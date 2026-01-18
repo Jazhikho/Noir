@@ -6,6 +6,7 @@
 [Bb]uilds/
 [Ll]ogs/
 [Uu]ser[Ss]ettings/
+[Mm]emoryCaptures/
 
 # Asset meta data should only be ignored when the corresponding asset is also ignored
 !/[Aa]ssets/**/*.meta
@@ -48,6 +49,9 @@ ExportedObj/
 # Unity3D generated file on crash reports
 sysinfo.txt
 
+# Unity shader cache
+*.cache
+
 # Builds
 *.apk
 *.aab
@@ -63,6 +67,16 @@ crashlytics-build.properties
 # Temporary auto-generated Android Assets
 [Aa]ssets/[Ss]treamingAssets/aa.meta
 [Aa]ssets/[Ss]treamingAssets/aa/*
+
+# Backup files
+*~
+*.orig
+*.rej
+*.swp
+*.swo
+
+# IDE files
+.idea/
 
 # OS generated files
 .DS_Store
