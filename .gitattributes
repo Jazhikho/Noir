@@ -1,0 +1,11 @@
+*.unity !text !filter !merge !diff
+*.prefab !text !filter !merge !diff
+*.asset !text !filter !merge !diff
+*.mat !text !filter !merge !diff
+*.anim !text !filter !merge !diff
+*.controller !text !filter !merge !diff
+*.preset !text !filter !merge !diff
+*.lighting !text !filter !merge !diff
+*.png !text !filter !merge !diff
+*.pdf !text !filter !merge !diff
+*.docx !text !filter !merge !diff
