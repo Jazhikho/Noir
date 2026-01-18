@@ -1,20 +1,32 @@
-# Noir
+# Private Eye Pierce & The Ink Spill
 
-A Unity game project.
+A 2D point-and-click sidescroller adventure game built in Unity, set in a black-and-white comic world.
+
+## About
+
+**Private Eye Pierce & The Ink Spill** follows P.I. Pierce, a washed-up detective locked in his office building. As a colorful ink spill spreads through the city, Pierce must explore different rooms, interact with surreal characters, and solve puzzles to escape.
+
+**Elevator Pitch:** *"A washed-up detective escapes the monotony of his grayscale office as color invades the outside world."*
 
 ## Project Structure
 
+All Unity assets are located in the `Private Eye Pierce & The Ink Spill` folder:
+
 ```
-/Scenes            # Unity Scenes
-/Scripts           # Gameplay scripts
-/Runtime           # Unity runtime scripts (assemblies as needed)
-/Editor            # Unity editor scripts (separate assembly)
-/Resources         # Unity ScriptableObjects/Data
-/Shaders           # Unity HLSL/ShaderGraph assets
-/Audio             # Audio assets
-/Art               # Models/Textures/Materials
-/Tests             # Tests
-/Docs              # Design docs, cheat sheets
+/Private Eye Pierce & The Ink Spill
+  /Assets
+    /Scenes            # Unity Scenes
+    /Scripts           # Gameplay scripts
+    /Runtime           # Unity runtime scripts (assemblies as needed)
+    /Editor            # Unity editor scripts (separate assembly)
+    /Resources         # Unity ScriptableObjects/Data
+    /Shaders           # Unity HLSL/ShaderGraph assets
+    /Audio             # Audio assets
+    /Art               # Models/Textures/Materials
+    /Tests             # Tests
+  /Packages            # Unity package manifests
+  /ProjectSettings     # Unity project settings
+/Docs                  # Design docs (at root level)
 ```
 
 ## Development Guidelines
@@ -52,6 +64,10 @@ A Unity game project.
 2. Ensure all packages are imported
 3. Check the `/Docs` folder for design documentation
 
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for development guidelines, code standards, and Git workflow.
+
 ## License
 
-See LICENSE file for details.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
