@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: d5032c4c155714171be74fd13887932e
+DefaultImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 175821
+  packageName: Bolt Unity Events
+  packageVersion: 1.0
+  assetPath: Assets/Plugins/Bolt Unity Events/Example/Example.unity
+  uploadId: 382012

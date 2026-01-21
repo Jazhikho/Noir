@@ -74,6 +74,7 @@ crashlytics-build.properties
 *.rej
 *.swp
 *.swo
+*.zip
 
 # IDE files
 .idea/

@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 8be7f6258136a554ab6eb28f51e96ebe
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 190446
+  packageName: Squawk Casual Adventure Creator
+  packageVersion: 0.1
+  assetPath: Assets/Squawk/Scripts/Specials/SpecialsSpriteShaker.cs
+  uploadId: 421949

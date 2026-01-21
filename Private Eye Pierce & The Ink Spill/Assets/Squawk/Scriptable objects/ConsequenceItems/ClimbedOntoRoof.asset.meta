@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 56525ea1e8176294ab293373a7390ba3
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 190446
+  packageName: Squawk Casual Adventure Creator
+  packageVersion: 0.1
+  assetPath: Assets/Squawk/Scriptable objects/ConsequenceItems/ClimbedOntoRoof.asset
+  uploadId: 421949

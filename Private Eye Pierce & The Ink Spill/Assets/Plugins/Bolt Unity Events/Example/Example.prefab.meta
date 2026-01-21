@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 82db38989837849d1abed00c131e85a1
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 175821
+  packageName: Bolt Unity Events
+  packageVersion: 1.0
+  assetPath: Assets/Plugins/Bolt Unity Events/Example/Example.prefab
+  uploadId: 382012

@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: b215aff72dee1c24db39272e102bb592
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 190446
+  packageName: Squawk Casual Adventure Creator
+  packageVersion: 0.1
+  assetPath: Assets/Squawk/Bolt Macros/Cutscenes/CutsceneReferenceSimplePlayer.asset
+  uploadId: 421949
