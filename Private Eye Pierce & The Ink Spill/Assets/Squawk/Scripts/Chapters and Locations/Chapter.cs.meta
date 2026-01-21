@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: e8c13788f23d7e9438ccb2a2b05653c2
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 190446
+  packageName: Squawk Casual Adventure Creator
+  packageVersion: 0.1
+  assetPath: Assets/Squawk/Scripts/Chapters and Locations/Chapter.cs
+  uploadId: 421949

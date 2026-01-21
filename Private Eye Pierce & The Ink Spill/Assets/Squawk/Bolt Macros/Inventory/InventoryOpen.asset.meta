@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: f8500eee6b02cc743a183884623e80d5
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 190446
+  packageName: Squawk Casual Adventure Creator
+  packageVersion: 0.1
+  assetPath: Assets/Squawk/Bolt Macros/Inventory/InventoryOpen.asset
+  uploadId: 421949

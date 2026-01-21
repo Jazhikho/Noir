@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: afa076a0dc660ee4d8ede055622f0f4a
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 190446
+  packageName: Squawk Casual Adventure Creator
+  packageVersion: 0.1
+  assetPath: Assets/Squawk/Graphics/import_cursors.preset
+  uploadId: 421949

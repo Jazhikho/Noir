@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: a1f597cee6ca72a43a44c02fedb16e08
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2655988077585873504
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 190446
+  packageName: Squawk Casual Adventure Creator
+  packageVersion: 0.1
+  assetPath: Assets/Squawk/PlayerSettings.preset
+  uploadId: 421949

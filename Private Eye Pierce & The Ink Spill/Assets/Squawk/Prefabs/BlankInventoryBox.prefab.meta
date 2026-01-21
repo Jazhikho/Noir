@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: a247b42c81df9b24ba25ab3b8837adc0
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 190446
+  packageName: Squawk Casual Adventure Creator
+  packageVersion: 0.1
+  assetPath: Assets/Squawk/Prefabs/BlankInventoryBox.prefab
+  uploadId: 421949

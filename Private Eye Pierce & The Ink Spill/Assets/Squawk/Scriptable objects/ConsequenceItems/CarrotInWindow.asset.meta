@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 1d39f8d9098501f43b2c3a61f6dba62a
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 190446
+  packageName: Squawk Casual Adventure Creator
+  packageVersion: 0.1
+  assetPath: Assets/Squawk/Scriptable objects/ConsequenceItems/CarrotInWindow.asset
+  uploadId: 421949

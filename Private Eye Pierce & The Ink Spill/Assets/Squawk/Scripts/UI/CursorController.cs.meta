@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 16627d752d6c22b41bc22f03d20e4cff
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 190446
+  packageName: Squawk Casual Adventure Creator
+  packageVersion: 0.1
+  assetPath: Assets/Squawk/Scripts/UI/CursorController.cs
+  uploadId: 421949

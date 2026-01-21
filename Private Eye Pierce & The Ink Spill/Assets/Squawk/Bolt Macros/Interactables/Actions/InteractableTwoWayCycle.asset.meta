@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: e6a69fac0d3cb774c94d250495c0553b
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 190446
+  packageName: Squawk Casual Adventure Creator
+  packageVersion: 0.1
+  assetPath: Assets/Squawk/Bolt Macros/Interactables/Actions/InteractableTwoWayCycle.asset
+  uploadId: 421949

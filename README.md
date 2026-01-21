@@ -60,13 +60,56 @@ All Unity assets are located in the `Private Eye Pierce & The Ink Spill` folder:
 
 ## Getting Started
 
-1. Open the project in Unity (recommended version: 2022.3 LTS or later)
-2. Ensure all packages are imported
-3. Check the `/Docs` folder for design documentation
+### For New Contributors
+
+**Never used GitHub before?** Start here:
+- Read [Docs/GitHubGuide.md](Docs/GitHubGuide.md) - A complete beginner's guide to GitHub and Git
+- This guide covers everything from creating an account to daily workflows
+
+### Setup Steps
+
+1. **Install Git and Git LFS** (see [GitHubGuide.md](Docs/GitHubGuide.md) for detailed instructions)
+2. **Clone the repository** to your computer
+3. **Open the project in Unity** (Unity 6.0.3 or later - see `ProjectSettings/ProjectVersion.txt` for exact version)
+4. **Wait for packages to import** - Unity will automatically download required packages from `Packages/manifest.json`
+5. **If you see compilation errors:**
+   - Wait for Unity Package Manager to finish downloading packages (check the Package Manager window)
+   - If errors persist, go to **Window → Package Manager** and click "Refresh" or "Reimport All"
+   - Close and reopen Unity if packages still haven't imported
+6. Check the `/Docs` folder for design documentation
+
+### Important: Git LFS Required
+
+This project uses **Git LFS (Large File Storage)** for large binary files (textures, audio, models, etc.). 
+
+**Before cloning:**
+- Install Git LFS: [git-lfs.github.com](https://git-lfs.github.com)
+- Run `git lfs install` after installation
+
+The `.gitattributes` file is already configured to handle large files automatically.
+
+## Troubleshooting
+
+### Package Import Errors
+
+If you see errors like "The type or namespace name 'Bolt' could not be found" or missing package errors:
+
+1. **Wait for packages to download** - Unity automatically imports packages listed in `Packages/manifest.json`, but this can take several minutes on first open
+2. **Check Package Manager** - Open **Window → Package Manager** and verify all packages are installed
+3. **Force reimport** - Right-click the `Packages` folder in Project window → **Reimport**
+4. **Restart Unity** - Close and reopen Unity to ensure all packages are properly loaded
+5. **Check Unity version** - Ensure you're using Unity 6.0.3 or later (check `ProjectSettings/ProjectVersion.txt`)
+
+### Missing Scripts or Pink Materials
+
+- **Never move/rename files outside Unity** - Always use Unity's Project window
+- If this happened, use Git to restore: `git checkout -- Assets/`
+- Then move/rename files inside Unity
 
 ## Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for development guidelines, code standards, and Git workflow.
+- **New to GitHub?** Start with [Docs/GitHubGuide.md](Docs/GitHubGuide.md) - Complete beginner's guide
+- **Ready to code?** See [CONTRIBUTING.md](CONTRIBUTING.md) for development guidelines, code standards, and Git workflow
 
 ## License
 

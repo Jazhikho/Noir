@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 3927b9aec38539745b3f60eac054b4aa
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 190446
+  packageName: Squawk Casual Adventure Creator
+  packageVersion: 0.1
+  assetPath: Assets/Squawk/Scriptable objects/Conversations/Introcutscene_conversation.asset
+  uploadId: 421949

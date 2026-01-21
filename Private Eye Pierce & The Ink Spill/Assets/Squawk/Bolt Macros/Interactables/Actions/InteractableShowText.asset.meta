@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 05a95d5ed22df9c4e81063f47c069e06
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 190446
+  packageName: Squawk Casual Adventure Creator
+  packageVersion: 0.1
+  assetPath: Assets/Squawk/Bolt Macros/Interactables/Actions/InteractableShowText.asset
+  uploadId: 421949

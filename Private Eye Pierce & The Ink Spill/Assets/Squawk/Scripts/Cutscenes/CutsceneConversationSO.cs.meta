@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: adbf4d43284aec54181a2511d8f4913a
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 190446
+  packageName: Squawk Casual Adventure Creator
+  packageVersion: 0.1
+  assetPath: Assets/Squawk/Scripts/Cutscenes/CutsceneConversationSO.cs
+  uploadId: 421949

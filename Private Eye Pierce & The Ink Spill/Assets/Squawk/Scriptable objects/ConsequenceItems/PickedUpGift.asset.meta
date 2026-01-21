@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 6fb20e9305c209c41b2daf8928416113
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 190446
+  packageName: Squawk Casual Adventure Creator
+  packageVersion: 0.1
+  assetPath: Assets/Squawk/Scriptable objects/ConsequenceItems/PickedUpGift.asset
+  uploadId: 421949

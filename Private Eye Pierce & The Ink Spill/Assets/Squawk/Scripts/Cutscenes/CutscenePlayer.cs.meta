@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: f5bad1dadcd8ee543ae51cfdf03d7e22
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 190446
+  packageName: Squawk Casual Adventure Creator
+  packageVersion: 0.1
+  assetPath: Assets/Squawk/Scripts/Cutscenes/CutscenePlayer.cs
+  uploadId: 421949

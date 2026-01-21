@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 0fce6ebe18d5a5043813c108e579a846
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 190446
+  packageName: Squawk Casual Adventure Creator
+  packageVersion: 0.1
+  assetPath: Assets/Squawk/Scriptable objects/ConsequenceItems/CatFed.asset
+  uploadId: 421949
