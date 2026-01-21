@@ -2,20 +2,13 @@
 # Optimized to only track files that actually need LFS (typically > 100KB)
 # This reduces LFS storage usage while still handling large binary files.
 
-# Large Image Files Only (exclude small UI sprites)
-# Only track images > 100KB - small sprites can be in regular Git
+# Image Files - REMOVED from LFS
+# Most game images (PNG, JPG) are under 100MB and fine in regular Git
+# Only track very large formats that are almost always huge:
 *.psd filter=lfs diff=lfs merge=lfs -text
-*.png filter=lfs diff=lfs merge=lfs -text
-*.jpg filter=lfs diff=lfs merge=lfs -text
-*.jpeg filter=lfs diff=lfs merge=lfs -text
-*.gif filter=lfs diff=lfs merge=lfs -text
-*.tga filter=lfs diff=lfs merge=lfs -text
-*.tiff filter=lfs diff=lfs merge=lfs -text
-*.tif filter=lfs diff=lfs merge=lfs -text
 *.exr filter=lfs diff=lfs merge=lfs -text
 *.hdr filter=lfs diff=lfs merge=lfs -text
-*.bmp filter=lfs diff=lfs merge=lfs -text
-*.ico filter=lfs diff=lfs merge=lfs -text
+# PNG, JPG, GIF, TGA, etc. are now in regular Git (fine for files < 100MB)
 # 3D Model Files (always large)
 *.fbx filter=lfs diff=lfs merge=lfs -text
 *.obj filter=lfs diff=lfs merge=lfs -text
