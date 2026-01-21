@@ -1,11 +1,11 @@
 # Team Noir
 
-Christopher Del Gesso - UI, Technical Details (Coding, Repo Management)
 Ashley Haberberger - Audio, Player Design
-Matthew Nichols - User Experience, Core Gameplay Loop, Game Objective
-Kevin - MVP, Elevator pitch, Genre and target audience
-Kaya Wilson - Enemy and Obstacle Design
 Bella Howe - Concept, Art Style, Influences and References
+Christopher Del Gesso - UI, Technical Details (Coding, Repo Management)
+Kaya Wilson - Enemy and Obstacle Design
+Kevin - MVP, Elevator pitch, Genre and target audience
+Matthew Nichols - User Experience, Core Gameplay Loop, Game Objective
 
 # Elevator Pitch 
 
