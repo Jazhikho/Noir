@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,7 +9,7 @@ public class CursorController : MonoBehaviour
     public enum CursorName
     {
         main, look, use, pickup, navigateUp, carryItem, inventory
-    }    
+    }
     public Texture2D mainCursor;
     public Texture2D lookCursor;
     public Texture2D useCursor;
@@ -22,8 +22,15 @@ public class CursorController : MonoBehaviour
     private bool carryingItem = false;
     private CursorName hiddenCursorChange = CursorName.main; //keeps record of cursor changes that are hidden while carrying an item so it can switch to correct cursor on item drop
 
+    private void Awake()
+    {
+        Initialise();
+    }
+
     public void Initialise()
-    {        
+    {
+        if (cursors.Count > 0) return;
+
         cursors.Add(CursorName.main, mainCursor);
         cursors.Add(CursorName.look, lookCursor);
         cursors.Add(CursorName.use, useCursor);
@@ -53,7 +60,7 @@ public class CursorController : MonoBehaviour
         }
         else
         {
-            Cursor.SetCursor(cursors[hiddenCursorChange], cursorOffsets[hiddenCursorChange], CursorMode.Auto);            
+            Cursor.SetCursor(cursors[hiddenCursorChange], cursorOffsets[hiddenCursorChange], CursorMode.Auto);
         }
     }
 
@@ -67,7 +74,7 @@ public class CursorController : MonoBehaviour
         }
 
         if (!carryingItem) //only change cursor if not carrying an inventory item
-        {            
+        {
             Cursor.SetCursor(cursors[c], cursorOffsets[c], CursorMode.Auto);
         }
         else //but do store the change in case item is dropped
@@ -75,5 +82,5 @@ public class CursorController : MonoBehaviour
             hiddenCursorChange = c;
         }
     }
-    
+
 }
