@@ -29,6 +29,17 @@ All Unity assets are located in the `Private Eye Pierce & The Ink Spill` folder:
 /Docs                  # Design docs (at root level)
 ```
 
+### Current Implementation (Graybox)
+
+The **OfficeFloor** scene (`Assets/Scenes/OfficeFloor.unity`) is the main playable graybox. It uses a single-scene room system:
+
+- **Rooms** are GameObjects under `Game/Rooms`; only one room’s `RoomRoot` is active at a time. Switching rooms enables the new room, teleports Pierce, snaps the camera, and updates walk bounds.
+- **Scripts** in `Assets/Scripts/`: `RoomManager` (transitions, spawn rules), `RoomDefinition` (per-room data), `ClickController2D` (interact vs move, door cursor), `DoorInteractable`, `PlayerMover2D`, `PageTurnTransition` (optional page-turn effect), `IInteractable`.
+- **Spawn rules**: Game start uses the initial room’s Spawn_Left. When entering via a door, spawn side follows “left door exit → spawn right” (with exceptions for Room1 and Hallway-from-Room1). Pierce’s Y position is never overridden.
+- **Squawk** `CursorController` (in `Assets/Squawk/Scripts/UI/`) is used for door-hover cursor; it initialises in `Awake`.
+
+See in-scene setup (RoomManager, ClickController, room definitions, floor colliders) for required references.
+
 ## Development Guidelines
 
 ### Code Standards
