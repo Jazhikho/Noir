@@ -33,7 +33,7 @@ public class RoomManager : MonoBehaviour
         Instance = this;
 
         _map = new Dictionary<string, RoomDefinition>();
-        foreach (var r in rooms)
+        foreach (RoomDefinition r in rooms)
         {
             _map[r.roomId] = r;
             if (r.roomRoot != null) r.roomRoot.SetActive(false);
@@ -74,7 +74,10 @@ public class RoomManager : MonoBehaviour
         _pendingRoomId = roomId;
         _pendingSpawnKey = spawnKey;
         _pendingDoorWorldX = doorTransform.position.x;
-        _pendingLeavingRoomId = _current != null ? _current.roomId : null;
+        if (_current != null)
+            _pendingLeavingRoomId = _current.roomId;
+        else
+            _pendingLeavingRoomId = null;
         float roomCenterX = GetRoomCenterX(_current);
         _pendingDoorWasOnLeft = _current != null && doorTransform.position.x < roomCenterX;
         playerMover.SetTargetX(_pendingDoorWorldX);
@@ -83,7 +86,7 @@ public class RoomManager : MonoBehaviour
     /// <summary>Enter a room and teleport the player. Game start: spawnKey only (use Spawn_Left). Via door: leavingRoomId and doorWasOnLeft drive spawn (left door exit → spawn right; exceptions for Room1 and Hallway-from-Room1).</summary>
     public void EnterRoom(string roomId, string spawnKey, string leavingRoomId = null, bool doorWasOnLeft = false)
     {
-        if (!_map.TryGetValue(roomId, out var next)) return;
+        if (!_map.TryGetValue(roomId, out RoomDefinition next)) return;
 
         if (_current != null && _current.roomRoot != null)
             _current.roomRoot.SetActive(false);
@@ -107,11 +110,18 @@ public class RoomManager : MonoBehaviour
         else if (roomId == "Hallway" && leavingRoomId == "Room1")
         {
             Transform doorInNewRoom = GetDoorInRoom(_current, "Room1");
-            spawnPosition = doorInNewRoom != null ? SpawnPositionFrom(doorInNewRoom) : SpawnPositionFrom(_current.GetSpawn("Left"));
+            if (doorInNewRoom != null)
+                spawnPosition = SpawnPositionFrom(doorInNewRoom);
+            else
+                spawnPosition = SpawnPositionFrom(_current.GetSpawn("Left"));
         }
         else
         {
-            string key = doorWasOnLeft ? "Right" : "Left";
+            string key;
+            if (doorWasOnLeft)
+                key = "Right";
+            else
+                key = "Left";
             Transform spawn = _current.GetSpawn(key);
             spawnPosition = SpawnPositionFrom(spawn);
         }
@@ -134,9 +144,21 @@ public class RoomManager : MonoBehaviour
 
     private Vector3 SpawnPositionFrom(Transform t)
     {
-        if (t == null) return player != null ? player.position : Vector3.zero;
-        float y = player != null ? player.position.y : t.position.y;
-        float z = player != null ? player.position.z : 0f;
+        if (t == null)
+        {
+            if (player != null) return player.position;
+            return Vector3.zero;
+        }
+        float y;
+        if (player != null)
+            y = player.position.y;
+        else
+            y = t.position.y;
+        float z;
+        if (player != null)
+            z = player.position.z;
+        else
+            z = 0f;
         return new Vector3(t.position.x, y, z);
     }
 
@@ -151,7 +173,7 @@ public class RoomManager : MonoBehaviour
     private static Transform GetDoorInRoom(RoomDefinition room, string targetRoomId)
     {
         if (room?.roomRoot == null) return null;
-        foreach (var door in room.roomRoot.GetComponentsInChildren<DoorInteractable>(true))
+        foreach (DoorInteractable door in room.roomRoot.GetComponentsInChildren<DoorInteractable>(true))
         {
             if (door.targetRoomId == targetRoomId) return door.transform;
         }
