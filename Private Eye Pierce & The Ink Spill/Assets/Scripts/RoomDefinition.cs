@@ -15,6 +15,7 @@ public class RoomDefinition : MonoBehaviour
 
     public Transform GetSpawn(string spawnKey)
     {
-        return spawnKey == "Right" ? spawnRight : spawnLeft;
+        if (spawnKey == "Right") return spawnRight;
+        return spawnLeft;
     }
 }

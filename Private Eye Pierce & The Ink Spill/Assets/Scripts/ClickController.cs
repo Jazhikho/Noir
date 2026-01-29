@@ -27,8 +27,10 @@ public class ClickController2D : MonoBehaviour
         Vector2 world = cam.ScreenToWorldPoint(Mouse.current.position.ReadValue());
 
         // Hover check for interactables
-        var hitHover = Physics2D.OverlapPoint(world, interactableMask);
-        var newHover = hitHover ? hitHover.GetComponent<IInteractable>() : null;
+        Collider2D hitHover = Physics2D.OverlapPoint(world, interactableMask);
+        IInteractable newHover = null;
+        if (hitHover != null)
+            newHover = hitHover.GetComponent<IInteractable>();
 
         if (_hovered != newHover)
         {
@@ -36,7 +38,12 @@ public class ClickController2D : MonoBehaviour
             _hovered = newHover;
             _hovered?.OnHover(true);
             if (cursorController != null)
-                cursorController.ChangeCursor(newHover is DoorInteractable ? CursorController.CursorName.use : CursorController.CursorName.main);
+            {
+                if (newHover is DoorInteractable)
+                    cursorController.ChangeCursor(CursorController.CursorName.use);
+                else
+                    cursorController.ChangeCursor(CursorController.CursorName.main);
+            }
         }
 
         if (!Mouse.current.leftButton.wasPressedThisFrame) return;
@@ -53,7 +60,7 @@ public class ClickController2D : MonoBehaviour
 
         if (walkBounds != null)
         {
-            var b = walkBounds.bounds;
+            Bounds b = walkBounds.bounds;
             targetX = Mathf.Clamp(targetX, b.min.x, b.max.x);
         }
 
