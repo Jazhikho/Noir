@@ -11,15 +11,9 @@ TagManager:
   - Walkable
   - Water
   - UI
-<<<<<<< HEAD
-  - Walkable
-  - Ground
-  - Interactables
-=======
   - Interactable
+  - Ground
   - 
-  - 
->>>>>>> 53378d4ba5c31a2811813d0adf99e9405e6d9fbd
   - 
   - 
   - 
