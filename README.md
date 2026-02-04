@@ -79,7 +79,7 @@ See in-scene setup (RoomManager, ClickController, room definitions, floor collid
 
 ### Setup Steps
 
-1. **Install Git and Git LFS** (see [GitHubGuide.md](Docs/GitHubGuide.md) for detailed instructions)
+1. **Install Git** (see [GitHubGuide.md](Docs/GitHubGuide.md) for detailed instructions)
 2. **Clone the repository** to your computer
 3. **Open the project in Unity** (Unity 6.0.3 or later - see `ProjectSettings/ProjectVersion.txt` for exact version)
 4. **Wait for packages to import** - Unity will automatically download required packages from `Packages/manifest.json`
@@ -88,16 +88,6 @@ See in-scene setup (RoomManager, ClickController, room definitions, floor collid
    - If errors persist, go to **Window → Package Manager** and click "Refresh" or "Reimport All"
    - Close and reopen Unity if packages still haven't imported
 6. Check the `/Docs` folder for design documentation
-
-### Important: Git LFS Required
-
-This project uses **Git LFS (Large File Storage)** for large binary files (textures, audio, models, etc.). 
-
-**Before cloning:**
-- Install Git LFS: [git-lfs.github.com](https://git-lfs.github.com)
-- Run `git lfs install` after installation
-
-The `.gitattributes` file is already configured to handle large files automatically.
 
 ## Troubleshooting
 
