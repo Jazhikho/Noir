@@ -618,8 +618,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc4417eba9489d44ab839c802e796a82, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DoorInteractable
-  targetRoomId: Break
-  targetSpawn: Left
+  _targetRoomId: Break
+  _targetSpawn: Left
 --- !u!61 &381760900
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -876,8 +876,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc4417eba9489d44ab839c802e796a82, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DoorInteractable
-  targetRoomId: Hallway
-  targetSpawn: Left
+  _targetRoomId: Hallway
+  _targetSpawn: Left
 --- !u!1 &471285011
 GameObject:
   m_ObjectHideFlags: 0
@@ -957,8 +957,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc4417eba9489d44ab839c802e796a82, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DoorInteractable
-  targetRoomId: Hallway
-  targetSpawn: Left
+  _targetRoomId: Hallway
+  _targetSpawn: Left
 --- !u!61 &484166808
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1547,8 +1547,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc4417eba9489d44ab839c802e796a82, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DoorInteractable
-  targetRoomId: Room1
-  targetSpawn: Left
+  _targetRoomId: Room1
+  _targetSpawn: Left
 --- !u!61 &976990331
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1755,8 +1755,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc4417eba9489d44ab839c802e796a82, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DoorInteractable
-  targetRoomId: Hallway
-  targetSpawn: Left
+  _targetRoomId: Hallway
+  _targetSpawn: Left
 --- !u!61 &1129932948
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1939,8 +1939,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc4417eba9489d44ab839c802e796a82, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DoorInteractable
-  targetRoomId: Pierce
-  targetSpawn: Left
+  _targetRoomId: Pierce
+  _targetSpawn: Right
 --- !u!61 &1209251383
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -2725,10 +2725,10 @@ Camera:
   m_LensShift: {x: 0, y: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0
-    y: 0
-    width: 1
-    height: 1
+    x: -0.275
+    y: -0.26666668
+    width: 0.55
+    height: 0.53333336
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 60

@@ -2,23 +2,56 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.EventSystems;
 
+/// <summary>
+/// Handles click-to-move and interaction in 2D. Converts screen clicks to world position, clamps to walk bounds,
+/// and notifies hovered IInteractable (e.g. doors, WalkToInteractable) on click.
+/// </summary>
 public class ClickController2D : MonoBehaviour
 {
+    /// <summary>
+    /// Layer mask for interactable colliders (doors, walk-to objects).
+    /// </summary>
     public LayerMask interactableMask;
 
+    /// <summary>
+    /// Camera used for screen-to-world. If unset, falls back to Camera.main in Start.
+    /// </summary>
     public Camera cam;
+
+    /// <summary>
+    /// Player mover that receives click-to-move targets.
+    /// </summary>
     public PlayerMover2D mover;
 
-    // Assign this to your current room's Floor collider (BoxCollider2D is fine)
+    /// <summary>
+    /// Current room's floor collider; clamps walk target X to this bounds.
+    /// </summary>
     public Collider2D walkBounds;
-    /// <summary>Optional. When set, cursor switches to Squawk "use" icon when hovering doors (Squawk/Graphics/UI cursor textures).</summary>
+
+    /// <summary>
+    /// Optional. When set, cursor switches to Squawk "use" icon when hovering doors.
+    /// </summary>
     public CursorController cursorController;
 
     private IInteractable _hovered;
 
+    /// <summary>
+    /// Caches camera reference. Uses Camera.main if cam is not assigned in the Inspector.
+    /// </summary>
+    private void Start()
+    {
+        if (cam == null)
+        {
+            cam = Camera.main;
+        }
+    }
+
+    /// <summary>
+    /// Handles hover state, cursor changes, and left-click: either triggers the hovered interactable or sets mover target X.
+    /// </summary>
     private void Update()
     {
-        if (cam == null) cam = Camera.main;
+        if (cam == null) return;
 
         // Ignore clicks over UI (prevents weirdness later when you add dialogue UI)
         if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
