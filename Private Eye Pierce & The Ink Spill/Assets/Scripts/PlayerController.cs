@@ -1,16 +1,21 @@
 using UnityEngine;
 
+/// <summary>
+/// Placeholder controller for the player. Extend with input and behaviour as needed.
+/// </summary>
 public class PlayerController : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    /// <summary>
+    /// Called once when the script is enabled. Use for one-time setup.
+    /// </summary>
     void Start()
     {
-        
     }
 
-    // Update is called once per frame
+    /// <summary>
+    /// Called every frame. Use for per-frame logic.
+    /// </summary>
     void Update()
     {
-        
     }
 }

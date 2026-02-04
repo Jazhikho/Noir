@@ -1,8 +1,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Singleton that manages room transitions: which room is active, spawn positions, and door-based transitions.
+/// Assign rooms in the Inspector; use DoorInteractable to trigger transitions when the player reaches a door.
+/// </summary>
 public class RoomManager : MonoBehaviour
 {
+    /// <summary>Singleton instance. Set in Awake.</summary>
     public static RoomManager Instance { get; private set; }
 
     public Transform player;
@@ -27,6 +32,9 @@ public class RoomManager : MonoBehaviour
     private string _pendingLeavingRoomId;
     private bool _pendingDoorWasOnLeft;
 
+    /// <summary>
+    /// Enforces singleton and builds the room ID map. Deactivates all room roots until EnterRoom is called.
+    /// </summary>
     private void Awake()
     {
         if (Instance != null && Instance != this) { Destroy(gameObject); return; }
@@ -40,11 +48,17 @@ public class RoomManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Enters the initial room using initialRoomId and the default "Left" spawn.
+    /// </summary>
     private void Start()
     {
         EnterRoom(initialRoomId, "Left", null);
     }
 
+    /// <summary>
+    /// When a room transition is pending, checks if the player has reached the door; if so, runs the transition (with optional page turn).
+    /// </summary>
     private void Update()
     {
         if (string.IsNullOrEmpty(_pendingRoomId) || player == null) return;
@@ -67,10 +81,24 @@ public class RoomManager : MonoBehaviour
         }
     }
 
-    /// <summary>Queue a room transition when the player reaches the door. Sets movement target to the door.</summary>
+    /// <summary>
+    /// Queues a room transition when the player reaches the door. Sets the player movement target to the door position.
+    /// </summary>
+    /// <param name="roomId">Room ID to transition to (must match a RoomDefinition.roomId in rooms).</param>
+    /// <param name="spawnKey">Spawn point in the target room: "Left" or "Right".</param>
+    /// <param name="doorTransform">Transform of the door the player is moving to; used for reach distance and side.</param>
     public void PrepareTransitionToDoor(string roomId, string spawnKey, Transform doorTransform)
     {
-        if (doorTransform == null || playerMover == null) return;
+        if (doorTransform == null)
+        {
+            Debug.LogError($"[RoomManager] PrepareTransitionToDoor failed: doorTransform is null for roomId '{roomId}'. Assign the door's transform.", this);
+            return;
+        }
+        if (playerMover == null)
+        {
+            Debug.LogError("[RoomManager] PrepareTransitionToDoor failed: playerMover is null. Assign PlayerMover2D in the Inspector.", this);
+            return;
+        }
         _pendingRoomId = roomId;
         _pendingSpawnKey = spawnKey;
         _pendingDoorWorldX = doorTransform.position.x;
@@ -83,10 +111,21 @@ public class RoomManager : MonoBehaviour
         playerMover.SetTargetX(_pendingDoorWorldX);
     }
 
-    /// <summary>Enter a room and teleport the player. Game start: spawnKey only (use Spawn_Left). Via door: leavingRoomId and doorWasOnLeft drive spawn (left door exit → spawn right; exceptions for Room1 and Hallway-from-Room1).</summary>
+    /// <summary>
+    /// Enters a room: deactivates current room, activates the new one, teleports player to spawn, updates camera and click walk bounds.
+    /// On game start use spawnKey only; when coming from a door, leavingRoomId and doorWasOnLeft determine spawn (e.g. left door exit → spawn right).
+    /// </summary>
+    /// <param name="roomId">Room ID to enter (must exist in rooms).</param>
+    /// <param name="spawnKey">"Left" or "Right" spawn in the target room.</param>
+    /// <param name="leavingRoomId">When transitioning via door, the room we are leaving; null on initial load.</param>
+    /// <param name="doorWasOnLeft">When true, player exited via a door on the left side of the previous room (affects which spawn is used).</param>
     public void EnterRoom(string roomId, string spawnKey, string leavingRoomId = null, bool doorWasOnLeft = false)
     {
-        if (!_map.TryGetValue(roomId, out RoomDefinition next)) return;
+        if (!_map.TryGetValue(roomId, out RoomDefinition next))
+        {
+            Debug.LogError($"[RoomManager] EnterRoom failed: No room defined with roomId '{roomId}'. Check RoomManager.rooms and RoomDefinition.roomId.", this);
+            return;
+        }
 
         if (_current != null && _current.roomRoot != null)
             _current.roomRoot.SetActive(false);
@@ -142,10 +181,16 @@ public class RoomManager : MonoBehaviour
             clickController.walkBounds = _current.floorCollider;
     }
 
+    /// <summary>
+    /// Computes world spawn position from a spawn transform, preserving player Y and Z when available.
+    /// </summary>
+    /// <param name="t">Spawn transform; if null, returns player position or zero.</param>
+    /// <returns>World position for the player spawn.</returns>
     private Vector3 SpawnPositionFrom(Transform t)
     {
         if (t == null)
         {
+            Debug.LogWarning("[RoomManager] SpawnPositionFrom called with null transform; using player position or zero.", this);
             if (player != null) return player.position;
             return Vector3.zero;
         }
@@ -162,6 +207,11 @@ public class RoomManager : MonoBehaviour
         return new Vector3(t.position.x, y, z);
     }
 
+    /// <summary>
+    /// Returns the approximate center X of a room (from floor collider or camera anchor).
+    /// </summary>
+    /// <param name="room">Room definition; may be null.</param>
+    /// <returns>Center X or 0 if room is null or has no floor/anchor.</returns>
     private float GetRoomCenterX(RoomDefinition room)
     {
         if (room == null) return 0f;
@@ -170,6 +220,12 @@ public class RoomManager : MonoBehaviour
         return 0f;
     }
 
+    /// <summary>
+    /// Finds the first door in the room that targets the given room ID.
+    /// </summary>
+    /// <param name="room">Room to search (roomRoot and children).</param>
+    /// <param name="targetRoomId">DoorInteractable.targetRoomId to match.</param>
+    /// <returns>The door's transform, or null if not found.</returns>
     private static Transform GetDoorInRoom(RoomDefinition room, string targetRoomId)
     {
         if (room?.roomRoot == null) return null;

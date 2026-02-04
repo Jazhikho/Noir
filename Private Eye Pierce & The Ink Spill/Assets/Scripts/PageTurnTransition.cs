@@ -32,6 +32,11 @@ public class PageTurnTransition : MonoBehaviour
         StartCoroutine(PlayTransitionCoroutine(rightToLeft, onMidTransition));
     }
 
+    /// <summary>
+    /// Runs the slide-in, invokes the callback when covered, then slides out.
+    /// </summary>
+    /// <param name="rightToLeft">True to slide in from right.</param>
+    /// <param name="onMidTransition">Invoked when the screen is fully covered.</param>
     private IEnumerator PlayTransitionCoroutine(bool rightToLeft, Action onMidTransition)
     {
         _isPlaying = true;
@@ -61,6 +66,12 @@ public class PageTurnTransition : MonoBehaviour
         _isPlaying = false;
     }
 
+    /// <summary>
+    /// Sets the RectTransform anchor min/max X and clears offsets so the panel spans the given X range.
+    /// </summary>
+    /// <param name="rect">The panel to update.</param>
+    /// <param name="minX">Anchor min X.</param>
+    /// <param name="maxX">Anchor max X.</param>
     private static void SetAnchorX(RectTransform rect, float minX, float maxX)
     {
         Vector2 min = rect.anchorMin;
@@ -73,6 +84,15 @@ public class PageTurnTransition : MonoBehaviour
         rect.offsetMax = Vector2.zero;
     }
 
+    /// <summary>
+    /// Lerps the panel's anchor X from (fromMinX, fromMaxX) to (toMinX, toMaxX) over the given duration with smoothstep.
+    /// </summary>
+    /// <param name="rect">The panel to animate.</param>
+    /// <param name="fromMinX">Starting anchor min X.</param>
+    /// <param name="fromMaxX">Starting anchor max X.</param>
+    /// <param name="toMinX">End anchor min X.</param>
+    /// <param name="toMaxX">End anchor max X.</param>
+    /// <param name="overDuration">Duration in seconds.</param>
     private static IEnumerator LerpAnchorX(RectTransform rect, float fromMinX, float fromMaxX, float toMinX, float toMaxX, float overDuration)
     {
         float elapsed = 0f;

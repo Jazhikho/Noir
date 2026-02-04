@@ -7,29 +7,41 @@ using UnityEngine;
 public class PlayerMover2D : MonoBehaviour
 {
     [Header("Movement Settings")]
-    // Movement speed in units per second.
-    public float speed = 4f;
-    
-    // Distance threshold at which the player is considered to have reached the target.
-    public float stopDistance = 0.02f;
-    
+    /// <summary>
+    /// Movement speed in units per second.
+    /// </summary>
+    [SerializeField] private float _speed = 4f;
+
+    /// <summary>
+    /// Distance threshold at which the player is considered to have reached the target.
+    /// </summary>
+    [SerializeField] private float _stopDistance = 0.02f;
+
+    /// <summary>
+    /// Distance threshold for arrival. Used by WalkToInteractable.
+    /// </summary>
+    public float StopDistance
+    {
+        get { return _stopDistance; }
+    }
+
     // If set, movement uses MovePosition so wall colliders block the player. Add Rigidbody2D (Kinematic) + Collider2D to the player.
     [SerializeField] private Rigidbody2D body;
 
     [Header("Floor Settings")]
     // If true, locks the player's Y position to floorY value.
     [SerializeField] private bool lockFloorY = false;
-    
+
     // The Y position to lock the player to when lockFloorY is enabled.
     [SerializeField] private float floorY = 0f;
 
     [Header("Visual Feedback")]
     // If set, automatically flips the sprite based on movement direction.
     [SerializeField] private SpriteRenderer spriteRenderer;
-    
+
     // If true, sprite faces right when flipX is false. Set to false if your sprite naturally faces left.
     [SerializeField] private bool spriteFacesRight = true;
-    
+
     // If set, updates the "IsWalking" bool parameter based on movement state.
     [SerializeField] private Animator animator;
 
@@ -53,7 +65,7 @@ public class PlayerMover2D : MonoBehaviour
     {
         _movementEnabled = false;
         _targetX = null;
-        
+
         if (animator != null)
         {
             animator.SetBool("IsWalking", false);
@@ -94,12 +106,12 @@ public class PlayerMover2D : MonoBehaviour
     {
         Vector3 newPos = transform.position;
         newPos.x = x;
-        
+
         if (lockFloorY)
         {
             newPos.y = floorY;
         }
-        
+
         transform.position = newPos;
         _targetX = null;
     }
@@ -112,7 +124,7 @@ public class PlayerMover2D : MonoBehaviour
     public void SetFloorY(float newFloorY, bool snapImmediately = true)
     {
         floorY = newFloorY;
-        
+
         if (snapImmediately)
         {
             Vector3 pos = transform.position;
@@ -126,7 +138,7 @@ public class PlayerMover2D : MonoBehaviour
     /// </summary>
     private void Update()
     {
-        if (!_movementEnabled || _targetX == null) 
+        if (!_movementEnabled || _targetX == null)
         {
             if (animator != null)
             {
@@ -136,11 +148,11 @@ public class PlayerMover2D : MonoBehaviour
         }
 
         float dx = _targetX.Value - transform.position.x;
-        
-        if (Mathf.Abs(dx) <= stopDistance)
+
+        if (Mathf.Abs(dx) <= _stopDistance)
         {
             _targetX = null;
-            
+
             if (animator != null)
             {
                 animator.SetBool("IsWalking", false);
@@ -158,7 +170,7 @@ public class PlayerMover2D : MonoBehaviour
         if (spriteRenderer != null)
         {
             float direction = Mathf.Sign(dx);
-            
+
             if (spriteFacesRight)
             {
                 spriteRenderer.flipX = direction < 0;
@@ -170,7 +182,7 @@ public class PlayerMover2D : MonoBehaviour
         }
 
         // Calculate movement step
-        float step = Mathf.Sign(dx) * speed * Time.deltaTime;
+        float step = Mathf.Sign(dx) * _speed * Time.deltaTime;
         if (Mathf.Abs(step) > Mathf.Abs(dx)) step = dx;
 
         Vector3 nextPosition = transform.position + new Vector3(step, 0f, 0f);
