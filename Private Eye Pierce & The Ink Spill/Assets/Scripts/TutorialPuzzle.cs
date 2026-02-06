@@ -36,12 +36,8 @@ public class TutorialPuzzle : MonoBehaviour
     private bool doorTriedOnce = false;
     private bool doorOpened = false;
 
-    private SpriteRenderer _batSpriteRenderer;
-    private Collider2D _batCollider;
-    private SpriteRenderer _doorSpriteRenderer;
-
     /// <summary>
-    /// Validates required references and caches bat/door components.
+    /// Validates that required references are assigned in the Inspector.
     /// </summary>
     private void Start()
     {
@@ -49,19 +45,10 @@ public class TutorialPuzzle : MonoBehaviour
         {
             Debug.LogError($"TutorialPuzzle on {gameObject.name}: Bat GameObject is not assigned.", this);
         }
-        else
-        {
-            _batSpriteRenderer = bat.GetComponent<SpriteRenderer>();
-            _batCollider = bat.GetComponent<Collider2D>();
-        }
-
+        
         if (door == null)
         {
             Debug.LogError($"TutorialPuzzle on {gameObject.name}: Door GameObject is not assigned.", this);
-        }
-        else
-        {
-            _doorSpriteRenderer = door.GetComponent<SpriteRenderer>();
         }
     }
 
@@ -71,13 +58,32 @@ public class TutorialPuzzle : MonoBehaviour
     /// </summary>
     public void InteractWithBat()
     {
-        if (hasBat) return;
+        if (hasBat)
+        {
+            Debug.Log("PUZZLE: Pierce already has the baseball bat.");
+            return;
+        }
 
         hasBat = true;
 
-        if (_batSpriteRenderer != null) _batSpriteRenderer.enabled = false;
-        if (_batCollider != null) _batCollider.enabled = false;
+        if (bat != null)
+        {
+            SpriteRenderer spriteRenderer = bat.GetComponent<SpriteRenderer>();
+            
+            if (spriteRenderer != null)
+            {
+                spriteRenderer.enabled = false;
+            }
 
+            Collider2D collider = bat.GetComponent<Collider2D>();
+            
+            if (collider != null)
+            {
+                collider.enabled = false;
+            }
+        }
+
+        Debug.Log("PUZZLE: Pierce picks up the baseball bat.");
         OnBatPickedUp.Invoke();
     }
 
@@ -87,17 +93,23 @@ public class TutorialPuzzle : MonoBehaviour
     /// </summary>
     public void InteractWithDoor()
     {
-        if (doorOpened) return;
+        if (doorOpened)
+        {
+            Debug.Log("PUZZLE: The door is already open.");
+            return;
+        }
 
         if (!doorTriedOnce)
         {
             doorTriedOnce = true;
+            Debug.Log("PUZZLE: The door is locked. Pierce can't leave.");
             OnDoorLocked.Invoke();
             return;
         }
 
         if (!hasBat)
         {
+            Debug.Log("PUZZLE: Pierce needs something to break the window.");
             OnNeedBat.Invoke();
             return;
         }
@@ -112,15 +124,21 @@ public class TutorialPuzzle : MonoBehaviour
     {
         doorOpened = true;
 
-        if (door != null && brokenDoorSprite != null && _doorSpriteRenderer != null)
+        if (door != null && brokenDoorSprite != null)
         {
-            _doorSpriteRenderer.sprite = brokenDoorSprite;
-        }
-        else if (door != null && brokenDoorSprite != null && _doorSpriteRenderer == null)
-        {
-            Debug.LogWarning($"TutorialPuzzle on {gameObject.name}: Door GameObject has no SpriteRenderer component.", this);
+            SpriteRenderer spriteRenderer = door.GetComponent<SpriteRenderer>();
+            
+            if (spriteRenderer != null)
+            {
+                spriteRenderer.sprite = brokenDoorSprite;
+            }
+            else
+            {
+                Debug.LogWarning($"TutorialPuzzle on {gameObject.name}: Door GameObject has no SpriteRenderer component.", this);
+            }
         }
 
+        Debug.Log("PUZZLE: Pierce smashes the window with the bat and unlocks the door.");
         OnDoorOpened.Invoke();
     }
 
@@ -151,7 +169,21 @@ public class TutorialPuzzle : MonoBehaviour
         doorTriedOnce = false;
         doorOpened = false;
 
-        if (_batSpriteRenderer != null) _batSpriteRenderer.enabled = true;
-        if (_batCollider != null) _batCollider.enabled = true;
+        if (bat != null)
+        {
+            SpriteRenderer spriteRenderer = bat.GetComponent<SpriteRenderer>();
+            if (spriteRenderer != null)
+            {
+                spriteRenderer.enabled = true;
+            }
+
+            Collider2D collider = bat.GetComponent<Collider2D>();
+            if (collider != null)
+            {
+                collider.enabled = true;
+            }
+        }
+
+        Debug.Log("PUZZLE: Tutorial puzzle has been reset.");
     }
 }
