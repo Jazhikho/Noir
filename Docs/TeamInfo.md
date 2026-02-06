@@ -41,3 +41,14 @@ On MatthewBranch, TMP is also used in:
 - **Squawk:** `CutsceneConversation.asset`, cutscene scenes, and scripts (`DialogueUI.cs`, `Inventory.cs`, `Tooltip.cs`, `CutsceneConversationSO.cs`) reference TMPro. Removing TMP will require updating those to use a non-TMP text solution.
 
 **Action:** Remove `Private Eye Pierce & The Ink Spill/Assets/Squawk/Materials/TMP materials/` (and `TMP materials.meta`) before merging, and either (a) add the package via Package Manager only (no Assets/TextMesh Pro folder), or (b) migrate Main Menu and Squawk UI to non-TMP text and then remove all TMP usage.
+
+---
+
+## Recent merges (Feb 2026)
+
+**main** currently includes:
+
+- **Bella-Branch:** Art assets (Backgrounds: PierceBreakroom, PierceOfficeBackr, PierceOfficeFront; PuzzleAssets: BoxChecked, BoxUnchecked, DoorBroken, FridgeChecked, PierceBat, PierceHand, TrashChecked, TrashUnchecked; Art root: PierceIdle, PierceLook, PierceWalk, PierceHallway; Backgrounds/PierceHallway). All art file names use **PascalCase** per project standard.
+- **NewMatthewBranch (aligned):** UI art (cursors, dialogue bubbles, buttons under `Assets/Art/UI/`), Audio (Music and SFX under `Assets/Audio/`), `UIController.cs`, `SceneFader.cs`, and updated MainMenu and OfficeFloor scenes. No TextMesh Pro package in repo; scenes may have placeholder TMP references to clean up in Unity.
+
+**Folder naming:** `Assets/Art`, `Assets/Scenes`, and `Assets/Scripts` are the canonical PascalCase folders for game content.

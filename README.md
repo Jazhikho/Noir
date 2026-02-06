@@ -15,19 +15,21 @@ All Unity assets are located in the `Private Eye Pierce & The Ink Spill` folder:
 ```
 /Private Eye Pierce & The Ink Spill
   /Assets
-    /Scenes            # Unity Scenes
-    /Scripts           # Gameplay scripts
+    /Art               # Models, textures, UI art (PascalCase file and folder names)
+    /Audio             # Music and SFX
+    /Scenes            # Unity scenes (PascalCase)
+    /Scripts           # Gameplay scripts (PascalCase)
     /Runtime           # Unity runtime scripts (assemblies as needed)
     /Editor            # Unity editor scripts (separate assembly)
     /Resources         # Unity ScriptableObjects/Data
     /Shaders           # Unity HLSL/ShaderGraph assets
-    /Audio             # Audio assets
-    /Art               # Models/Textures/Materials
     /Tests             # Tests
   /Packages            # Unity package manifests
   /ProjectSettings     # Unity project settings
 /Docs                  # Design docs (at root level)
 ```
+
+Asset and folder names under `Assets` use **PascalCase** (e.g. `PierceIdle.png`, `Backgrounds/`, `PuzzleAssets/`).
 
 ### Current Implementation (Graybox)
 
