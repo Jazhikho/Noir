@@ -31,7 +31,7 @@ public class UIController : MonoBehaviour
 
     public void LoadScene(string sceneName)
     {
-        SceneManager.LoadScene(sceneName);
+        SceneFader.Instance.FadeToScene(sceneName);
     }
 
     public void QuitGame()
