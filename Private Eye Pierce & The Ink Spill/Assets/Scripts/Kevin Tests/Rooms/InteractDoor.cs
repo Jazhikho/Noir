@@ -8,7 +8,7 @@ using UnityEngine.InputSystem;
 public class InteractDoor : MonoBehaviour
 {
     [Header("Destination")]
-    public Room targetRoom;
+    public RoomDefinition targetRoom;
     public string targetEntryPointName = "Left";
     public KevinTests.Rooms.RoomManager roomManager;
 
@@ -130,7 +130,7 @@ public class InteractDoor : MonoBehaviour
         Transform spawn = targetRoom.GetEntryPoint(targetEntryPointName);
         if (spawn == null)
         {
-            Debug.LogWarning($"Spawn point '{targetEntryPointName}' not found in room '{targetRoom.roomID}'");
+            Debug.LogWarning($"Spawn point '{targetEntryPointName}' not found in room '{targetRoom.roomId}'");
             return;
         }
 

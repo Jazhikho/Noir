@@ -19,6 +19,7 @@ public class CursorController : MonoBehaviour
     public Texture2D inventoryCursor;
     private Dictionary<CursorName, Texture2D> cursors = new Dictionary<CursorName, Texture2D>();
     private Dictionary<CursorName, Vector2> cursorOffsets = new Dictionary<CursorName, Vector2>();
+    private Dictionary<CursorName, Texture2D> readableCopies = new Dictionary<CursorName, Texture2D>();
     private bool carryingItem = false;
     private CursorName hiddenCursorChange = CursorName.main; //keeps record of cursor changes that are hidden while carrying an item so it can switch to correct cursor on item drop
 
@@ -47,7 +48,52 @@ public class CursorController : MonoBehaviour
         cursorOffsets.Add(CursorName.carryItem, Vector2.zero);
         cursorOffsets.Add(CursorName.inventory, new Vector2(0f, 0f));
 
-        Cursor.SetCursor(cursors[CursorName.main], cursorOffsets[CursorName.main], CursorMode.Auto);
+        SafeSetCursor(CursorName.main);
+    }
+
+    /// <summary>
+    /// Returns a texture safe for Cursor.SetCursor: always a runtime copy (RGBA32, readable, no mip) so imported textures never hit cursor API.
+    /// </summary>
+    private Texture2D GetReadableCursorTexture(CursorName name)
+    {
+        if (!cursors.TryGetValue(name, out Texture2D tex) || tex == null)
+            return null;
+        if (readableCopies.TryGetValue(name, out Texture2D copy) && copy != null)
+            return copy;
+        copy = CreateCursorSafeCopy(tex);
+        if (copy != null)
+            readableCopies[name] = copy;
+        return copy;
+    }
+
+    /// <summary>
+    /// Creates a copy that meets Cursor.SetCursor requirements: RGBA32, readable, no mip chain. Uses GPU blit so source can be any format.
+    /// </summary>
+    private static Texture2D CreateCursorSafeCopy(Texture2D source)
+    {
+        if (source == null || source.width <= 0 || source.height <= 0)
+            return null;
+        RenderTexture rt = RenderTexture.GetTemporary(source.width, source.height, 0, RenderTextureFormat.ARGB32);
+        RenderTexture previous = RenderTexture.active;
+        Graphics.Blit(source, rt);
+        RenderTexture.active = rt;
+        Texture2D copy = new Texture2D(source.width, source.height, TextureFormat.RGBA32, false);
+        copy.ReadPixels(new Rect(0, 0, source.width, source.height), 0, 0);
+        copy.Apply(false, false);
+        RenderTexture.active = previous;
+        RenderTexture.ReleaseTemporary(rt);
+        return copy;
+    }
+
+    /// <summary>
+    /// Sets the cursor using a readable texture (original or GPU copy). Cursor.SetCursor requires CPU-accessible texture data.
+    /// </summary>
+    private void SafeSetCursor(CursorName name)
+    {
+        Texture2D tex = GetReadableCursorTexture(name);
+        if (tex == null)
+            return;
+        Cursor.SetCursor(tex, cursorOffsets[name], CursorMode.Auto);
     }
 
     public void ChangeToCarryCursor(bool activate)
@@ -55,12 +101,12 @@ public class CursorController : MonoBehaviour
         carryingItem = activate;
         if (activate)
         {
-            Cursor.SetCursor(cursors[CursorName.carryItem], cursorOffsets[CursorName.carryItem], CursorMode.Auto);
+            SafeSetCursor(CursorName.carryItem);
             hiddenCursorChange = CursorName.main;
         }
         else
         {
-            Cursor.SetCursor(cursors[hiddenCursorChange], cursorOffsets[hiddenCursorChange], CursorMode.Auto);
+            SafeSetCursor(hiddenCursorChange);
         }
     }
 
@@ -75,7 +121,7 @@ public class CursorController : MonoBehaviour
 
         if (!carryingItem) //only change cursor if not carrying an inventory item
         {
-            Cursor.SetCursor(cursors[c], cursorOffsets[c], CursorMode.Auto);
+            SafeSetCursor(c);
         }
         else //but do store the change in case item is dropped
         {

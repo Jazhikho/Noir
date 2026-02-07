@@ -4,7 +4,7 @@ using UnityEngine.Events;
 public class LockedDoor : MonoBehaviour
 {
     [Header("Destination")]
-    public Room targetRoom;
+    public RoomDefinition targetRoom;
     public string targetEntryPointName = "Left";
     public KevinTests.Rooms.RoomManager roomManager;
 
@@ -24,7 +24,7 @@ public class LockedDoor : MonoBehaviour
     {
         if (IsCurrentlyLocked())
         {
-            Debug.Log("LockedDoor: Door to " + targetRoom.roomID + " is locked.");
+            Debug.Log("LockedDoor: Door to " + targetRoom.roomId + " is locked.");
             OnLockedAttempt?.Invoke();
             Interactable.EndCurrentInteraction();
             return;

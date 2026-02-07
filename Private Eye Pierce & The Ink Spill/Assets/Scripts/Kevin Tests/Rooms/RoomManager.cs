@@ -3,25 +3,37 @@ using UnityEngine;
 namespace KevinTests.Rooms
 {
     /// <summary>
-    /// Kevin Tests: room switching using Room and AdventureCameraController. Main game uses Scripts/RoomManager with RoomDefinition.
+    /// Kevin Tests: room switching using RoomDefinition and AdventureCameraController. Single source of truth for room data is RoomDefinition.
     /// </summary>
     public class RoomManager : MonoBehaviour
     {
-        public Room currentRoom;
+        public RoomDefinition currentRoom;
         public AdventureCameraController cameraController;
 
-        public void EnterRoom(Room newRoom)
+        /// <summary>
+        /// Switches the active room: deactivates current room root, activates new room root, updates camera bounds.
+        /// </summary>
+        public void EnterRoom(RoomDefinition newRoom)
         {
             if (currentRoom != null)
-                currentRoom.gameObject.SetActive(false);
+            {
+                if (currentRoom.roomRoot != null)
+                    currentRoom.roomRoot.SetActive(false);
+                if (currentRoom.background != null)
+                    currentRoom.background.SetActive(false);
+            }
 
             currentRoom = newRoom;
 
             if (currentRoom != null)
             {
-                currentRoom.gameObject.SetActive(true);
-                if (cameraController != null && currentRoom.roomBounds != null)
-                    cameraController.SetRoomBounds(currentRoom.roomBounds);
+                if (currentRoom.roomRoot != null)
+                    currentRoom.roomRoot.SetActive(true);
+                if (currentRoom.background != null)
+                    currentRoom.background.SetActive(true);
+                BoxCollider2D bounds = currentRoom.GetRoomBounds();
+                if (cameraController != null && bounds != null)
+                    cameraController.SetRoomBounds(bounds);
             }
         }
     }
