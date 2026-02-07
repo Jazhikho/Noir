@@ -1,69 +1,8 @@
-# Git LFS (Large File Storage) Configuration
-# Optimized to only track files that actually need LFS (typically > 100KB)
-# This reduces LFS storage usage while still handling large binary files.
+# Git attributes - line endings and binary handling (no LFS)
+# Large binary files (PSD, FBX, WAV, etc.) are tracked as regular Git blobs.
+# Keep repo size in check; add very large files to .gitignore if needed.
 
-# Image Files - REMOVED from LFS
-# Most game images (PNG, JPG) are under 100MB and fine in regular Git
-# Only track very large formats that are almost always huge:
-*.psd filter=lfs diff=lfs merge=lfs -text
-*.exr filter=lfs diff=lfs merge=lfs -text
-*.hdr filter=lfs diff=lfs merge=lfs -text
-# PNG, JPG, GIF, TGA, etc. are now in regular Git (fine for files < 100MB)
-# 3D Model Files (always large)
-*.fbx filter=lfs diff=lfs merge=lfs -text
-*.obj filter=lfs diff=lfs merge=lfs -text
-*.blend filter=lfs diff=lfs merge=lfs -text
-*.blend1 filter=lfs diff=lfs merge=lfs -text
-*.3ds filter=lfs diff=lfs merge=lfs -text
-*.dae filter=lfs diff=lfs merge=lfs -text
-*.gltf filter=lfs diff=lfs merge=lfs -text
-*.glb filter=lfs diff=lfs merge=lfs -text
-*.max filter=lfs diff=lfs merge=lfs -text
-*.ma filter=lfs diff=lfs merge=lfs -text
-*.mb filter=lfs diff=lfs merge=lfs -text
-# Audio Files (always large)
-*.wav filter=lfs diff=lfs merge=lfs -text
-*.mp3 filter=lfs diff=lfs merge=lfs -text
-*.ogg filter=lfs diff=lfs merge=lfs -text
-*.aiff filter=lfs diff=lfs merge=lfs -text
-*.aac filter=lfs diff=lfs merge=lfs -text
-*.flac filter=lfs diff=lfs merge=lfs -text
-*.m4a filter=lfs diff=lfs merge=lfs -text
-# Video Files (always large)
-*.mp4 filter=lfs diff=lfs merge=lfs -text
-*.mov filter=lfs diff=lfs merge=lfs -text
-*.avi filter=lfs diff=lfs merge=lfs -text
-*.webm filter=lfs diff=lfs merge=lfs -text
-# Archives and Packages (always large)
-*.zip filter=lfs diff=lfs merge=lfs -text
-*.rar filter=lfs diff=lfs merge=lfs -text
-*.7z filter=lfs diff=lfs merge=lfs -text
-*.tar filter=lfs diff=lfs merge=lfs -text
-*.gz filter=lfs diff=lfs merge=lfs -text
-# Documents - REMOVED from LFS
-# Most documentation files are small enough for regular Git
-# Only very large documents (> 50MB) would need LFS
-# *.pdf, *.docx, *.xlsx removed from LFS to reduce usage
-# Font Files (can be large)
-*.ttf filter=lfs diff=lfs merge=lfs -text
-*.otf filter=lfs diff=lfs merge=lfs -text
-*.fon filter=lfs diff=lfs merge=lfs -text
-# Unity-specific files - REMOVED from LFS
-# These are typically small text-based files that don't need LFS:
-# *.unity - Scene files are usually small text
-# *.prefab - Prefab files are usually small text
-# *.asset - Most asset files are small (except large ScriptableObjects)
-# *.mat - Material files are small
-# *.anim - Animation files are usually small
-# *.controller - Animator controllers are small
-# *.preset - Preset files are small
-# Only track large Unity-specific files that are actually binary/large:
-*.rendertexture filter=lfs diff=lfs merge=lfs -text
-*.rendertexture2d filter=lfs diff=lfs merge=lfs -text
-*.cubemap filter=lfs diff=lfs merge=lfs -text
-*.spriteatlas filter=lfs diff=lfs merge=lfs -text
-*.spriteatlasv2 filter=lfs diff=lfs merge=lfs -text
-# Keep text files as text (important!)
+# Text files - normalize line endings
 *.cs text eol=lf
 *.js text eol=lf
 *.json text eol=lf
@@ -96,6 +35,7 @@
 *.guiskin text eol=lf
 *.flare text eol=lf
 *.fontsettings text eol=lf
+# Binary / do not modify
 *.unity !text !filter !merge !diff
 *.prefab !text !filter !merge !diff
 *.asset !text !filter !merge !diff

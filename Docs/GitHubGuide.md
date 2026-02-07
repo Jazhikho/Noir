@@ -58,27 +58,7 @@ This guide assumes you know **absolutely nothing** about GitHub or Git. We'll wa
 - Ubuntu/Debian: `sudo apt-get install git`
 - Fedora: `sudo dnf install git`
 
-### Step 3: Install Git LFS (Large File Storage)
-
-**Why?** Our project uses large files (images, audio, 3D models). Git LFS handles these properly.
-
-**Windows:**
-1. Download from [git-lfs.github.com](https://git-lfs.github.com)
-2. Run the installer
-3. Open PowerShell or Command Prompt
-4. Type: `git lfs install`
-5. You should see "Git LFS initialized"
-
-**Mac:**
-1. Install Homebrew if you don't have it: `/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"`
-2. Type: `brew install git-lfs`
-3. Then: `git lfs install`
-
-**Linux:**
-- Ubuntu/Debian: `sudo apt-get install git-lfs && git lfs install`
-- Fedora: `sudo dnf install git-lfs && git lfs install`
-
-### Step 4: Tell Git Who You Are
+### Step 3: Tell Git Who You Are
 
 Open PowerShell (Windows) or Terminal (Mac/Linux) and type:
 
@@ -420,13 +400,12 @@ git config --global user.email "your.email@example.com"
 
 ### Problem: "Large files detected" or "file is too large"
 
-**What it means:** You tried to commit a file that's too big for regular Git.
+**What it means:** You tried to commit a file that's too big for Git (GitHub recommends keeping files under 100 MB).
 
 **Solution:**
-1. Make sure Git LFS is installed: `git lfs version`
-2. Make sure it's initialized: `git lfs install`
-3. The `.gitattributes` file should handle this automatically
-4. If a file was already committed before LFS was set up, you may need help from a team lead
+1. Add the file or its extension to `.gitignore` if it's a generated or local-only file (e.g. builds, caches)
+2. Otherwise, reduce the file size, use a different format, or host it elsewhere and document it in `Docs/Assets.md`
+3. If you need help, ask a team lead
 
 ### Problem: "Cannot lock ref" or "Another git process seems to be running"
 

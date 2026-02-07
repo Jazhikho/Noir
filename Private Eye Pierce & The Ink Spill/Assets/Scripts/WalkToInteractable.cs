@@ -71,7 +71,7 @@ public class WalkToInteractable : MonoBehaviour, IInteractable
         // Check if player has reached the interaction point
         float distanceToTarget = Mathf.Abs(playerMover.transform.position.x - targetInteractionX);
         
-        if (distanceToTarget <= playerMover.stopDistance)
+        if (distanceToTarget <= playerMover.StopDistance)
         {
             isWaitingForPlayer = false;
             OnPlayerArrived();
