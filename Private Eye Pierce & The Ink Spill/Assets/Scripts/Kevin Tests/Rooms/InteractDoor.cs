@@ -10,7 +10,7 @@ public class InteractDoor : MonoBehaviour
     [Header("Destination")]
     public Room targetRoom;
     public string targetEntryPointName = "Left";
-    public RoomManager roomManager;
+    public KevinTests.Rooms.RoomManager roomManager;
 
     [Header("UI")]
     public GameObject glowEffect;  // Optional: assign a glow GameObject to show when player nearby
