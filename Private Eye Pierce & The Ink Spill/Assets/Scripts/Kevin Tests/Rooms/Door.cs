@@ -5,7 +5,7 @@ public class Door : MonoBehaviour
 {
     public Room targetRoom;
     public string targetEntryPointName = "Left";
-    public RoomManager roomManager;
+    public KevinTests.Rooms.RoomManager roomManager;
 
     [SerializeField] private float teleportCooldown = 0.25f;
     private static readonly Dictionary<int, float> nextAllowed = new();

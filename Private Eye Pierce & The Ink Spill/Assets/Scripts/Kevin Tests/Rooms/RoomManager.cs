@@ -1,22 +1,28 @@
 using UnityEngine;
 
-public class RoomManager : MonoBehaviour
+namespace KevinTests.Rooms
 {
-    public Room currentRoom;
-    public AdventureCameraController cameraController;
-
-    public void EnterRoom(Room newRoom)
+    /// <summary>
+    /// Kevin Tests: room switching using Room and AdventureCameraController. Main game uses Scripts/RoomManager with RoomDefinition.
+    /// </summary>
+    public class RoomManager : MonoBehaviour
     {
-        if (currentRoom != null)
-            currentRoom.gameObject.SetActive(false);
+        public Room currentRoom;
+        public AdventureCameraController cameraController;
 
-        currentRoom = newRoom;
-
-        if (currentRoom != null)
+        public void EnterRoom(Room newRoom)
         {
-            currentRoom.gameObject.SetActive(true);
-            if (cameraController != null && currentRoom.roomBounds != null)
-                cameraController.SetRoomBounds(currentRoom.roomBounds);
+            if (currentRoom != null)
+                currentRoom.gameObject.SetActive(false);
+
+            currentRoom = newRoom;
+
+            if (currentRoom != null)
+            {
+                currentRoom.gameObject.SetActive(true);
+                if (cameraController != null && currentRoom.roomBounds != null)
+                    cameraController.SetRoomBounds(currentRoom.roomBounds);
+            }
         }
     }
 }

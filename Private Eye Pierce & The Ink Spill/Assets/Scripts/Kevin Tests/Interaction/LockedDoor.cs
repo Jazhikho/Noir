@@ -6,7 +6,7 @@ public class LockedDoor : MonoBehaviour
     [Header("Destination")]
     public Room targetRoom;
     public string targetEntryPointName = "Left";
-    public RoomManager roomManager;
+    public KevinTests.Rooms.RoomManager roomManager;
 
     [Header("Lock Settings")]
     public bool isLocked = false;
