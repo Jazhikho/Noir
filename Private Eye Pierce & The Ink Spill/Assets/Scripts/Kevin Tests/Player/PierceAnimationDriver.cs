@@ -1,0 +1,130 @@
+using System.Collections;
+using UnityEngine;
+
+public class PierceAnimationDriver : MonoBehaviour
+{
+    [Header("References")]
+    public Animator animator;
+    public PointClickController playerController;
+
+    [Header("Look Up Settings")]
+    public bool lookUpEnabled = true;
+    public float lookUpThreshold = 1.5f;
+
+    [Header("Animator Parameters")]
+    public string inspectTrigger = "Inspect";
+    public string lookingUpBool = "IsLookingUp";
+
+    [Header("Inspect Auto End")]
+    public float inspectAutoEndDelay = 0.5f;
+
+    private bool isLookingUp = false;
+    private bool autoEndAfterInspect = false;
+    private Coroutine autoEndCoroutine;
+
+    void Start()
+    {
+        if (animator == null)
+            animator = GetComponent<Animator>();
+
+        if (animator == null)
+            Debug.LogWarning("PierceAnimationDriver: No Animator found. Animation features disabled.");
+
+        if (playerController == null)
+            playerController = GetComponent<PointClickController>();
+
+        if (playerController == null)
+            playerController = FindFirstObjectByType<PointClickController>();
+    }
+
+    void Update()
+    {
+        if (!lookUpEnabled) return;
+        if (animator == null) return;
+
+        UpdateLookUp();
+    }
+
+    void UpdateLookUp()
+    {
+        if (playerController != null && playerController.IsMoving())
+        {
+            SetLookingUp(false);
+            return;
+        }
+
+        if (Camera.main == null)
+            return;
+
+        Vector2 pointerPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+
+        float playerY = transform.position.y;
+        bool shouldLookUp = pointerPos.y > playerY + lookUpThreshold;
+
+        SetLookingUp(shouldLookUp);
+    }
+
+    public void PlayInspect()
+    {
+        if (animator == null)
+        {
+            Debug.LogWarning("PierceAnimationDriver: Cannot play inspect, no Animator.");
+            return;
+        }
+
+        animator.SetTrigger(inspectTrigger);
+        Debug.Log("ANIMATION: Playing inspect animation.");
+    }
+
+    public void PlayInspectAutoEnd()
+    {
+        autoEndAfterInspect = true;
+
+        if (autoEndCoroutine != null)
+            StopCoroutine(autoEndCoroutine);
+
+        autoEndCoroutine = StartCoroutine(AutoEndFallback());
+        PlayInspect();
+    }
+
+    IEnumerator AutoEndFallback()
+    {
+        yield return new WaitForSeconds(inspectAutoEndDelay);
+        OnInspectAnimationComplete();
+    }
+
+    public void OnInspectAnimationComplete()
+    {
+        if (autoEndCoroutine != null)
+        {
+            StopCoroutine(autoEndCoroutine);
+            autoEndCoroutine = null;
+        }
+
+        if (!autoEndAfterInspect)
+            return;
+
+        autoEndAfterInspect = false;
+        Interactable.EndCurrentInteraction();
+    }
+
+    public void SetLookingUp(bool value)
+    {
+        if (isLookingUp == value) return;
+
+        isLookingUp = value;
+
+        if (animator != null)
+            animator.SetBool(lookingUpBool, value);
+    }
+
+    public bool IsLookingUp() => isLookingUp;
+
+    public void SetLookUpEnabled(bool enabled)
+    {
+        lookUpEnabled = enabled;
+
+        if (!enabled)
+            SetLookingUp(false);
+    }
+}
