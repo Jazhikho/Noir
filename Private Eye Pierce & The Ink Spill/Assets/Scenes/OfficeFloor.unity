@@ -298,7 +298,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_TargetDisplay: 0
 --- !u!1 &26591103
 GameObject:
@@ -4752,10 +4752,10 @@ Camera:
   m_LensShift: {x: 0, y: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0.30911064
-    y: 0.17839196
-    width: 0.38177875
-    height: 0.6432161
+    x: 0.024324324
+    y: 0.025925925
+    width: 0.9513514
+    height: 0.94814813
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 60
