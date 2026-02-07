@@ -128,6 +128,10 @@ public class AdventureCameraController : MonoBehaviour
         useRoomMode = !follow;
     }
 
+    /// <summary>
+    /// Sets follow mode and clamps the camera so its view stays inside the room bounds.
+    /// The camera center is constrained to [roomMin + halfViewWidth, roomMax - halfViewWidth].
+    /// </summary>
     public void SetRoomBounds(BoxCollider2D bounds)
     {
         if (bounds == null)
@@ -137,8 +141,24 @@ public class AdventureCameraController : MonoBehaviour
         }
 
         Bounds b = bounds.bounds;
-        minX = b.min.x;
-        maxX = b.max.x;
+        float roomMinX = b.min.x;
+        float roomMaxX = b.max.x;
+
+        float halfViewWidth = GetCameraHalfWidthWorld();
+        float allowedMin = roomMinX + halfViewWidth;
+        float allowedMax = roomMaxX - halfViewWidth;
+
+        if (allowedMin <= allowedMax)
+        {
+            minX = allowedMin;
+            maxX = allowedMax;
+        }
+        else
+        {
+            float roomCenterX = (roomMinX + roomMaxX) * 0.5f;
+            minX = roomCenterX;
+            maxX = roomCenterX;
+        }
 
         roomPosition = new Vector3(b.center.x, b.center.y, roomPosition.z);
 
@@ -151,6 +171,17 @@ public class AdventureCameraController : MonoBehaviour
             if (player != null)
                 target = player.transform;
         }
+    }
+
+    /// <summary>
+    /// World-space half-width of the camera view (X extent from center to edge) using orthographic size and target aspect.
+    /// </summary>
+    private float GetCameraHalfWidthWorld()
+    {
+        if (cam == null) cam = GetComponent<Camera>();
+        float orthoSize = cam != null ? cam.orthographicSize : 8f;
+        float aspect = targetAspectWidth / targetAspectHeight;
+        return orthoSize * aspect;
     }
 
     void OnValidate()

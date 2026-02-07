@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class PointClickController : MonoBehaviour
 {
@@ -12,6 +13,10 @@ public class PointClickController : MonoBehaviour
     [Header("Click Detection")]
     public LayerMask walkableLayer;
     public LayerMask interactableLayer;
+
+    [Header("Input")]
+    [Tooltip("When true, click-to-move is driven by another component (e.g. ClickController2D). This controller will only move when SetTargetX is called.")]
+    public bool inputHandledExternally = false;
 
     private float targetX;
     private bool isMoving = false;
@@ -35,7 +40,10 @@ public class PointClickController : MonoBehaviour
 
     void Update()
     {
-        HandleClickInput();
+        if (!inputHandledExternally)
+        {
+            HandleClickInput();
+        }
 
         if (movementEnabled)
         {
@@ -47,6 +55,8 @@ public class PointClickController : MonoBehaviour
     {
         if (!Input.GetMouseButtonDown(0)) return;
         if (!movementEnabled) return;
+        if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
+            return;
 
         Vector2 mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
@@ -167,6 +177,18 @@ public class PointClickController : MonoBehaviour
         transform.position = pos;
     }
 
+    /// <summary>
+    /// Sets the target X position for the player to walk to. Used by ClickController2D and RoomManager when input is driven externally.
+    /// </summary>
+    public void SetTargetX(float x)
+    {
+        if (!movementEnabled) return;
+        targetX = x;
+        currentTarget = null;
+        walkingToInteractable = false;
+        isMoving = true;
+    }
+
     public bool IsMoving()
     {
         return isMoving;
@@ -175,5 +197,14 @@ public class PointClickController : MonoBehaviour
     public bool IsMovementEnabled()
     {
         return movementEnabled;
+    }
+
+    /// <summary>
+    /// Sets sprite facing: true = face left, false = face right. Used when spawning after a room transition.
+    /// </summary>
+    public void SetFaceLeft(bool faceLeft)
+    {
+        if (spriteRenderer != null)
+            spriteRenderer.flipX = faceLeft;
     }
 }

@@ -4,7 +4,7 @@ using UnityEngine.EventSystems;
 
 /// <summary>
 /// Handles click-to-move and interaction in 2D. Converts screen clicks to world position, clamps to walk bounds,
-/// and notifies hovered IInteractable (e.g. doors, WalkToInteractable) on click.
+/// and notifies hovered IInteractable (e.g. doors, WalkToInteractable) on click. Drives PointClickController (Pierce) when assigned.
 /// </summary>
 public class ClickController2D : MonoBehaviour
 {
@@ -19,9 +19,9 @@ public class ClickController2D : MonoBehaviour
     public Camera cam;
 
     /// <summary>
-    /// Player mover that receives click-to-move targets.
+    /// Pierce (player) controller that receives click-to-move targets. If unset, finds PointClickController in scene at Start.
     /// </summary>
-    public PlayerMover2D mover;
+    public PointClickController pierceController;
 
     /// <summary>
     /// Current room's floor collider; clamps walk target X to this bounds.
@@ -36,14 +36,16 @@ public class ClickController2D : MonoBehaviour
     private IInteractable _hovered;
 
     /// <summary>
-    /// Caches camera reference. Uses Camera.main if cam is not assigned in the Inspector.
+    /// Caches camera and pierce controller. Uses Camera.main and FindFirstObjectByType PointClickController if not assigned.
     /// </summary>
     private void Start()
     {
         if (cam == null)
-        {
             cam = Camera.main;
-        }
+        if (pierceController == null)
+            pierceController = FindFirstObjectByType<PointClickController>();
+        if (pierceController != null)
+            pierceController.inputHandledExternally = true;
     }
 
     /// <summary>
@@ -97,6 +99,7 @@ public class ClickController2D : MonoBehaviour
             targetX = Mathf.Clamp(targetX, b.min.x, b.max.x);
         }
 
-        mover.SetTargetX(targetX);
+        if (pierceController != null)
+            pierceController.SetTargetX(targetX);
     }
 }

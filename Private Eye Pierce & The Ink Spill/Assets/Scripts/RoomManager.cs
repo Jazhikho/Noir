@@ -13,12 +13,17 @@ public class RoomManager : MonoBehaviour
     public Transform player;
     public Transform mainCamera;
     public ClickController2D clickController;
+    [Tooltip("Used for click-to-move and door transitions. If unset, PointClickController on player is used when present.")]
     public PlayerMover2D playerMover;
+    [Tooltip("Pierce controller. If unset and player is set, found via GetComponent on player at runtime. Used for door transition target when playerMover is null.")]
+    public PointClickController pierceController;
 
     [Tooltip("Room ID to enter when the game starts. Pierce spawns at this room's Spawn_Left.")]
     public string initialRoomId = "Pierce";
     [Tooltip("Distance (world units) from door X at which the room transition triggers.")]
     public float doorReachDistance = 0.5f;
+    [Tooltip("When spawning at a door, move the player this many units inward so they are not standing on the door. Tune in Inspector.")]
+    public float spawnInwardOffset = 0.8f;
     [Tooltip("Optional. When set, room change plays a page-turn animation (direction from spawn: Right = right-to-left, Left = left-to-right).")]
     public PageTurnTransition pageTurnTransition;
 
@@ -26,6 +31,7 @@ public class RoomManager : MonoBehaviour
 
     private Dictionary<string, RoomDefinition> _map;
     private RoomDefinition _current;
+    private AdventureCameraController _cameraController;
     private string _pendingRoomId;
     private string _pendingSpawnKey;
     private float _pendingDoorWorldX;
@@ -54,6 +60,18 @@ public class RoomManager : MonoBehaviour
     private void Start()
     {
         EnterRoom(initialRoomId, "Left", null);
+    }
+
+    /// <summary>
+    /// Resolves pierceController reference: assigned field, then player (including inactive children), then any in scene.
+    /// </summary>
+    private void ResolvePierceController()
+    {
+        if (pierceController != null) return;
+        if (player != null)
+            pierceController = player.GetComponentInChildren<PointClickController>(true);
+        if (pierceController == null)
+            pierceController = FindFirstObjectByType<PointClickController>(FindObjectsInactive.Include);
     }
 
     /// <summary>
@@ -94,9 +112,10 @@ public class RoomManager : MonoBehaviour
             Debug.LogError($"[RoomManager] PrepareTransitionToDoor failed: doorTransform is null for roomId '{roomId}'. Assign the door's transform.", this);
             return;
         }
-        if (playerMover == null)
+        ResolvePierceController();
+        if (playerMover == null && pierceController == null)
         {
-            Debug.LogError("[RoomManager] PrepareTransitionToDoor failed: playerMover is null. Assign PlayerMover2D in the Inspector.", this);
+            Debug.LogError("[RoomManager] PrepareTransitionToDoor failed: assign Player Mover (PlayerMover2D) or add PointClickController to the Player GameObject and assign Player in RoomManager.", this);
             return;
         }
         _pendingRoomId = roomId;
@@ -108,7 +127,10 @@ public class RoomManager : MonoBehaviour
             _pendingLeavingRoomId = null;
         float roomCenterX = GetRoomCenterX(_current);
         _pendingDoorWasOnLeft = _current != null && doorTransform.position.x < roomCenterX;
-        playerMover.SetTargetX(_pendingDoorWorldX);
+        if (playerMover != null)
+            playerMover.SetTargetX(_pendingDoorWorldX);
+        else if (pierceController != null)
+            pierceController.SetTargetX(_pendingDoorWorldX);
     }
 
     /// <summary>
@@ -127,13 +149,23 @@ public class RoomManager : MonoBehaviour
             return;
         }
 
-        if (_current != null && _current.roomRoot != null)
-            _current.roomRoot.SetActive(false);
+        if (_current != null)
+        {
+            if (_current.roomRoot != null)
+                _current.roomRoot.SetActive(false);
+            if (_current.background != null)
+                _current.background.SetActive(false);
+        }
 
         _current = next;
 
-        if (_current.roomRoot != null)
-            _current.roomRoot.SetActive(true);
+        if (_current != null)
+        {
+            if (_current.roomRoot != null)
+                _current.roomRoot.SetActive(true);
+            if (_current.background != null)
+                _current.background.SetActive(true);
+        }
 
         Vector3 spawnPosition;
         if (leavingRoomId == null)
@@ -141,43 +173,57 @@ public class RoomManager : MonoBehaviour
             Transform spawn = _current.GetSpawn(spawnKey);
             spawnPosition = SpawnPositionFrom(spawn);
         }
-        else if (roomId == "Room1")
-        {
-            Transform spawn = _current.GetSpawn("Right");
-            spawnPosition = SpawnPositionFrom(spawn);
-        }
-        else if (roomId == "Hallway" && leavingRoomId == "Room1")
-        {
-            Transform doorInNewRoom = GetDoorInRoom(_current, "Room1");
-            if (doorInNewRoom != null)
-                spawnPosition = SpawnPositionFrom(doorInNewRoom);
-            else
-                spawnPosition = SpawnPositionFrom(_current.GetSpawn("Left"));
-        }
         else
         {
-            string key;
-            if (doorWasOnLeft)
-                key = "Right";
+            Transform doorInNewRoom = GetDoorInRoom(_current, leavingRoomId);
+            if (doorInNewRoom != null)
+            {
+                spawnPosition = SpawnPositionFrom(doorInNewRoom);
+                float inward = (doorWasOnLeft ? -1f : 1f) * spawnInwardOffset;
+                spawnPosition.x += inward;
+            }
+            else if (roomId == "Room1")
+            {
+                Transform spawn = _current.GetSpawn("Right");
+                spawnPosition = SpawnPositionFrom(spawn);
+            }
             else
-                key = "Left";
-            Transform spawn = _current.GetSpawn(key);
-            spawnPosition = SpawnPositionFrom(spawn);
+            {
+                string key = doorWasOnLeft ? "Right" : "Left";
+                Transform spawn = _current.GetSpawn(key);
+                spawnPosition = SpawnPositionFrom(spawn);
+            }
         }
 
         if (player != null)
             player.position = new Vector3(spawnPosition.x, player.position.y, player.position.z);
 
+        ResolvePierceController();
+        if (leavingRoomId != null && pierceController != null)
+            pierceController.SetFaceLeft(doorWasOnLeft);
         if (playerMover != null)
             playerMover.SetTargetX(player.position.x);
+        else if (pierceController != null)
+            pierceController.SetTargetX(player.position.x);
 
-        if (_current.cameraAnchor != null && mainCamera != null)
+        if (mainCamera != null)
         {
-            mainCamera.position = new Vector3(_current.cameraAnchor.position.x, _current.cameraAnchor.position.y, mainCamera.position.z);
-            mainCamera.eulerAngles = new Vector3(0f, 0f, _current.cameraAngleDegrees);
+            if (_cameraController == null)
+                _cameraController = mainCamera.GetComponent<AdventureCameraController>();
+
+            BoxCollider2D bounds = _current != null ? _current.GetRoomBounds() : null;
+            if (_cameraController != null && bounds != null)
+            {
+                _cameraController.SetRoomBounds(bounds);
+            }
+            else if (_current != null && _current.cameraAnchor != null)
+            {
+                mainCamera.position = new Vector3(_current.cameraAnchor.position.x, _current.cameraAnchor.position.y, mainCamera.position.z);
+                mainCamera.eulerAngles = new Vector3(0f, 0f, _current.cameraAngleDegrees);
+            }
         }
 
-        if (clickController != null && _current.floorCollider != null)
+        if (clickController != null && _current != null && _current.floorCollider != null)
             clickController.walkBounds = _current.floorCollider;
     }
 

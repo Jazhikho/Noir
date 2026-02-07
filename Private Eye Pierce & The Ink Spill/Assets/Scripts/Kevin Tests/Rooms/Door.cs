@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 public class Door : MonoBehaviour
 {
-    public Room targetRoom;
+    public RoomDefinition targetRoom;
     public string targetEntryPointName = "Left";
     public KevinTests.Rooms.RoomManager roomManager;
 
@@ -22,7 +22,7 @@ public class Door : MonoBehaviour
             Transform spawnPoint = targetRoom.GetEntryPoint(targetEntryPointName);
             if (spawnPoint == null)
             {
-                Debug.LogWarning("Spawn point '" + targetEntryPointName + "' not found in room '" + targetRoom.roomID + "'");
+                Debug.LogWarning("Spawn point '" + targetEntryPointName + "' not found in room '" + targetRoom.roomId + "'");
                 return;
             }
 
