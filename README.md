@@ -15,19 +15,21 @@ All Unity assets are located in the `Private Eye Pierce & The Ink Spill` folder:
 ```
 /Private Eye Pierce & The Ink Spill
   /Assets
-    /Scenes            # Unity Scenes
-    /Scripts           # Gameplay scripts
+    /Art               # Models, textures, UI art (PascalCase file and folder names)
+    /Audio             # Music and SFX
+    /Scenes            # Unity scenes (PascalCase)
+    /Scripts           # Gameplay scripts (PascalCase)
     /Runtime           # Unity runtime scripts (assemblies as needed)
     /Editor            # Unity editor scripts (separate assembly)
     /Resources         # Unity ScriptableObjects/Data
     /Shaders           # Unity HLSL/ShaderGraph assets
-    /Audio             # Audio assets
-    /Art               # Models/Textures/Materials
     /Tests             # Tests
   /Packages            # Unity package manifests
   /ProjectSettings     # Unity project settings
 /Docs                  # Design docs (at root level)
 ```
+
+Asset and folder names under `Assets` use **PascalCase** (e.g. `PierceIdle.png`, `Backgrounds/`, `PuzzleAssets/`).
 
 ### Current Implementation (Graybox)
 
@@ -79,7 +81,7 @@ See in-scene setup (RoomManager, ClickController, room definitions, floor collid
 
 ### Setup Steps
 
-1. **Install Git and Git LFS** (see [GitHubGuide.md](Docs/GitHubGuide.md) for detailed instructions)
+1. **Install Git** (see [GitHubGuide.md](Docs/GitHubGuide.md) for detailed instructions)
 2. **Clone the repository** to your computer
 3. **Open the project in Unity** (Unity 6.0.3 or later - see `ProjectSettings/ProjectVersion.txt` for exact version)
 4. **Wait for packages to import** - Unity will automatically download required packages from `Packages/manifest.json`
@@ -88,16 +90,6 @@ See in-scene setup (RoomManager, ClickController, room definitions, floor collid
    - If errors persist, go to **Window → Package Manager** and click "Refresh" or "Reimport All"
    - Close and reopen Unity if packages still haven't imported
 6. Check the `/Docs` folder for design documentation
-
-### Important: Git LFS Required
-
-This project uses **Git LFS (Large File Storage)** for large binary files (textures, audio, models, etc.). 
-
-**Before cloning:**
-- Install Git LFS: [git-lfs.github.com](https://git-lfs.github.com)
-- Run `git lfs install` after installation
-
-The `.gitattributes` file is already configured to handle large files automatically.
 
 ## Troubleshooting
 
