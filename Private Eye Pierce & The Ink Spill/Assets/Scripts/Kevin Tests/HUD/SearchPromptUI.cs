@@ -1,11 +1,13 @@
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class SearchPromptUI : MonoBehaviour
 {
-    [Header("UI References")]
+    [Header("UI References (Use TMP or Legacy Text)")]
     public GameObject panelRoot;
-    public Text searchingText;
+    public TMP_Text tmpText;
+    public Text legacyText;
 
     [Header("Text")]
     public string defaultText = "Searching...";
@@ -27,8 +29,7 @@ public class SearchPromptUI : MonoBehaviour
 
     public void Show()
     {
-        if (searchingText != null)
-            searchingText.text = defaultText;
+        SetText(defaultText);
 
         if (panelRoot != null)
             panelRoot.SetActive(true);
@@ -36,8 +37,7 @@ public class SearchPromptUI : MonoBehaviour
 
     public void Show(string text)
     {
-        if (searchingText != null)
-            searchingText.text = text;
+        SetText(text);
 
         if (panelRoot != null)
             panelRoot.SetActive(true);
@@ -51,7 +51,9 @@ public class SearchPromptUI : MonoBehaviour
 
     public void SetText(string text)
     {
-        if (searchingText != null)
-            searchingText.text = text;
+        if (tmpText != null)
+            tmpText.text = text;
+        else if (legacyText != null)
+            legacyText.text = text;
     }
 }

@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -13,8 +14,9 @@ public class ButtonMashPromptUI : MonoBehaviour
         public string text = "Click to escape!";
     }
 
-    [Header("UI References")]
-    public Text promptText;
+    [Header("UI References (Use TMP or Legacy Text)")]
+    public TMP_Text tmpText;
+    public Text legacyText;
     public GameObject panelRoot;
 
     [Header("Bob Animation")]
@@ -36,9 +38,17 @@ public class ButtonMashPromptUI : MonoBehaviour
 
     void Awake()
     {
-        if (promptText != null)
+        if (tmpText != null)
         {
-            rectTransform = promptText.GetComponent<RectTransform>();
+            rectTransform = tmpText.GetComponent<RectTransform>();
+        }
+        else if (legacyText != null)
+        {
+            rectTransform = legacyText.GetComponent<RectTransform>();
+        }
+
+        if (rectTransform != null)
+        {
             originalPosition = rectTransform.anchoredPosition;
             originalScale = rectTransform.localScale;
         }
@@ -87,13 +97,16 @@ public class ButtonMashPromptUI : MonoBehaviour
 
     public void SetText(string text)
     {
-        if (promptText != null)
-            promptText.text = text;
+        if (tmpText != null)
+            tmpText.text = text;
+        else if (legacyText != null)
+            legacyText.text = text;
     }
 
     void UpdateTextFromProgress()
     {
-        if (progressTexts.Count == 0 || promptText == null) return;
+        if (progressTexts.Count == 0) return;
+        if (tmpText == null && legacyText == null) return;
 
         string textToUse = progressTexts[0].text;
         foreach (var pt in progressTexts)
@@ -103,7 +116,7 @@ public class ButtonMashPromptUI : MonoBehaviour
             else
                 break;
         }
-        promptText.text = textToUse;
+        SetText(textToUse);
     }
 
     IEnumerator PunchCoroutine()

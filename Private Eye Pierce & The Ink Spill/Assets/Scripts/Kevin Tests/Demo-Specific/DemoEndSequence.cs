@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using TMPro;
 using System.Collections;
 
 public class DemoEndSequence : MonoBehaviour
@@ -10,8 +11,9 @@ public class DemoEndSequence : MonoBehaviour
     public CanvasGroup fadeCanvasGroup;
     public float fadeDuration = 1.5f;
 
-    [Header("To Be Continued")]
-    public Text toBeContinuedText;
+    [Header("To Be Continued (Use TMP or Legacy Text)")]
+    public TMP_Text tmpText;
+    public Text legacyText;
     public float textDisplayDuration = 3f;
     public float textFadeDuration = 0.5f;
 
@@ -46,12 +48,20 @@ public class DemoEndSequence : MonoBehaviour
             fadeCanvasGroup.gameObject.SetActive(false);
         }
 
-        if (toBeContinuedText != null)
+        if (tmpText != null)
         {
-            Color c = toBeContinuedText.color;
+            Color c = tmpText.color;
             c.a = 0f;
-            toBeContinuedText.color = c;
-            toBeContinuedText.gameObject.SetActive(false);
+            tmpText.color = c;
+            tmpText.gameObject.SetActive(false);
+        }
+
+        if (legacyText != null)
+        {
+            Color c = legacyText.color;
+            c.a = 0f;
+            legacyText.color = c;
+            legacyText.gameObject.SetActive(false);
         }
     }
 
@@ -135,9 +145,13 @@ public class DemoEndSequence : MonoBehaviour
 
     IEnumerator ShowToBeContinued()
     {
-        if (toBeContinuedText == null) yield break;
+        if (tmpText == null && legacyText == null) yield break;
 
-        toBeContinuedText.gameObject.SetActive(true);
+        if (tmpText != null)
+            tmpText.gameObject.SetActive(true);
+
+        if (legacyText != null)
+            legacyText.gameObject.SetActive(true);
 
         float elapsed = 0f;
         while (elapsed < textFadeDuration)
@@ -145,16 +159,36 @@ public class DemoEndSequence : MonoBehaviour
             elapsed += Time.deltaTime;
             float t = Mathf.Clamp01(elapsed / textFadeDuration);
 
-            Color c = toBeContinuedText.color;
-            c.a = t;
-            toBeContinuedText.color = c;
+            if (tmpText != null)
+            {
+                Color c = tmpText.color;
+                c.a = t;
+                tmpText.color = c;
+            }
+
+            if (legacyText != null)
+            {
+                Color c = legacyText.color;
+                c.a = t;
+                legacyText.color = c;
+            }
 
             yield return null;
         }
 
-        Color finalColor = toBeContinuedText.color;
-        finalColor.a = 1f;
-        toBeContinuedText.color = finalColor;
+        if (tmpText != null)
+        {
+            Color c = tmpText.color;
+            c.a = 1f;
+            tmpText.color = c;
+        }
+
+        if (legacyText != null)
+        {
+            Color c = legacyText.color;
+            c.a = 1f;
+            legacyText.color = c;
+        }
 
         Debug.Log("DEMO END: To be continued...");
 
