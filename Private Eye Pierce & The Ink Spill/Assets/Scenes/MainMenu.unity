@@ -1478,12 +1478,12 @@ MonoBehaviour:
       m_Calls: []
   m_text: "Ashley H: Audio and Narrative Design\nBelle H: Character, Environment
     & Puzzle Art, Narrative Design\nChris D: Project Management, Programming, Repo
-    Tech\nKaya W: Character Art\nKevin M: Production, Game Design/Programming, Audio
-    Design\nMatthew N: UI Design, Programming\nSam N: Puzzle Art\n\nThank you to
-    Team Circe for Narrative dialogue and room coding\n\nMusic: \nI Knew a Guy by
-    Kevin MacLeod\r\nShady Business by David Renda \r\nDances and Dames by Kevin
-    MacLeod\r\nCool Vibes by Kevin MacLeod \r\nClosed Curtains by David Renda\r\nUntapped
-    Well by Ashley H. and Joshua Hammond"
+    Tech\nKaya W: Character Art, Playtesting\nKevin M: Production, Game Design/Programming,
+    Audio Design\nMatthew N: UI Design, Programming, Playtesting, Debugging\nSam
+    N: Puzzle Art\n\nThank you to Team Circe for Narrative dialogue and room coding\n\nMusic:
+    \nI Knew a Guy by Kevin MacLeod\r\nShady Business by David Renda \r\nDances and
+    Dames by Kevin MacLeod\r\nCool Vibes by Kevin MacLeod \r\nClosed Curtains by
+    David Renda\r\nUntapped Well by Ashley H. and Joshua Hammond"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
