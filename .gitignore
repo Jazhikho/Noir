@@ -97,3 +97,5 @@ Private Eye Pierce & The Ink Spill/Assets/Art/Carmen Evangeline/NPC (2).pixil
 
 # Local GDD copy (canonical content; keep untracked per team preference)
 Docs/GDD.md
+RunWebGLBuild.bat
+RunWebGLBuild.ps1
