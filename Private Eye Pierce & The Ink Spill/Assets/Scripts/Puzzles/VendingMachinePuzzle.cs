@@ -12,7 +12,7 @@ using System.Collections.Generic;
 public class VendingMachinePuzzle : MonoBehaviour
 {
     [Header("Progress Settings")]
-    public float targetProgress = 100f;
+    public float targetProgress = 20f;
     public float clickPower = 1f;
 
     [Header("Early Stage Resistance")]

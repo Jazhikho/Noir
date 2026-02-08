@@ -4453,7 +4453,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b1394654e5e6a24899381df6cde30d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::VendingMachinePuzzle
-  targetProgress: 100
+  targetProgress: 20
   clickPower: 1
   resistanceInterval: 2
   resistanceStep: 1
