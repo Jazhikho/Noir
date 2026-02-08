@@ -58,6 +58,9 @@ sysinfo.txt
 *.unitypackage
 *.app
 
+# WebGL / release build output (host elsewhere; not versioned)
+[Ff]or[Rr]elease/
+
 # Crashlytics generated file
 crashlytics-build.properties
 

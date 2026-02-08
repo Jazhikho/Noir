@@ -1,11 +1,24 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.InputSystem;
 using System.Collections.Generic;
 
 public class AdventureHUDController : MonoBehaviour
 {
+    /// <summary>Cursor display mode: default, interactable (highlight), or door (arrow).</summary>
+    public enum CursorType
+    {
+        Main,
+        Interactable,
+        Door
+    }
+
     [Header("UI Elements")]
     public Image cursorImage;
+    /// <summary>Sprite shown when cursor is over an interactable (e.g. bat, vending machine). Assign your highlight cursor image here.</summary>
+    public Sprite interactableCursorSprite;
+    /// <summary>Sprite shown when cursor is over a door. Assign your arrow/pointer image here.</summary>
+    public Sprite doorCursorSprite;
     public Image highlightImage;
     public Image arrowImage;
 
@@ -31,6 +44,8 @@ public class AdventureHUDController : MonoBehaviour
     private RectTransform highlightRect;
     private Canvas parentCanvas;
     private List<LockedDoor> lockedDoors = new List<LockedDoor>();
+    private Sprite _mainCursorSprite;
+    private CursorType _currentCursorType = CursorType.Main;
 
     void Awake()
     {
@@ -42,7 +57,10 @@ public class AdventureHUDController : MonoBehaviour
         Instance = this;
 
         if (cursorImage != null)
+        {
             cursorRect = cursorImage.GetComponent<RectTransform>();
+            _mainCursorSprite = cursorImage.sprite;
+        }
 
         if (highlightImage != null)
             highlightRect = highlightImage.GetComponent<RectTransform>();
@@ -69,6 +87,10 @@ public class AdventureHUDController : MonoBehaviour
 
         if (hideSystemCursor)
             Cursor.visible = false;
+
+        EnsureCursorOnTop();
+        if (cursorImage != null && hudEnabled && !cursorImage.gameObject.activeSelf)
+            cursorImage.gameObject.SetActive(true);
     }
 
     void Update()
@@ -86,13 +108,39 @@ public class AdventureHUDController : MonoBehaviour
         UpdateArrow();
     }
 
+    /// <summary>
+    /// Returns current mouse position in screen space. Uses new Input System when available so cursor stays in sync.
+    /// </summary>
+    private Vector2 GetMouseScreenPosition()
+    {
+        if (Mouse.current != null)
+            return Mouse.current.position.ReadValue();
+        return new Vector2(Input.mousePosition.x, Input.mousePosition.y);
+    }
+
+    /// <summary>
+    /// Puts the cursor as the last child of the canvas so it draws on top of other UI in the office scene.
+    /// </summary>
+    private void EnsureCursorOnTop()
+    {
+        if (cursorRect == null || parentCanvas == null) return;
+        if (cursorRect.parent == parentCanvas.transform) return;
+        cursorRect.SetParent(parentCanvas.transform, true);
+        cursorRect.SetAsLastSibling();
+    }
+
     void UpdateCursor()
     {
         if (cursorImage == null || cursorRect == null) return;
 
+        if (!cursorImage.gameObject.activeSelf)
+            cursorImage.gameObject.SetActive(true);
         cursorImage.enabled = true;
 
-        Vector2 screenPos = Input.mousePosition;
+        if (cursorRect.parent != null)
+            cursorRect.SetAsLastSibling();
+
+        Vector2 screenPos = GetMouseScreenPosition();
 
         if (parentCanvas != null && parentCanvas.renderMode == RenderMode.ScreenSpaceOverlay)
         {
@@ -114,7 +162,7 @@ public class AdventureHUDController : MonoBehaviour
     {
         if (highlightImage == null) return;
 
-        Vector2 worldPos = mainCamera.ScreenToWorldPoint(Input.mousePosition);
+        Vector2 worldPos = mainCamera.ScreenToWorldPoint(GetMouseScreenPosition());
 
         RaycastHit2D hit = Physics2D.Raycast(worldPos, Vector2.zero, 0f, interactableLayer);
 
@@ -216,6 +264,37 @@ public class AdventureHUDController : MonoBehaviour
     {
         if (cursorImage != null)
             cursorImage.enabled = visible;
+    }
+
+    /// <summary>
+    /// Sets the cursor appearance: Main (default), Interactable (highlight), or Door (arrow). Call from ClickController2D when hover target changes.
+    /// </summary>
+    public void SetCursorType(CursorType type)
+    {
+        if (_currentCursorType == type) return;
+        _currentCursorType = type;
+
+        if (cursorImage == null) return;
+        Sprite s = GetSpriteForCursorType(type);
+        if (s != null)
+            cursorImage.sprite = s;
+        else
+            cursorImage.sprite = _mainCursorSprite;
+    }
+
+    private Sprite GetSpriteForCursorType(CursorType type)
+    {
+        if (type == CursorType.Interactable)
+        {
+            if (interactableCursorSprite != null) return interactableCursorSprite;
+            if (highlightImage != null && highlightImage.sprite != null) return highlightImage.sprite;
+        }
+        else if (type == CursorType.Door)
+        {
+            if (doorCursorSprite != null) return doorCursorSprite;
+            if (arrowImage != null && arrowImage.sprite != null) return arrowImage.sprite;
+        }
+        return null;
     }
 
     public void SetHighlightVisible(bool visible)

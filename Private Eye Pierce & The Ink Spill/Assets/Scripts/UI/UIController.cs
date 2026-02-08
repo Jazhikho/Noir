@@ -64,16 +64,26 @@ public class UIController : MonoBehaviour
     }
 
     /// <summary>
-    /// Loads the main game scene (OfficeFloor). Uses SceneFader when available for a fade transition.
+    /// Loads the main game scene (OfficeFloor). Uses SceneFader when available for a fade transition. Fades out the Jukebox over the same duration as the screen fade.
     /// </summary>
     public void StartGame()
     {
-        if (SceneFader.Instance != null)
-            SceneFader.Instance.FadeToScene("OfficeFloor");
-        else
+        if (SceneFader.Instance == null)
+        {
             SceneManager.LoadScene("OfficeFloor");
+            return;
+        }
+
+        Jukebox jukebox = FindFirstObjectByType<Jukebox>();
+        if (jukebox != null)
+            jukebox.FadeOut(SceneFader.Instance.fadeDuration);
+
+        SceneFader.Instance.FadeToScene("OfficeFloor");
     }
 
+    /// <summary>
+    /// Loads a scene. When loading MainMenu or OfficeFloor, fades out the Jukebox over the same duration as the screen fade.
+    /// </summary>
     public void LoadScene(string sceneName)
     {
         if (SceneFader.Instance == null)
@@ -81,6 +91,16 @@ public class UIController : MonoBehaviour
             SceneManager.LoadScene(sceneName);
             return;
         }
+
+        string mainMenuScene = "MainMenu";
+        string officeScene = "OfficeFloor";
+        if (sceneName == mainMenuScene || sceneName == officeScene)
+        {
+            Jukebox jukebox = FindFirstObjectByType<Jukebox>();
+            if (jukebox != null)
+                jukebox.FadeOut(SceneFader.Instance.fadeDuration);
+        }
+
         SceneFader.Instance.FadeToScene(sceneName);
     }
 

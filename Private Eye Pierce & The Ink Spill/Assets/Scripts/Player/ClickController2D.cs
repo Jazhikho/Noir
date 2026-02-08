@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.EventSystems;
+using System.Collections.Generic;
 
 /// <summary>
 /// Handles click-to-move and interaction in 2D. Converts screen clicks to world position, clamps to walk bounds,
@@ -29,9 +30,9 @@ public class ClickController2D : MonoBehaviour
     public Collider2D walkBounds;
 
     /// <summary>
-    /// Optional. When set, cursor switches to Squawk "use" icon when hovering doors.
+    /// Optional. When set, cursor switches to "use" when hovering any IInteractable (via AdventureHUDController.SetCursorType).
     /// </summary>
-    public CursorController cursorController;
+    public AdventureHUDController adventureHUDController;
 
     private IInteractable _hovered;
 
@@ -56,51 +57,69 @@ public class ClickController2D : MonoBehaviour
         if (cam == null) return;
         if (UIController.IsPaused) return;
 
-        // Ignore clicks over UI (prevents weirdness later when you add dialogue UI)
-        if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
-            return;
+        Vector2 screenPos = Mouse.current != null ? Mouse.current.position.ReadValue() : (Vector2)Input.mousePosition;
+        Vector2 world = cam.ScreenToWorldPoint(screenPos);
 
-        Vector2 world = cam.ScreenToWorldPoint(Mouse.current.position.ReadValue());
-
-        // Hover check for interactables
+        // Hover check for interactables first (so cursor and clicks work even when UI is under the pointer)
         Collider2D hitHover = Physics2D.OverlapPoint(world, interactableMask);
         IInteractable newHover = null;
         if (hitHover != null)
+        {
             newHover = hitHover.GetComponent<IInteractable>();
+            if (newHover == null)
+                newHover = hitHover.GetComponent<Interactable>();
+        }
 
         if (_hovered != newHover)
         {
             _hovered?.OnHover(false);
             _hovered = newHover;
             _hovered?.OnHover(true);
-            if (cursorController != null)
+            if (adventureHUDController != null)
             {
-                if (newHover is DoorInteractable)
-                    cursorController.ChangeCursor(CursorController.CursorName.use);
+                if (newHover == null)
+                    adventureHUDController.SetCursorType(AdventureHUDController.CursorType.Main);
+                else if (newHover is DoorInteractable)
+                    adventureHUDController.SetCursorType(AdventureHUDController.CursorType.Door);
                 else
-                    cursorController.ChangeCursor(CursorController.CursorName.main);
+                    adventureHUDController.SetCursorType(AdventureHUDController.CursorType.Interactable);
             }
         }
 
-        if (!Mouse.current.leftButton.wasPressedThisFrame) return;
-
-        // If we clicked an interactable, do that instead of moving
-        if (_hovered != null)
+        bool clicked = Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame;
+        if (clicked && _hovered != null)
         {
             _hovered.OnClick();
             return;
         }
 
-        // Otherwise: click-anywhere move (X only), clamped to walk bounds
-        float targetX = world.x;
+        if (clicked && IsPointerOverBlockingUI(screenPos))
+            return;
 
-        if (walkBounds != null)
+        if (clicked)
         {
-            Bounds b = walkBounds.bounds;
-            targetX = Mathf.Clamp(targetX, b.min.x, b.max.x);
+            float targetX = world.x;
+            if (walkBounds != null)
+            {
+                Bounds b = walkBounds.bounds;
+                targetX = Mathf.Clamp(targetX, b.min.x, b.max.x);
+            }
+            if (pierceController != null)
+                pierceController.SetTargetX(targetX);
         }
+    }
 
-        if (pierceController != null)
-            pierceController.SetTargetX(targetX);
+    /// <summary>
+    /// Returns true if the given screen position is over UI that blocks raycasts. Uses the same position source as our click so world clicks are not wrongly ignored. Ensure the HUD cursor image has Raycast Target disabled so it does not block.
+    /// </summary>
+    private bool IsPointerOverBlockingUI(Vector2 screenPosition)
+    {
+        if (EventSystem.current == null) return false;
+
+        PointerEventData pointerData = new PointerEventData(EventSystem.current) { position = screenPosition };
+        List<RaycastResult> results = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(pointerData, results);
+
+        return results.Count > 0;
     }
 }
