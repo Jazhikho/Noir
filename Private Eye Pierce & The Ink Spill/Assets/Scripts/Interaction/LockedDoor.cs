@@ -6,7 +6,6 @@ public class LockedDoor : MonoBehaviour
     [Header("Destination")]
     public RoomDefinition targetRoom;
     public string targetEntryPointName = "Left";
-    public KevinTests.Rooms.RoomManager roomManager;
 
     [Header("Lock Settings")]
     public bool isLocked = false;
@@ -30,7 +29,13 @@ public class LockedDoor : MonoBehaviour
             return;
         }
 
-        if (roomManager != null && targetRoom != null)
+        if (RoomManager.Instance == null)
+        {
+            Debug.LogError("[LockedDoor] RoomManager.Instance is null. Add a RoomManager to the scene.", this);
+            Interactable.EndCurrentInteraction();
+            return;
+        }
+        if (targetRoom != null)
         {
             var player = FindFirstObjectByType<PointClickController>();
 
@@ -41,12 +46,12 @@ public class LockedDoor : MonoBehaviour
                 player.SetFloorY(spawnPoint.position.y);
             }
 
-            roomManager.EnterRoom(targetRoom);
+            RoomManager.Instance.EnterRoom(targetRoom);
             OnEntered?.Invoke();
         }
         else
         {
-            Debug.LogWarning("LockedDoor: Missing RoomManager or TargetRoom.");
+            Debug.LogWarning("LockedDoor: TargetRoom is not assigned.");
         }
 
         Interactable.EndCurrentInteraction();

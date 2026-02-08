@@ -10,7 +10,7 @@ public class WalkToInteractable : MonoBehaviour, IInteractable
     [Header("Interaction Position")]
     // The specific point where the player should stand to interact. If null, uses defaultOffset.
     [SerializeField] private Transform interactionPoint;
-    
+
     // Distance from this object where the player should stand if no interaction point is set.
     [SerializeField] private float defaultOffset = 1f;
 
@@ -28,7 +28,7 @@ public class WalkToInteractable : MonoBehaviour, IInteractable
     private void Start()
     {
         playerMover = FindFirstObjectByType<PlayerMover2D>();
-        
+
         if (playerMover == null)
         {
             Debug.LogError($"WalkToInteractable on {gameObject.name}: No PlayerMover2D found in scene. This component requires a PlayerMover2D to function.", this);
@@ -70,7 +70,7 @@ public class WalkToInteractable : MonoBehaviour, IInteractable
 
         // Check if player has reached the interaction point
         float distanceToTarget = Mathf.Abs(playerMover.transform.position.x - targetInteractionX);
-        
+
         if (distanceToTarget <= playerMover.StopDistance)
         {
             isWaitingForPlayer = false;
