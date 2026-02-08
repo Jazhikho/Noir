@@ -126,7 +126,9 @@ public class PointClickController : MonoBehaviour
             {
                 FaceInteractable();
                 DisableMovement();
-                currentTarget.OnPlayerArrived();
+                Interactable[] allOnObject = currentTarget.GetComponents<Interactable>();
+                for (int i = allOnObject.Length - 1; i >= 0; i--)
+                    allOnObject[i].OnPlayerArrived();
                 walkingToInteractable = false;
             }
         }
@@ -188,6 +190,21 @@ public class PointClickController : MonoBehaviour
         targetX = x;
         currentTarget = null;
         walkingToInteractable = false;
+        isMoving = true;
+    }
+
+    /// <summary>
+    /// Sets the target X and the interactable to notify on arrival. Used when an Interactable (e.g. bat, vending machine) is clicked via ClickController2D.
+    /// Re-enables movement if it was disabled so the new interaction can start.
+    /// </summary>
+    public void SetTargetXForInteractable(float x, Interactable interactable)
+    {
+        if (interactable == null) return;
+        if (!movementEnabled)
+            EnableMovement();
+        targetX = x;
+        currentTarget = interactable;
+        walkingToInteractable = true;
         isMoving = true;
     }
 

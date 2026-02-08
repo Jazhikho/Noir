@@ -18,9 +18,6 @@ public class DialogueUI : MonoBehaviour
     private int currentLineIndex;
     private bool dialogueActive;
 
-    private PlayerInput playerInput;
-    private InputAction advanceAction;
-
     private Coroutine typingCoroutine;
 
     private void Awake()
@@ -29,27 +26,14 @@ public class DialogueUI : MonoBehaviour
             dialoguePanel.SetActive(false);
         else
             Debug.LogWarning("DialogueUI: Dialogue Panel not assigned!");
+    }
 
-        playerInput = GetComponent<PlayerInput>();
-        if (playerInput == null)
-        {
-            Debug.LogError("PlayerInput component not found on DialogueUI GameObject.");
+    private void Update()
+    {
+        if (!dialogueActive)
             return;
-        }
-
-        advanceAction = playerInput.actions["AdvanceDialogue"];
-    }
-
-    private void OnEnable()
-    {
-        if (advanceAction != null)
-            advanceAction.performed += OnAdvanceDialogue;
-    }
-
-    private void OnDisable()
-    {
-        if (advanceAction != null)
-            advanceAction.performed -= OnAdvanceDialogue;
+        if (Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame)
+            AdvanceDialogue();
     }
 
     public void StartDialogue(DialogueAsset dialogue)
@@ -87,16 +71,21 @@ public class DialogueUI : MonoBehaviour
         DialogueLine line = currentDialogue.lines[currentLineIndex];
 
         // Set speaker name
-        speakerNameText.text = (line.speaker == Speaker.Player) ? currentDialogue.playerName : currentDialogue.otherName;
+        if (line.speaker == Speaker.Player)
+            speakerNameText.text = currentDialogue.playerName;
+        else
+            speakerNameText.text = currentDialogue.otherName;
 
         // Set portraits with overrides or defaults
-        playerImage.sprite = (line.speaker == Speaker.Player && line.portrait != null)
-            ? line.portrait
-            : currentDialogue.defaultPlayerPortrait;
+        if (line.speaker == Speaker.Player && line.portrait != null)
+            playerImage.sprite = line.portrait;
+        else
+            playerImage.sprite = currentDialogue.defaultPlayerPortrait;
 
-        npcImage.sprite = (line.speaker == Speaker.Other && line.portrait != null)
-            ? line.portrait
-            : currentDialogue.defaultOtherPortrait;
+        if (line.speaker == Speaker.Other && line.portrait != null)
+            npcImage.sprite = line.portrait;
+        else
+            npcImage.sprite = currentDialogue.defaultOtherPortrait;
 
         Color brightColor = Color.white;
         Color dimColor = new Color(0.5f, 0.5f, 0.5f, 1f);
@@ -114,10 +103,13 @@ public class DialogueUI : MonoBehaviour
         }
 
         // Start typing text coroutine
-        typingCoroutine = StartCoroutine(TypeText(line.text, line.typingSpeed, currentLineIndex));
+        typingCoroutine = StartCoroutine(TypeText(line.text, line.typingSpeed));
     }
 
-    private IEnumerator TypeText(string fullText, float typingSpeed, int currentlineIndex)
+    /// <summary>
+    /// Types out the line character by character. Uses currentLineIndex field when invoking onLineEnd.
+    /// </summary>
+    private IEnumerator TypeText(string fullText, float typingSpeed)
     {
         dialogueText.text = "";
         if (typingSpeed <= 0f)
@@ -131,31 +123,30 @@ public class DialogueUI : MonoBehaviour
             dialogueText.text += c;
             yield return new WaitForSeconds(typingSpeed);
         }
-        Debug.Log("OnLineEnd");
 
-        currentDialogue.lines[currentLineIndex].onLineEnd.Invoke();
+        if (currentDialogue != null && currentLineIndex < currentDialogue.lines.Count)
+            currentDialogue.lines[currentLineIndex].onLineEnd.Invoke();
     }
 
-    public void OnAdvanceDialogue(InputAction.CallbackContext context)
+    /// <summary>
+    /// Advances dialogue on click: either completes the current line typewriter or moves to the next line.
+    /// </summary>
+    private void AdvanceDialogue()
     {
         if (!dialogueActive)
             return;
 
-        // If currently typing, finish immediately
         if (typingCoroutine != null)
         {
             StopCoroutine(typingCoroutine);
             typingCoroutine = null;
-
-            // Show full text instantly
             if (currentDialogue != null && currentLineIndex < currentDialogue.lines.Count)
                 dialogueText.text = currentDialogue.lines[currentLineIndex].text;
+            currentDialogue.lines[currentLineIndex].onLineEnd.Invoke();
             return;
         }
-        Debug.Log("OnLineEnd");
 
         currentDialogue.lines[currentLineIndex].onLineEnd.Invoke();
-
         currentLineIndex++;
         ShowLine();
     }

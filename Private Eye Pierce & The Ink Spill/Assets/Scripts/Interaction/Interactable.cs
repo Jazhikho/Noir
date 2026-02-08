@@ -1,7 +1,10 @@
 using UnityEngine;
 using UnityEngine.Events;
 
-public class Interactable : MonoBehaviour
+/// <summary>
+/// Walk-to interactable used by PointClickController and ClickController2D. Implements IInteractable so ClickController2D can detect and trigger it (e.g. bat in office).
+/// </summary>
+public class Interactable : MonoBehaviour, IInteractable
 {
     [Header("Interaction Position")]
     public Transform interactionPoint;
@@ -15,6 +18,23 @@ public class Interactable : MonoBehaviour
     void Start()
     {
         playerController = FindFirstObjectByType<PointClickController>();
+    }
+
+    /// <summary>
+    /// Called by ClickController2D when the player clicks this object. Starts walk to interaction point; OnPlayerArrived is called when the player arrives.
+    /// </summary>
+    public void OnClick()
+    {
+        if (playerController == null) return;
+        float x = GetInteractionX();
+        playerController.SetTargetXForInteractable(x, this);
+    }
+
+    /// <summary>
+    /// Called when the cursor enters or leaves this interactable. Optional visual feedback can be added.
+    /// </summary>
+    public void OnHover(bool isHovering)
+    {
     }
 
     public float GetInteractionX()

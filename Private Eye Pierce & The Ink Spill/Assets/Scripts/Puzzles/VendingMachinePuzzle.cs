@@ -4,6 +4,11 @@ using UnityEngine.Events;
 using System.Collections;
 using System.Collections.Generic;
 
+/// <summary>
+/// Pierce's hand gets stuck; fullscreen arm image shakes. Click fast to escape.
+/// Setup: Same GameObject (or sibling) needs Interactable with On Interact -> VendingMachinePuzzle.StartPuzzle.
+/// Player must be in the same room as the vending machine (e.g. enter the Hallway first); otherwise the collider is inactive.
+/// </summary>
 public class VendingMachinePuzzle : MonoBehaviour
 {
     [Header("Progress Settings")]
@@ -23,8 +28,14 @@ public class VendingMachinePuzzle : MonoBehaviour
 
     [Header("Fullscreen Arm (Shakes During Puzzle)")]
     public Image fullscreenArmImage;
+    /// <summary>Optional. Fullscreen black panel behind the arm. Assign a fullscreen Image (black) so the arm sits on black.</summary>
+    public Image blackBackgroundImage;
     public float maxShakeIntensity = 20f;
     public float clickWindowDuration = 1f;
+
+    [Header("Player (Hidden During Puzzle)")]
+    /// <summary>Pierce (player) root to hide while the puzzle is active. If unset, finds PointClickController in scene.</summary>
+    public GameObject playerRoot;
 
     [Header("Hand Reveal (Shows After Escape)")]
     public Image handRevealImage;
@@ -58,12 +69,21 @@ public class VendingMachinePuzzle : MonoBehaviour
         {
             armRectTransform = fullscreenArmImage.GetComponent<RectTransform>();
             armOriginalPosition = armRectTransform.anchoredPosition;
+            fullscreenArmImage.preserveAspect = true;
             fullscreenArmImage.gameObject.SetActive(false);
         }
 
+        if (blackBackgroundImage != null)
+            blackBackgroundImage.gameObject.SetActive(false);
+
         if (handRevealImage != null)
-        {
             handRevealImage.gameObject.SetActive(false);
+
+        if (playerRoot == null)
+        {
+            PointClickController p = FindFirstObjectByType<PointClickController>();
+            if (p != null)
+                playerRoot = p.gameObject;
         }
     }
 
@@ -81,13 +101,26 @@ public class VendingMachinePuzzle : MonoBehaviour
     {
         if (puzzleActive) return;
 
+        if (fullscreenArmImage == null)
+            Debug.LogWarning("VendingMachinePuzzle: Fullscreen Arm Image is not assigned. Assign it in the Inspector so the arm is visible during the puzzle.", this);
+
         puzzleActive = true;
         currentProgress = 0f;
         resistanceTimer = 0f;
         clickTimestamps.Clear();
 
+        if (playerRoot != null)
+            playerRoot.SetActive(false);
+
+        if (blackBackgroundImage != null)
+        {
+            blackBackgroundImage.gameObject.SetActive(true);
+            SetImageAlpha(blackBackgroundImage, 1f);
+        }
+
         if (fullscreenArmImage != null)
         {
+            fullscreenArmImage.preserveAspect = true;
             fullscreenArmImage.gameObject.SetActive(true);
             SetImageAlpha(fullscreenArmImage, 1f);
         }
@@ -96,7 +129,12 @@ public class VendingMachinePuzzle : MonoBehaviour
         {
             promptUI.SetVisible(true);
             promptUI.SetProgress01(0f);
+            Canvas canvas = GetPuzzleCanvas();
+            if (canvas != null)
+                promptUI.SetTextToFront(canvas);
         }
+        else
+            Debug.LogWarning("VendingMachinePuzzle: ButtonMashPromptUI (Prompt UI) is not assigned. Assign it for click-to-escape feedback.", this);
 
         OnPuzzleStarted?.Invoke();
         Debug.Log("PUZZLE: Vending machine puzzle started. Click to escape!");
@@ -194,6 +232,9 @@ public class VendingMachinePuzzle : MonoBehaviour
 
         yield return StartCoroutine(ShowHandReveal());
 
+        if (playerRoot != null)
+            playerRoot.SetActive(true);
+
         if (breakRoomUnlockedFlag != null)
             breakRoomUnlockedFlag.Toggle();
 
@@ -216,6 +257,9 @@ public class VendingMachinePuzzle : MonoBehaviour
         }
 
         fullscreenArmImage.gameObject.SetActive(false);
+
+        if (blackBackgroundImage != null)
+            blackBackgroundImage.gameObject.SetActive(false);
     }
 
     IEnumerator ShowHandReveal()
@@ -245,6 +289,18 @@ public class VendingMachinePuzzle : MonoBehaviour
         Color c = img.color;
         c.a = alpha;
         img.color = c;
+    }
+
+    /// <summary>
+    /// Returns the canvas used by the puzzle UI (arm/background) so the prompt text can be moved in front of it.
+    /// </summary>
+    Canvas GetPuzzleCanvas()
+    {
+        if (fullscreenArmImage != null)
+            return fullscreenArmImage.GetComponentInParent<Canvas>();
+        if (blackBackgroundImage != null)
+            return blackBackgroundImage.GetComponentInParent<Canvas>();
+        return null;
     }
 
     public float GetProgressNormalized() => currentProgress / targetProgress;

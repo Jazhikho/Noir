@@ -37,13 +37,12 @@ public class LockedDoor : MonoBehaviour
         }
         if (targetRoom != null)
         {
-            var player = FindFirstObjectByType<PointClickController>();
-
+            PointClickController playerController = FindFirstObjectByType<PointClickController>();
             Transform spawnPoint = targetRoom.GetEntryPoint(targetEntryPointName);
-            if (spawnPoint != null && player != null)
+
+            if (spawnPoint != null && playerController != null)
             {
-                player.TeleportToX(spawnPoint.position.x);
-                player.SetFloorY(spawnPoint.position.y);
+                playerController.TeleportToX(spawnPoint.position.x);
             }
 
             RoomManager.Instance.EnterRoom(targetRoom);

@@ -16,7 +16,7 @@ public class DoorInteractable : MonoBehaviour, IInteractable
     public string targetSpawn = "Left";
 
     /// <summary>
-    /// Starts a room transition to targetRoomId when the player reaches this door.
+    /// Starts a room transition to targetRoomId when the player reaches this door. Sets the player's walk target to this door (using the same controller as ClickController2D) so they move there; RoomManager triggers the transition on arrival.
     /// </summary>
     public void OnClick()
     {
@@ -25,6 +25,11 @@ public class DoorInteractable : MonoBehaviour, IInteractable
             Debug.LogError("[DoorInteractable] RoomManager.Instance is null. Is there a RoomManager in the scene with no duplicate?", this);
             return;
         }
+
+        PointClickController pierce = UnityEngine.Object.FindFirstObjectByType<PointClickController>();
+        if (pierce != null)
+            pierce.SetTargetX(transform.position.x);
+
         RoomManager.Instance.PrepareTransitionToDoor(targetRoomId, targetSpawn, transform);
     }
 

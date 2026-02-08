@@ -18,6 +18,8 @@ public class ButtonMashPromptUI : MonoBehaviour
     public TMP_Text tmpText;
     public Text legacyText;
     public GameObject panelRoot;
+    /// <summary>Optional. Assign to have only this (e.g. text) drawn in front of overlays; panel stays behind. If unset, the TMP/legacy text transform is used.</summary>
+    public Transform textFrontRoot;
 
     [Header("Bob Animation")]
     public float bobSpeed = 2f;
@@ -35,6 +37,8 @@ public class ButtonMashPromptUI : MonoBehaviour
     private Vector3 originalScale;
     private Coroutine punchCoroutine;
     private float currentProgress = 0f;
+    private Transform _textOriginalParent;
+    private int _textOriginalSiblingIndex;
 
     void Awake()
     {
@@ -72,14 +76,50 @@ public class ButtonMashPromptUI : MonoBehaviour
 
     public void SetVisible(bool visible)
     {
+        if (visible)
+            gameObject.SetActive(true);
+
         if (panelRoot != null)
             panelRoot.SetActive(visible);
+
+        if (!visible)
+            SetTextBackToPanel();
 
         if (visible)
         {
             currentProgress = 0f;
             UpdateTextFromProgress();
         }
+    }
+
+    /// <summary>
+    /// Reparents the text (or textFrontRoot) to the canvas as last sibling so it draws in front. Panel stays in place (behind).
+    /// </summary>
+    public void SetTextToFront(Canvas canvas)
+    {
+        if (canvas == null) return;
+        Transform textRoot = textFrontRoot != null ? textFrontRoot : rectTransform != null ? rectTransform : null;
+        if (textRoot == null) return;
+        if (textRoot.parent == canvas.transform) return;
+
+        _textOriginalParent = textRoot.parent;
+        _textOriginalSiblingIndex = textRoot.GetSiblingIndex();
+        textRoot.SetParent(canvas.transform, true);
+        textRoot.SetAsLastSibling();
+    }
+
+    /// <summary>
+    /// Puts the text back under the panel. Call when hiding the prompt.
+    /// </summary>
+    public void SetTextBackToPanel()
+    {
+        if (_textOriginalParent == null) return;
+        Transform textRoot = textFrontRoot != null ? textFrontRoot : rectTransform != null ? rectTransform : null;
+        if (textRoot == null) return;
+
+        textRoot.SetParent(_textOriginalParent, true);
+        textRoot.SetSiblingIndex(_textOriginalSiblingIndex);
+        _textOriginalParent = null;
     }
 
     public void NotifyMash()
