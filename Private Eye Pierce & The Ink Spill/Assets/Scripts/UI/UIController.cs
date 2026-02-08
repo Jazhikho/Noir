@@ -17,7 +17,7 @@ public class UIController : MonoBehaviour
         {
             pauseMenu.SetActive(false);
         }
-        ApplyPausedState(false);
+        //ApplyPausedState(false);
     }
 
     /// <summary>
@@ -27,7 +27,7 @@ public class UIController : MonoBehaviour
     {
         if (pauseMenu != null)
             pauseMenu.SetActive(true);
-        ApplyPausedState(true);
+        //ApplyPausedState(true);
     }
 
     /// <summary>
@@ -37,7 +37,7 @@ public class UIController : MonoBehaviour
     {
         if (pauseMenu != null)
             pauseMenu.SetActive(false);
-        ApplyPausedState(false);
+        //ApplyPausedState(false);
     }
 
     /// <summary>
@@ -48,20 +48,20 @@ public class UIController : MonoBehaviour
         if (pauseMenu == null) return;
         bool willBeVisible = !pauseMenu.activeSelf;
         pauseMenu.SetActive(willBeVisible);
-        ApplyPausedState(willBeVisible);
+        //ApplyPausedState(willBeVisible);
     }
 
     /// <summary>
     /// Applies time scale, cursor visibility/lock, and IsPaused based on whether the game is paused (menu open).
     /// </summary>
     /// <param name="paused">True when pause menu is open, false when playing.</param>
-    private void ApplyPausedState(bool paused)
+    /*private void ApplyPausedState(bool paused)
     {
         IsPaused = paused;
         Time.timeScale = paused ? 0f : 1f;
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
-    }
+    }*/
 
     /// <summary>
     /// Loads the main game scene (OfficeFloor). Uses SceneFader when available for a fade transition. Fades out the Jukebox over the same duration as the screen fade.
