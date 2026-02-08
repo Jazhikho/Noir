@@ -53,8 +53,7 @@ public class RoomDefinition : MonoBehaviour
     /// <returns>The entry point transform, or null if not assigned.</returns>
     public Transform GetEntryPoint(string entranceName)
     {
-        if (entranceName == "Right") return spawnRight;
-        return spawnLeft;
+        return GetSpawn(entranceName);
     }
 
     /// <summary>

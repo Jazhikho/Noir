@@ -40,6 +40,8 @@ public class PointClickController : MonoBehaviour
 
     void Update()
     {
+        if (UIController.IsPaused) return;
+
         if (!inputHandledExternally)
         {
             HandleClickInput();

@@ -54,6 +54,7 @@ public class ClickController2D : MonoBehaviour
     private void Update()
     {
         if (cam == null) return;
+        if (UIController.IsPaused) return;
 
         // Ignore clicks over UI (prevents weirdness later when you add dialogue UI)
         if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())

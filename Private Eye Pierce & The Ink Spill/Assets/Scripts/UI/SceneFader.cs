@@ -33,6 +33,32 @@ public class SceneFader : MonoBehaviour
         StartCoroutine(FadeOutAndLoad(sceneName));
     }
 
+    /// <summary>
+    /// Fades the fade panel to black over the given duration. Yields until complete. Does not load a scene or fade in after.
+    /// Used by DemoEndSequence and any other flow that needs a fade-to-black without a scene change.
+    /// </summary>
+    /// <param name="duration">Time in seconds to fade from current alpha to 1.</param>
+    /// <returns>Coroutine enumerator.</returns>
+    public IEnumerator FadeToBlack(float duration)
+    {
+        if (fadePanel == null) yield break;
+        fadePanel.gameObject.SetActive(true);
+        Color color = fadePanel.color;
+        float startAlpha = color.a;
+        float elapsed = 0f;
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            color.a = Mathf.Lerp(startAlpha, 1f, Mathf.Clamp01(elapsed / duration));
+            fadePanel.color = color;
+            yield return null;
+        }
+
+        color.a = 1f;
+        fadePanel.color = color;
+    }
+
     IEnumerator FadeIn()
     {
         float elapsed = 0f;

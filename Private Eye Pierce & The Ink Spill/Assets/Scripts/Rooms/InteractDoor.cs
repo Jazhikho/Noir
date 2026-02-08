@@ -10,7 +10,6 @@ public class InteractDoor : MonoBehaviour
     [Header("Destination")]
     public RoomDefinition targetRoom;
     public string targetEntryPointName = "Left";
-    public KevinTests.Rooms.RoomManager roomManager;
 
     [Header("UI")]
     public GameObject glowEffect;  // Optional: assign a glow GameObject to show when player nearby
@@ -119,7 +118,12 @@ public class InteractDoor : MonoBehaviour
 
     private void TryTeleport(Collider2D other)
     {
-        if (roomManager == null || targetRoom == null) return;
+        if (RoomManager.Instance == null)
+        {
+            Debug.LogError("[InteractDoor] RoomManager.Instance is null. Add a RoomManager to the scene.", this);
+            return;
+        }
+        if (targetRoom == null) return;
 
         int key = other.GetInstanceID();
         float now = Time.time;
@@ -176,6 +180,6 @@ public class InteractDoor : MonoBehaviour
         Physics2D.SyncTransforms();
 
         // Then swap rooms (updates camera bounds)
-        roomManager.EnterRoom(targetRoom);
+        RoomManager.Instance.EnterRoom(targetRoom);
     }
 }

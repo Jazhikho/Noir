@@ -90,7 +90,10 @@ public class DemoEndSequence : MonoBehaviour
 
         Debug.Log("DEMO END: Starting end sequence...");
 
-        yield return StartCoroutine(FadeToBlack());
+        if (SceneFader.Instance != null)
+            yield return StartCoroutine(SceneFader.Instance.FadeToBlack(fadeDuration));
+        else
+            yield return StartCoroutine(FadeToBlack());
 
         yield return StartCoroutine(ShowToBeContinued());
 

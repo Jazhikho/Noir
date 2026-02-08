@@ -149,23 +149,7 @@ public class RoomManager : MonoBehaviour
             return;
         }
 
-        if (_current != null)
-        {
-            if (_current.roomRoot != null)
-                _current.roomRoot.SetActive(false);
-            if (_current.background != null)
-                _current.background.SetActive(false);
-        }
-
-        _current = next;
-
-        if (_current != null)
-        {
-            if (_current.roomRoot != null)
-                _current.roomRoot.SetActive(true);
-            if (_current.background != null)
-                _current.background.SetActive(true);
-        }
+        ApplyRoomSwitch(next);
 
         Vector3 spawnPosition;
         if (leavingRoomId == null)
@@ -206,6 +190,54 @@ public class RoomManager : MonoBehaviour
         else if (pierceController != null)
             pierceController.SetTargetX(player.position.x);
 
+        ApplyCameraAndClickBounds();
+    }
+
+    /// <summary>
+    /// Enters a room by room definition only: switches active room and updates camera/click bounds. Does not move the player.
+    /// Used by Door, InteractDoor, and LockedDoor after they teleport the player themselves.
+    /// </summary>
+    /// <param name="newRoom">Room to enter (must not be null).</param>
+    public void EnterRoom(RoomDefinition newRoom)
+    {
+        if (newRoom == null)
+        {
+            Debug.LogError("[RoomManager] EnterRoom(RoomDefinition) failed: newRoom is null.", this);
+            return;
+        }
+        ApplyRoomSwitch(newRoom);
+        ApplyCameraAndClickBounds();
+    }
+
+    /// <summary>
+    /// Deactivates current room root/background, sets _current to next, activates next room root/background.
+    /// </summary>
+    private void ApplyRoomSwitch(RoomDefinition next)
+    {
+        if (_current != null)
+        {
+            if (_current.roomRoot != null)
+                _current.roomRoot.SetActive(false);
+            if (_current.background != null)
+                _current.background.SetActive(false);
+        }
+
+        _current = next;
+
+        if (_current != null)
+        {
+            if (_current.roomRoot != null)
+                _current.roomRoot.SetActive(true);
+            if (_current.background != null)
+                _current.background.SetActive(true);
+        }
+    }
+
+    /// <summary>
+    /// Updates camera bounds (or anchor/angle) and clickController walk bounds for _current room.
+    /// </summary>
+    private void ApplyCameraAndClickBounds()
+    {
         if (mainCamera != null)
         {
             if (_cameraController == null)
