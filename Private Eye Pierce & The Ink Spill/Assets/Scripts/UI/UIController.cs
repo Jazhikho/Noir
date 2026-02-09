@@ -111,13 +111,13 @@ public class UIController : MonoBehaviour
     public void QuitGame()
     {
         Time.timeScale = 1f;
-        if (UnityEditor.EditorApplication.isPlaying == true)
+        /*if (UnityEditor.EditorApplication.isPlaying == true)
         { 
             UnityEditor.EditorApplication.isPlaying = false;
         }
         else
-        {
+        {*/
             Application.Quit();
-        }
+        //}
     }
 }
