@@ -298,7 +298,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 100
+  m_SortingOrder: 24
   m_TargetDisplay: 0
 --- !u!1 &26591103
 GameObject:
@@ -4373,7 +4373,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 200
+  m_SortingOrder: 24
   m_TargetDisplay: 0
 --- !u!1 &1222992893
 GameObject:
