@@ -1646,7 +1646,6 @@ GameObject:
   - component: {fileID: 437290180}
   - component: {fileID: 437290182}
   - component: {fileID: 437290181}
-  - component: {fileID: 437290184}
   - component: {fileID: 437290183}
   - component: {fileID: 437290185}
   m_Layer: 6
@@ -1800,35 +1799,6 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   showExitArrow: 1
---- !u!114 &437290184
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 437290179}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4c634dafdac92564891ae4782ab301c5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Interactable
-  interactionPoint: {fileID: 437290180}
-  defaultOffset: 1
-  OnInteract:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 437290183}
-        m_TargetAssemblyTypeName: LockedDoor, Assembly-CSharp
-        m_MethodName: UseDoor
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
 --- !u!114 &437290185
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2945,6 +2915,9 @@ MonoBehaviour:
   bat: {fileID: 1709559386}
   door: {fileID: 437290179}
   brokenDoorSprite: {fileID: 7317441055069821419, guid: aa67080d375eee74e9abf7e7b4b357a0, type: 3}
+  backgroundRenderer: {fileID: 2088140872}
+  brokenWindowBackground: {fileID: 7609269607446010227, guid: 6fc9542548ca49440a28359de4064d6a, type: 3}
+  lockedDoor: {fileID: 437290183}
   dialogueRunner: {fileID: 1682519117}
   doorLockedDialogue: {fileID: 11400000, guid: 120b6ffd9832798479142a32c17dddda, type: 2}
   needBatDialogue: {fileID: 11400000, guid: f07eb60def50aa74ab4bc3319dd68a4e, type: 2}
@@ -4400,7 +4373,7 @@ Transform:
   m_GameObject: {fileID: 1222992893}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 9, y: -6, z: 0}
+  m_LocalPosition: {x: 3.91, y: -6, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -5269,7 +5242,7 @@ Transform:
   m_GameObject: {fileID: 1461135965}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -9, y: -6, z: 0}
+  m_LocalPosition: {x: -0.77, y: -6, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -7197,9 +7170,9 @@ Camera:
   m_LensShift: {x: 0, y: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0.024324324
+    x: 0.13333334
     y: 0.025925925
-    width: 0.9513514
+    width: 0.73333335
     height: 0.94814813
   near clip plane: 0.3
   far clip plane: 1000

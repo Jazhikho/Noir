@@ -28,13 +28,11 @@ public class VendingMachinePuzzle : MonoBehaviour
 
     [Header("Fullscreen Arm (Shakes During Puzzle)")]
     public Image fullscreenArmImage;
-    /// <summary>Optional. Fullscreen black panel behind the arm. Assign a fullscreen Image (black) so the arm sits on black.</summary>
     public Image blackBackgroundImage;
     public float maxShakeIntensity = 20f;
     public float clickWindowDuration = 1f;
 
     [Header("Player (Hidden During Puzzle)")]
-    /// <summary>Pierce (player) root to hide while the puzzle is active. If unset, finds PointClickController in scene.</summary>
     public GameObject playerRoot;
 
     [Header("Hand Reveal (Shows After Escape)")]
@@ -58,6 +56,7 @@ public class VendingMachinePuzzle : MonoBehaviour
 
     private float currentProgress = 0f;
     private bool puzzleActive = false;
+    private bool puzzleCompleted = false;
     private float resistanceTimer = 0f;
     private List<float> clickTimestamps = new List<float>();
     private RectTransform armRectTransform;
@@ -100,6 +99,11 @@ public class VendingMachinePuzzle : MonoBehaviour
     public void StartPuzzle()
     {
         if (puzzleActive) return;
+        if (puzzleCompleted)
+        {
+            Interactable.EndCurrentInteraction();
+            return;
+        }
 
         if (fullscreenArmImage == null)
             Debug.LogWarning("VendingMachinePuzzle: Fullscreen Arm Image is not assigned. Assign it in the Inspector so the arm is visible during the puzzle.", this);
@@ -213,6 +217,7 @@ public class VendingMachinePuzzle : MonoBehaviour
     void CompletePuzzle()
     {
         puzzleActive = false;
+        puzzleCompleted = true;
 
         Debug.Log("PUZZLE: Vending machine puzzle completed!");
         OnPuzzleCompleted?.Invoke();
@@ -291,9 +296,6 @@ public class VendingMachinePuzzle : MonoBehaviour
         img.color = c;
     }
 
-    /// <summary>
-    /// Returns the canvas used by the puzzle UI (arm/background) so the prompt text can be moved in front of it.
-    /// </summary>
     Canvas GetPuzzleCanvas()
     {
         if (fullscreenArmImage != null)
@@ -305,4 +307,5 @@ public class VendingMachinePuzzle : MonoBehaviour
 
     public float GetProgressNormalized() => currentProgress / targetProgress;
     public bool IsPuzzleActive() => puzzleActive;
+    public bool IsPuzzleCompleted() => puzzleCompleted;
 }

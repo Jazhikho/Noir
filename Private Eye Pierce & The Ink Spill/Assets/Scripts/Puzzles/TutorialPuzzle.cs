@@ -3,9 +3,6 @@ using UnityEngine.Events;
 
 namespace KevinTests.Puzzles
 {
-    /// <summary>
-    /// Kevin Tests: tutorial puzzle with dialogue integration. Main game uses Scripts/TutorialPuzzle.
-    /// </summary>
     public class TutorialPuzzle : MonoBehaviour
     {
         [Header("Object References")]
@@ -14,6 +11,14 @@ namespace KevinTests.Puzzles
 
         [Header("Door Sprite")]
         public Sprite brokenDoorSprite;
+
+        [Header("Background")]
+        public SpriteRenderer backgroundRenderer;
+        public Sprite brokenWindowBackground;
+
+        [Header("Door Transition")]
+        [Tooltip("Reference to the LockedDoor component on the tutorial door. Used to transition after the window is broken.")]
+        public LockedDoor lockedDoor;
 
         [Header("Dialogue")]
         public DialogueRunner dialogueRunner;
@@ -71,7 +76,7 @@ namespace KevinTests.Puzzles
         {
             if (hasBat)
             {
-                if (autoReenableMovement) Interactable.EndCurrentInteraction();
+                Interactable.EndCurrentInteraction();
                 return;
             }
 
@@ -91,7 +96,7 @@ namespace KevinTests.Puzzles
                 waitingForDialogue = true;
                 dialogueRunner.StartDialogue(batPickedUpDialogue);
             }
-            else if (autoReenableMovement)
+            else
             {
                 Interactable.EndCurrentInteraction();
             }
@@ -99,13 +104,55 @@ namespace KevinTests.Puzzles
 
         public void InteractWithDoor()
         {
+            // Door already broken - use LockedDoor to transition to next room
             if (doorOpened)
             {
-                Debug.Log("PUZZLE: The door is already open.");
-                if (autoReenableMovement) Interactable.EndCurrentInteraction();
+                if (lockedDoor != null)
+                {
+                    lockedDoor.UseDoor();
+                }
+                else
+                {
+                    Interactable.EndCurrentInteraction();
+                }
                 return;
             }
 
+            // Has bat - break window immediately
+            if (hasBat)
+            {
+                doorOpened = true;
+
+                if (brokenDoorSprite != null)
+                {
+                    SpriteRenderer doorSR = door.GetComponent<SpriteRenderer>();
+                    if (doorSR != null) doorSR.sprite = brokenDoorSprite;
+                }
+
+                if (backgroundRenderer != null && brokenWindowBackground != null)
+                {
+                    backgroundRenderer.sprite = brokenWindowBackground;
+                }
+
+                if (tutorialCompleteFlag != null)
+                    tutorialCompleteFlag.Toggle();
+
+                Debug.Log("PUZZLE: Pierce smashes the window with the bat and unlocks the door.");
+                OnDoorOpened?.Invoke();
+
+                if (dialogueRunner != null && doorOpenedDialogue != null)
+                {
+                    waitingForDialogue = true;
+                    dialogueRunner.StartDialogue(doorOpenedDialogue);
+                }
+                else
+                {
+                    Interactable.EndCurrentInteraction();
+                }
+                return;
+            }
+
+            // No bat - first time trying door
             if (!doorTriedOnce)
             {
                 doorTriedOnce = true;
@@ -117,50 +164,23 @@ namespace KevinTests.Puzzles
                     waitingForDialogue = true;
                     dialogueRunner.StartDialogue(doorLockedDialogue);
                 }
-                else if (autoReenableMovement)
+                else
                 {
                     Interactable.EndCurrentInteraction();
                 }
                 return;
             }
 
-            if (!hasBat)
-            {
-                Debug.Log("PUZZLE: Pierce needs something to break the window.");
-                OnNeedBat?.Invoke();
+            // No bat - tried before, needs hint
+            Debug.Log("PUZZLE: Pierce needs something to break the window.");
+            OnNeedBat?.Invoke();
 
-                if (dialogueRunner != null && needBatDialogue != null)
-                {
-                    waitingForDialogue = true;
-                    dialogueRunner.StartDialogue(needBatDialogue);
-                }
-                else if (autoReenableMovement)
-                {
-                    Interactable.EndCurrentInteraction();
-                }
-                return;
-            }
-
-            doorOpened = true;
-
-            if (brokenDoorSprite != null)
-            {
-                SpriteRenderer doorSR = door.GetComponent<SpriteRenderer>();
-                if (doorSR != null) doorSR.sprite = brokenDoorSprite;
-            }
-
-            if (tutorialCompleteFlag != null)
-                tutorialCompleteFlag.Toggle();
-
-            Debug.Log("PUZZLE: Pierce smashes the window with the bat and unlocks the door.");
-            OnDoorOpened?.Invoke();
-
-            if (dialogueRunner != null && doorOpenedDialogue != null)
+            if (dialogueRunner != null && needBatDialogue != null)
             {
                 waitingForDialogue = true;
-                dialogueRunner.StartDialogue(doorOpenedDialogue);
+                dialogueRunner.StartDialogue(needBatDialogue);
             }
-            else if (autoReenableMovement)
+            else
             {
                 Interactable.EndCurrentInteraction();
             }
