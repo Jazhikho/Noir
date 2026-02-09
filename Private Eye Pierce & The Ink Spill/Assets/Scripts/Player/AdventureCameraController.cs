@@ -61,6 +61,21 @@ public class AdventureCameraController : MonoBehaviour
 
     void FollowTarget()
     {
+        Vector3 desiredPosition = GetDesiredPosition();
+
+        Vector3 smoothedPosition = Vector3.Lerp(
+            transform.position,
+            desiredPosition,
+            followSpeed * Time.deltaTime
+        );
+
+        transform.position = smoothedPosition;
+    }
+
+    Vector3 GetDesiredPosition()
+    {
+        if (target == null) return roomPosition;
+
         Vector3 desiredPosition = new Vector3(
             target.position.x + horizontalOffset,
             roomPosition.y + verticalOffset,
@@ -72,13 +87,7 @@ public class AdventureCameraController : MonoBehaviour
             desiredPosition.x = Mathf.Clamp(desiredPosition.x, minX, maxX);
         }
 
-        Vector3 smoothedPosition = Vector3.Lerp(
-            transform.position,
-            desiredPosition,
-            followSpeed * Time.deltaTime
-        );
-
-        transform.position = smoothedPosition;
+        return desiredPosition;
     }
 
     void EnforceAspectRatio()
@@ -128,10 +137,6 @@ public class AdventureCameraController : MonoBehaviour
         useRoomMode = !follow;
     }
 
-    /// <summary>
-    /// Sets follow mode and clamps the camera so its view stays inside the room bounds.
-    /// The camera center is constrained to [roomMin + halfViewWidth, roomMax - halfViewWidth].
-    /// </summary>
     public void SetRoomBounds(BoxCollider2D bounds)
     {
         if (bounds == null)
@@ -148,22 +153,25 @@ public class AdventureCameraController : MonoBehaviour
         float allowedMin = roomMinX + halfViewWidth;
         float allowedMax = roomMaxX - halfViewWidth;
 
+        // Room is wider than camera view - use follow mode with bounds
         if (allowedMin <= allowedMax)
         {
             minX = allowedMin;
             maxX = allowedMax;
+            useBounds = true;
+            useRoomMode = false;
         }
+        // Room fits on screen - use static room mode
         else
         {
             float roomCenterX = (roomMinX + roomMaxX) * 0.5f;
             minX = roomCenterX;
             maxX = roomCenterX;
+            useBounds = false;
+            useRoomMode = true;
         }
 
         roomPosition = new Vector3(b.center.x, b.center.y, roomPosition.z);
-
-        useBounds = true;
-        useRoomMode = false;
 
         if (target == null)
         {
@@ -171,11 +179,23 @@ public class AdventureCameraController : MonoBehaviour
             if (player != null)
                 target = player.transform;
         }
+
+        SnapToTarget();
     }
 
-    /// <summary>
-    /// World-space half-width of the camera view (X extent from center to edge) using orthographic size and target aspect.
-    /// </summary>
+    // Instantly moves camera to correct position without lerping
+    public void SnapToTarget()
+    {
+        if (useRoomMode)
+        {
+            transform.position = roomPosition;
+        }
+        else
+        {
+            transform.position = GetDesiredPosition();
+        }
+    }
+
     private float GetCameraHalfWidthWorld()
     {
         if (cam == null) cam = GetComponent<Camera>();
