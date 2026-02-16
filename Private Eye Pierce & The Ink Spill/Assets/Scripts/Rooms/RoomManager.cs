@@ -195,7 +195,7 @@ public class RoomManager : MonoBehaviour
 
     /// <summary>
     /// Enters a room by room definition only: switches active room and updates camera/click bounds. Does not move the player.
-    /// Used by Door, InteractDoor, and LockedDoor after they teleport the player themselves.
+    /// Used by LockedDoor after it teleports the player.
     /// </summary>
     /// <param name="newRoom">Room to enter (must not be null).</param>
     public void EnterRoom(RoomDefinition newRoom)

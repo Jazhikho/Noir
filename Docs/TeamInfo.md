@@ -24,5 +24,15 @@ Closed Curtains by David Renda
 Untapped Well by Ashley Haberberger and Joshua Hammond
 
 ---
+
+## Code / Repo Notes (for team)
+
+- **RefreshLockedDoors** (`AdventureHUDController`): Public method is intentionally left in place but is not currently called from anywhere. Call it when doors are unlocked at runtime so the HUD arrow and lock state stay correct. See XML doc on the method.
+- **Folder naming**: `Assets/Scripts/ScriptDocumentation/Demo-Specific/` uses a hyphen; CONTRIBUTING prefers PascalCase (e.g. `DemoSpecific`). Rename only when confirmed no scene/prefab/asset references depend on the path.
+- **Demo scripts** (`FadeGroup`, `DemoEndSequence`): Not referenced in MainMenu or OfficeFloor; kept for possible demo/Bolt flows. Remove or relocate if the team decides they are unused.
+- **Ternaries**: CONTRIBUTING disallows ternary operators. One instance was fixed in `AdventureHUDController`. Other scripts (e.g. `RoomManager`, `UIController`, `ClickController2D`, `ButtonMashPromptUI`, `AdventureCameraController`) still contain ternaries; consider refactoring to explicit `if`/`else` in a follow-up.
+
+---
+
 AI Use Statement:
 This project used AI-assisted tools during development. Claude Sonnet 4.5 (Anthropic) was used for portions of code authoring and implementation. Cursor (Cursor, Inc.) was used for code authoring support and repository management. All AI-generated or AI-assisted content was reviewed, edited, and approved by the team; design and creative decisions remain human-led.

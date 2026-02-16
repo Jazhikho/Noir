@@ -2,7 +2,7 @@ using UnityEngine;
 
 /// <summary>
 /// Defines one room: ID, spawn/entry points, camera anchor, root GameObject, floor collider for walk bounds,
-/// optional camera bounds, and optional camera angle. Used by both root RoomManager and Kevin's RoomManager/LockedDoor/InteractDoor.
+/// optional camera bounds, and optional camera angle. Used by RoomManager and LockedDoor.
 /// </summary>
 public class RoomDefinition : MonoBehaviour
 {
@@ -47,7 +47,7 @@ public class RoomDefinition : MonoBehaviour
     }
 
     /// <summary>
-    /// Returns the entry point transform for the given entrance name. Used by LockedDoor, InteractDoor, and Door. Only Left and Right are used for this 2D side-scroller.
+    /// Returns the entry point transform for the given entrance name. Used by LockedDoor and RoomManager. Only Left and Right are used for this 2D side-scroller.
     /// </summary>
     /// <param name="entranceName">"Right" for spawnRight, anything else returns spawnLeft.</param>
     /// <returns>The entry point transform, or null if not assigned.</returns>

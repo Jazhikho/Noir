@@ -242,7 +242,14 @@ public class AdventureHUDController : MonoBehaviour
                     arrowImage.rectTransform.position = screenPos;
             }
 
-            arrowImage.color = nearestDoor.IsCurrentlyLocked() ? arrowLockedColor : arrowActiveColor;
+            if (nearestDoor.IsCurrentlyLocked())
+            {
+                arrowImage.color = arrowLockedColor;
+            }
+            else
+            {
+                arrowImage.color = arrowActiveColor;
+            }
         }
         else
         {
@@ -309,6 +316,10 @@ public class AdventureHUDController : MonoBehaviour
             arrowImage.enabled = visible;
     }
 
+    /// <summary>
+    /// Rebuilds the cached list of LockedDoor components in the scene. Call this when doors are unlocked at runtime
+    /// so the HUD arrow and lock state stay correct. Currently not called from code; reserve for future use or wire from game logic.
+    /// </summary>
     public void RefreshLockedDoors()
     {
         lockedDoors.Clear();
