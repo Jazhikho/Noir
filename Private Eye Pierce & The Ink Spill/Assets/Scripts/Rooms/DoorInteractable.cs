@@ -16,6 +16,11 @@ public class DoorInteractable : MonoBehaviour, IInteractable
     public string targetSpawn = "Left";
 
     /// <summary>
+    /// Optional. GameObject to show when the cursor hovers this door (e.g. glow). Shown/hidden in OnHover.
+    /// </summary>
+    public GameObject glowEffect;
+
+    /// <summary>
     /// Starts a room transition to targetRoomId when the player reaches this door. Sets the player's walk target to this door (using the same controller as ClickController2D) so they move there; RoomManager triggers the transition on arrival.
     /// </summary>
     public void OnClick()
@@ -28,16 +33,22 @@ public class DoorInteractable : MonoBehaviour, IInteractable
 
         PointClickController pierce = UnityEngine.Object.FindFirstObjectByType<PointClickController>();
         if (pierce != null)
+        {
             pierce.SetTargetX(transform.position.x);
+        }
 
         RoomManager.Instance.PrepareTransitionToDoor(targetRoomId, targetSpawn, transform);
     }
 
     /// <summary>
-    /// Called when the cursor hovers over or leaves this door. Optional visual feedback can be added.
+    /// Called when the cursor hovers over or leaves this door. Toggles optional glowEffect if assigned.
     /// </summary>
     /// <param name="isHovering">True when hovering, false when leaving.</param>
     public void OnHover(bool isHovering)
     {
+        if (glowEffect != null)
+        {
+            glowEffect.SetActive(isHovering);
+        }
     }
 }
