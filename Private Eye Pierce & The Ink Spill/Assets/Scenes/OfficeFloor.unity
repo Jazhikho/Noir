@@ -1530,6 +1530,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DoorInteractable
   targetRoomId: Break
   targetSpawn: Left
+  doorDirection: 1
+  glowEffect: {fileID: 0}
 --- !u!61 &381760900
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1648,6 +1650,7 @@ GameObject:
   - component: {fileID: 437290181}
   - component: {fileID: 437290183}
   - component: {fileID: 437290185}
+  - component: {fileID: 437290186}
   m_Layer: 6
   m_Name: Door_To_Hallway
   m_TagString: Untagged
@@ -1798,6 +1801,8 @@ MonoBehaviour:
   OnEntered:
     m_PersistentCalls:
       m_Calls: []
+  _teleportCooldown: 0.25
+  glowEffect: {fileID: 0}
   showExitArrow: 1
 --- !u!114 &437290185
 MonoBehaviour:
@@ -1828,6 +1833,22 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &437290186
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 437290179}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc4417eba9489d44ab839c802e796a82, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DoorInteractable
+  targetRoomId: 
+  targetSpawn: Left
+  doorDirection: 2
+  glowEffect: {fileID: 0}
 --- !u!1 &451454133
 GameObject:
   m_ObjectHideFlags: 0
@@ -2138,6 +2159,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DoorInteractable
   targetRoomId: Hallway
   targetSpawn: Left
+  doorDirection: 1
+  glowEffect: {fileID: 0}
 --- !u!61 &484166808
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -2647,6 +2670,7 @@ MonoBehaviour:
   lookUpThreshold: 1.5
   inspectTrigger: Inspect
   lookingUpBool: Inspect
+  highlightReactTrigger: HighlightReact
   inspectAutoEndDelay: 0.5
 --- !u!114 &816229038
 MonoBehaviour:
@@ -3927,6 +3951,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DoorInteractable
   targetRoomId: Hallway
   targetSpawn: Left
+  doorDirection: 1
+  glowEffect: {fileID: 0}
 --- !u!61 &1129932948
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -4248,6 +4274,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DoorInteractable
   targetRoomId: Pierce
   targetSpawn: Right
+  doorDirection: 2
+  glowEffect: {fileID: 0}
 --- !u!61 &1209251383
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -6228,7 +6256,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AdventureHUDController
   cursorImage: {fileID: 247528278}
   interactableCursorSprite: {fileID: 0}
-  doorCursorSprite: {fileID: 0}
+  doorCursorSprite: {fileID: 21300000, guid: 1dcd15ae4b5a0a34399f6a47efe0856b, type: 3}
+  doorCursorLeftSprite: {fileID: 21300000, guid: 3d04e268b8ff274488b70f51b899aa0c, type: 3}
+  doorCursorRightSprite: {fileID: 21300000, guid: 308c8e11443f78d4d8961d24e58a3591, type: 3}
+  doorCursorUpSprite: {fileID: 21300000, guid: 1dcd15ae4b5a0a34399f6a47efe0856b, type: 3}
   highlightImage: {fileID: 1393652512}
   arrowImage: {fileID: 298825091}
   interactableLayer:
@@ -7402,10 +7433,10 @@ Camera:
   m_LensShift: {x: 0, y: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0.024324324
-    y: 0.025925925
-    width: 0.9513514
-    height: 0.94814813
+    x: 0.34056008
+    y: 0.24603176
+    width: 0.31797653
+    height: 0.50793654
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 60
@@ -7455,6 +7486,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AdventureCameraController
   targetAspectWidth: 1.37
   targetAspectHeight: 1
+  pictureWindowMode: 0
+  pictureWindowScale: 0.5
   useRoomMode: 0
   roomPosition: {x: 0, y: 0, z: -10}
   target: {fileID: 0}

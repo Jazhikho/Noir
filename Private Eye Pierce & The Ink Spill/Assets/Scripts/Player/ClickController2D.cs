@@ -35,6 +35,7 @@ public class ClickController2D : MonoBehaviour
     public AdventureHUDController adventureHUDController;
 
     private IInteractable _hovered;
+    private GameObject _hoveredObject;
 
     /// <summary>
     /// Caches camera and pierce controller. Uses Camera.main and FindFirstObjectByType PointClickController if not assigned.
@@ -72,15 +73,31 @@ public class ClickController2D : MonoBehaviour
 
         if (_hovered != newHover)
         {
+            if (_hoveredObject != null)
+            {
+                var prevFeedback = _hoveredObject.GetComponentInParent<HoverFeedback>();
+                if (prevFeedback != null)
+                    prevFeedback.NotifyHover(false);
+            }
+
             _hovered?.OnHover(false);
             _hovered = newHover;
             _hovered?.OnHover(true);
+
+            _hoveredObject = hitHover != null ? hitHover.gameObject : null;
+            if (_hoveredObject != null)
+            {
+                var feedback = _hoveredObject.GetComponentInParent<HoverFeedback>();
+                if (feedback != null)
+                    feedback.NotifyHover(true);
+            }
+
             if (adventureHUDController != null)
             {
                 if (newHover == null)
                     adventureHUDController.SetCursorType(AdventureHUDController.CursorType.Main);
-                else if (newHover is DoorInteractable)
-                    adventureHUDController.SetCursorType(AdventureHUDController.CursorType.Door);
+                else if (newHover is DoorInteractable door)
+                    adventureHUDController.SetCursorTypeForDoor(door.doorDirection);
                 else
                     adventureHUDController.SetCursorType(AdventureHUDController.CursorType.Interactable);
             }
