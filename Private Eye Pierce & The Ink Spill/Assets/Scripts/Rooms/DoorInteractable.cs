@@ -1,6 +1,19 @@
 using UnityEngine;
 
 /// <summary>
+/// Direction the door leads; used to pick the correct cursor arrow (left, right, or up for wall).
+/// </summary>
+public enum DoorDirection
+{
+    /// <summary>Door leads left; cursor shows left arrow.</summary>
+    Left,
+    /// <summary>Door leads right; cursor shows right arrow.</summary>
+    Right,
+    /// <summary>Door is on the wall (e.g. forward); cursor shows up arrow.</summary>
+    Wall
+}
+
+/// <summary>
 /// Door that triggers a room transition when clicked. Implements IInteractable for ClickController2D.
 /// </summary>
 public class DoorInteractable : MonoBehaviour, IInteractable
@@ -14,6 +27,11 @@ public class DoorInteractable : MonoBehaviour, IInteractable
     /// Spawn point in the target room: "Left" or "Right".
     /// </summary>
     public string targetSpawn = "Left";
+
+    /// <summary>
+    /// Direction this door leads. Used by AdventureHUDController to show the correct arrow cursor (left, right, or up).
+    /// </summary>
+    public DoorDirection doorDirection = DoorDirection.Right;
 
     /// <summary>
     /// Optional. GameObject to show when the cursor hovers this door (e.g. glow). Shown/hidden in OnHover.

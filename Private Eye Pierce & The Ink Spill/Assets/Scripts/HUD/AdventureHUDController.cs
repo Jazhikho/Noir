@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 public class AdventureHUDController : MonoBehaviour
 {
-    /// <summary>Cursor display mode: default, interactable (highlight), or door (arrow).</summary>
+    /// <summary>Cursor display mode: default, interactable (highlight), or door (arrow by direction).</summary>
     public enum CursorType
     {
         Main,
@@ -17,8 +17,14 @@ public class AdventureHUDController : MonoBehaviour
     public Image cursorImage;
     /// <summary>Sprite shown when cursor is over an interactable (e.g. bat, vending machine). Assign your highlight cursor image here.</summary>
     public Sprite interactableCursorSprite;
-    /// <summary>Sprite shown when cursor is over a door. Assign your arrow/pointer image here.</summary>
+    /// <summary>Sprite shown when cursor is over a door leading right. Fallback if door cursor sprites are unset.</summary>
     public Sprite doorCursorSprite;
+    /// <summary>Sprite shown when cursor is over a door leading left. If unset, doorCursorSprite is used.</summary>
+    public Sprite doorCursorLeftSprite;
+    /// <summary>Sprite shown when cursor is over a door leading right. If unset, doorCursorSprite is used.</summary>
+    public Sprite doorCursorRightSprite;
+    /// <summary>Sprite shown when cursor is over a door on the wall (up). If unset, doorCursorSprite is used.</summary>
+    public Sprite doorCursorUpSprite;
     public Image highlightImage;
     public Image arrowImage;
 
@@ -46,6 +52,7 @@ public class AdventureHUDController : MonoBehaviour
     private List<LockedDoor> lockedDoors = new List<LockedDoor>();
     private Sprite _mainCursorSprite;
     private CursorType _currentCursorType = CursorType.Main;
+    private DoorDirection _currentDoorDirection = DoorDirection.Right;
 
     void Awake()
     {
@@ -278,11 +285,30 @@ public class AdventureHUDController : MonoBehaviour
     /// </summary>
     public void SetCursorType(CursorType type)
     {
-        if (_currentCursorType == type) return;
+        if (_currentCursorType == type && type != CursorType.Door)
+        {
+            return;
+        }
         _currentCursorType = type;
 
         if (cursorImage == null) return;
         Sprite s = GetSpriteForCursorType(type);
+        if (s != null)
+            cursorImage.sprite = s;
+        else
+            cursorImage.sprite = _mainCursorSprite;
+    }
+
+    /// <summary>
+    /// Sets the cursor to the door arrow for the given direction (left = left arrow, right = right arrow, wall = up arrow). Call from ClickController2D when hovering a DoorInteractable.
+    /// </summary>
+    public void SetCursorTypeForDoor(DoorDirection direction)
+    {
+        _currentCursorType = CursorType.Door;
+        _currentDoorDirection = direction;
+
+        if (cursorImage == null) return;
+        Sprite s = GetSpriteForDoorDirection(direction);
         if (s != null)
             cursorImage.sprite = s;
         else
@@ -298,9 +324,18 @@ public class AdventureHUDController : MonoBehaviour
         }
         else if (type == CursorType.Door)
         {
-            if (doorCursorSprite != null) return doorCursorSprite;
-            if (arrowImage != null && arrowImage.sprite != null) return arrowImage.sprite;
+            return GetSpriteForDoorDirection(_currentDoorDirection);
         }
+        return null;
+    }
+
+    private Sprite GetSpriteForDoorDirection(DoorDirection direction)
+    {
+        if (direction == DoorDirection.Left && doorCursorLeftSprite != null) return doorCursorLeftSprite;
+        if (direction == DoorDirection.Right && doorCursorRightSprite != null) return doorCursorRightSprite;
+        if (direction == DoorDirection.Wall && doorCursorUpSprite != null) return doorCursorUpSprite;
+        if (doorCursorSprite != null) return doorCursorSprite;
+        if (arrowImage != null && arrowImage.sprite != null) return arrowImage.sprite;
         return null;
     }
 

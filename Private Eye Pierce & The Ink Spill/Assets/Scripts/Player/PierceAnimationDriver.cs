@@ -14,6 +14,8 @@ public class PierceAnimationDriver : MonoBehaviour
     [Header("Animator Parameters")]
     public string inspectTrigger = "Inspect";
     public string lookingUpBool = "IsLookingUp";
+    /// <summary>Trigger fired when the cursor hovers an interactable (optional highlight reaction).</summary>
+    public string highlightReactTrigger = "HighlightReact";
 
     [Header("Inspect Auto End")]
     public float inspectAutoEndDelay = 0.5f;
@@ -126,5 +128,15 @@ public class PierceAnimationDriver : MonoBehaviour
 
         if (!enabled)
             SetLookingUp(false);
+    }
+
+    /// <summary>
+    /// Plays the highlight-react animation (e.g. when the cursor hovers an interactable). Add a "HighlightReact" trigger in the Animator if you use this.
+    /// </summary>
+    public void PlayHighlightReact()
+    {
+        if (animator == null) return;
+        if (string.IsNullOrEmpty(highlightReactTrigger)) return;
+        animator.SetTrigger(highlightReactTrigger);
     }
 }

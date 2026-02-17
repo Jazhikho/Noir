@@ -867,6 +867,7 @@ GameObject:
   - component: {fileID: 582188612}
   - component: {fileID: 582188611}
   - component: {fileID: 582188614}
+  - component: {fileID: 582188615}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -891,8 +892,8 @@ Camera:
   m_GameObject: {fileID: 582188610}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_ClearFlags: 2
+  m_BackGroundColor: {r: 0, g: 0, b: 0, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -992,6 +993,31 @@ MonoBehaviour:
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
   m_Version: 2
+--- !u!114 &582188615
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 582188610}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8eabdd3638dfbf64dab36134031cfad6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AdventureCameraController
+  targetAspectWidth: 1.37
+  targetAspectHeight: 1
+  pictureWindowMode: 1
+  pictureWindowScale: 0.5
+  useRoomMode: 1
+  roomPosition: {x: 0, y: 0, z: -10}
+  target: {fileID: 0}
+  followSpeed: 2
+  horizontalOffset: 0
+  verticalOffset: 0
+  useBounds: 0
+  minX: -10
+  maxX: 10
 --- !u!1 &711020501
 GameObject:
   m_ObjectHideFlags: 0
@@ -1529,7 +1555,7 @@ MonoBehaviour:
   m_charWidthMaxAdj: 0
   m_TextWrappingMode: 1
   m_wordWrappingRatios: 0.4
-  m_overflowMode: 1
+  m_overflowMode: 3
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 0

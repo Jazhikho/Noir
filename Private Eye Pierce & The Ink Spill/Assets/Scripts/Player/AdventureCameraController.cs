@@ -1,10 +1,17 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class AdventureCameraController : MonoBehaviour
 {
     [Header("Aspect Ratio Settings")]
     public float targetAspectWidth = 1.37f;
     public float targetAspectHeight = 1f;
+
+    [Header("Picture Window")]
+    /// <summary>When true, the game view is drawn in a smaller rect (e.g. half size) with black bars on the sides and top/bottom.</summary>
+    public bool pictureWindowMode = false;
+    /// <summary>Width and height of the viewport in 0–1. e.g. 0.5 = half the screen each way (centered).</summary>
+    public float pictureWindowScale = 0.5f;
 
     [Header("Room Mode (Static Camera)")]
     public bool useRoomMode = true;
@@ -22,11 +29,12 @@ public class AdventureCameraController : MonoBehaviour
     public float maxX = 10f;
 
     private Camera cam;
+    private Camera _letterboxClearCamera;
 
     void Awake()
     {
         cam = GetComponent<Camera>();
-        EnforceAspectRatio();
+        ApplyViewport();
     }
 
     void Start()
@@ -42,6 +50,28 @@ public class AdventureCameraController : MonoBehaviour
             {
                 target = player.transform;
             }
+        }
+
+        if (pictureWindowMode)
+            ConstrainOverlayCanvasesToPictureWindow();
+    }
+
+    /// <summary>
+    /// Overlay Canvases draw on the full screen and hide the black bars. Switch them to Screen Space - Camera
+    /// with this camera so they only draw inside the picture window (same as OfficeFloor).
+    /// </summary>
+    private void ConstrainOverlayCanvasesToPictureWindow()
+    {
+        if (cam == null) return;
+
+        Canvas[] allCanvases = FindObjectsByType<Canvas>(FindObjectsSortMode.None);
+        foreach (Canvas canvas in allCanvases)
+        {
+            if (canvas.renderMode != RenderMode.ScreenSpaceOverlay)
+                continue;
+            canvas.renderMode = RenderMode.ScreenSpaceCamera;
+            canvas.worldCamera = cam;
+            canvas.planeDistance = 100f;
         }
     }
 
@@ -88,6 +118,64 @@ public class AdventureCameraController : MonoBehaviour
         }
 
         return desiredPosition;
+    }
+
+    /// <summary>
+    /// Applies viewport: picture-window mode (centered smaller rect + black bars) or aspect-ratio letterboxing.
+    /// Unity only clears the camera's viewport rect, so we add a full-screen clear camera when in picture-window mode
+    /// so the bar regions are black in every scene (main menu and game).
+    /// </summary>
+    void ApplyViewport()
+    {
+        if (pictureWindowMode)
+        {
+            EnsureLetterboxClearCamera();
+            float margin = (1f - pictureWindowScale) * 0.5f;
+            cam.rect = new Rect(margin, margin, pictureWindowScale, pictureWindowScale);
+            cam.backgroundColor = Color.black;
+            if (cam.clearFlags == CameraClearFlags.Skybox)
+                cam.clearFlags = CameraClearFlags.SolidColor;
+        }
+        else
+        {
+            DisableLetterboxClearCamera();
+            EnforceAspectRatio();
+        }
+    }
+
+    /// <summary>
+    /// Creates or enables a camera that clears the entire screen to black (depth below main cam). Required because Unity only clears the viewport rect.
+    /// </summary>
+    private void EnsureLetterboxClearCamera()
+    {
+        if (_letterboxClearCamera != null)
+        {
+            _letterboxClearCamera.gameObject.SetActive(true);
+            _letterboxClearCamera.rect = new Rect(0f, 0f, 1f, 1f);
+            _letterboxClearCamera.depth = cam.depth - 1f;
+            return;
+        }
+
+        GameObject clearGo = new GameObject("LetterboxClearCamera");
+        clearGo.transform.SetParent(transform.parent, false);
+
+        _letterboxClearCamera = clearGo.AddComponent<Camera>();
+        _letterboxClearCamera.rect = new Rect(0f, 0f, 1f, 1f);
+        _letterboxClearCamera.depth = cam.depth - 1f;
+        _letterboxClearCamera.clearFlags = CameraClearFlags.SolidColor;
+        _letterboxClearCamera.backgroundColor = Color.black;
+        _letterboxClearCamera.cullingMask = 0;
+        _letterboxClearCamera.orthographic = cam.orthographic;
+        _letterboxClearCamera.orthographicSize = cam.orthographicSize;
+        _letterboxClearCamera.nearClipPlane = cam.nearClipPlane;
+        _letterboxClearCamera.farClipPlane = cam.farClipPlane;
+        _letterboxClearCamera.useOcclusionCulling = false;
+    }
+
+    private void DisableLetterboxClearCamera()
+    {
+        if (_letterboxClearCamera != null)
+            _letterboxClearCamera.gameObject.SetActive(false);
     }
 
     void EnforceAspectRatio()
@@ -208,7 +296,7 @@ public class AdventureCameraController : MonoBehaviour
     {
         if (cam != null)
         {
-            EnforceAspectRatio();
+            ApplyViewport();
         }
     }
 
