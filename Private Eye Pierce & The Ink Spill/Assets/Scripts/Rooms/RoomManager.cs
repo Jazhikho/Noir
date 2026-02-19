@@ -13,9 +13,7 @@ public class RoomManager : MonoBehaviour
     public Transform player;
     public Transform mainCamera;
     public ClickController2D clickController;
-    [Tooltip("Used for click-to-move and door transitions. If unset, PointClickController on player is used when present.")]
-    public PlayerMover2D playerMover;
-    [Tooltip("Pierce controller. If unset and player is set, found via GetComponent on player at runtime. Used for door transition target when playerMover is null.")]
+    [Tooltip("Pierce controller. If unset and player is set, found via GetComponent on player at runtime. Used for door transition target.")]
     public PointClickController pierceController;
 
     [Tooltip("Room ID to enter when the game starts. Pierce spawns at this room's Spawn_Left.")]
@@ -113,9 +111,9 @@ public class RoomManager : MonoBehaviour
             return;
         }
         ResolvePierceController();
-        if (playerMover == null && pierceController == null)
+        if (pierceController == null)
         {
-            Debug.LogError("[RoomManager] PrepareTransitionToDoor failed: assign Player Mover (PlayerMover2D) or add PointClickController to the Player GameObject and assign Player in RoomManager.", this);
+            Debug.LogError("[RoomManager] PrepareTransitionToDoor failed: add PointClickController to the Player GameObject and assign Player (or Pierce Controller) in RoomManager.", this);
             return;
         }
         _pendingRoomId = roomId;
@@ -127,10 +125,7 @@ public class RoomManager : MonoBehaviour
             _pendingLeavingRoomId = null;
         float roomCenterX = GetRoomCenterX(_current);
         _pendingDoorWasOnLeft = _current != null && doorTransform.position.x < roomCenterX;
-        if (playerMover != null)
-            playerMover.SetTargetX(_pendingDoorWorldX);
-        else if (pierceController != null)
-            pierceController.SetTargetX(_pendingDoorWorldX);
+        pierceController.SetTargetX(_pendingDoorWorldX);
     }
 
     /// <summary>
@@ -185,9 +180,7 @@ public class RoomManager : MonoBehaviour
         ResolvePierceController();
         if (leavingRoomId != null && pierceController != null)
             pierceController.SetFaceLeft(doorWasOnLeft);
-        if (playerMover != null)
-            playerMover.SetTargetX(player.position.x);
-        else if (pierceController != null)
+        if (pierceController != null)
             pierceController.SetTargetX(player.position.x);
 
         ApplyCameraAndClickBounds();

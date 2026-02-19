@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 /// <summary>
 /// Handles click-to-move and interaction in 2D. Converts screen clicks to world position, clamps to walk bounds,
-/// and notifies hovered IInteractable (e.g. doors, WalkToInteractable) on click. Drives PointClickController (Pierce) when assigned.
+/// and notifies hovered IInteractable (e.g. Interactable, DoorInteractable) on click. Drives PointClickController (Pierce) when assigned.
 /// </summary>
 public class ClickController2D : MonoBehaviour
 {
@@ -65,11 +65,7 @@ public class ClickController2D : MonoBehaviour
         Collider2D hitHover = Physics2D.OverlapPoint(world, interactableMask);
         IInteractable newHover = null;
         if (hitHover != null)
-        {
             newHover = hitHover.GetComponent<IInteractable>();
-            if (newHover == null)
-                newHover = hitHover.GetComponent<Interactable>();
-        }
 
         if (_hovered != newHover)
         {
