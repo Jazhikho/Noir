@@ -244,6 +244,8 @@ Shows text like "Click to escape!" during the vending machine puzzle. Text bobs 
 7. Set Bob Speed to 2, Bob Amount to 10, Punch Scale to 1.2
 8. DISABLE MashPromptPanel (the puzzle enables it when needed)
 
+**Progress Texts**: List of threshold + text. Lets you show different messages at different progress values (e.g. "Almost there!" when close to winning). Each entry has a **threshold** (0–1) and **text**. The UI shows the text for the highest threshold the current progress has reached. **VendingMachinePuzzle** wires this up automatically via SetProgress01 and the prompt's progress text list.
+
 ### HoverHighlightTarget.cs
 
 **What Does It Do?**  
@@ -255,7 +257,7 @@ Add Component > HoverHighlightTarget. Defaults work fine.
 ### HoverFeedback.cs
 
 **What Does It Do?**  
-When an interactable is highlighted (cursor hovers over it), this can trigger: a Pierce animation (e.g. "interested" look), a highlighted sprite or animation on the object, and a sound cue. Add to the same GameObject (or a child) as an IInteractable (e.g. Interactable, DoorInteractable, WalkToInteractable). ClickController2D calls it automatically when hover starts and ends.
+When an interactable is highlighted (cursor hovers over it), this can trigger: a Pierce animation (e.g. "interested" look), a highlighted sprite or animation on the object, and a sound cue. Add to the same GameObject (or a child) as an IInteractable (e.g. Interactable, DoorInteractable). ClickController2D calls it automatically when hover starts and ends.
 
 **How to Hook It Up**
 
@@ -335,7 +337,11 @@ A door locked by an EventFlag. When unlocked, teleports the player to the target
    - **Target Entry Point Name**: "Left" or "Right"
    - **Unlock Flag**: Drag the EventFlag that unlocks this door (e.g. BreakRoomUnlocked)
    - **Require Flag True**: CHECK
-7. On Interactable's **On Interact**:
+7. Other fields (optional):
+   - **Is Locked**: Manual lock toggle; when true, the door refuses use regardless of the unlock flag. No EventFlag needed for this.
+   - **Glow Effect**: GameObject to show when the player is nearby. The door (or a child) must have a **trigger collider** (e.g. Box Collider 2D with Is Trigger checked); LockedDoor shows/hides this on trigger enter/exit.
+   - **Show Exit Arrow**: When true, the HUD can show an arrow pointing to this door.
+8. On Interactable's **On Interact**:
    - For break room door: connect to LockedDoor > UseDoor
    - For tutorial door: connect to TutorialPuzzle > InteractWithDoor (TutorialPuzzle calls LockedDoor.UseDoor() internally after the window is broken)
 
@@ -394,7 +400,7 @@ Makes Pierce walk when you click. Click on the floor → Pierce walks there. Cli
 ### ClickController2D.cs
 
 **What Does It Do?**  
-Handles click-to-move and interaction. Converts screen clicks to world position, clamps to walk bounds, and calls IInteractable.OnClick() when hovering interactables. Drives PointClickController (sets `inputHandledExternally = true`).
+Handles click-to-move and interaction. Converts screen clicks to world position, clamps to walk bounds, and calls IInteractable.OnClick() when hovering interactables. ClickController2D works with any component that implements IInteractable (e.g. Interactable, DoorInteractable). Drives PointClickController (sets `inputHandledExternally = true`).
 
 **How to Hook It Up**
 
@@ -417,6 +423,8 @@ Controls the camera: follow Pierce, use room bounds, optional film look. **Pictu
 4. For small rooms: Check "Use Room Mode" and set Room Position
 5. For big rooms: Uncheck "Use Room Mode", assign Target
 6. For **Picture Window** (half-size view with black bars): Check **Picture Window Mode**, set **Picture Window Scale** (e.g. 0.5 = half width and height, centered). A full-screen clear camera runs first so the bar regions are black. **Main menu and other scenes**: If your Canvas is **Screen Space - Overlay**, it would draw full screen and hide the bars. AdventureCameraController automatically switches Overlay Canvases to **Screen Space - Camera** and assigns the Main Camera when Picture Window Mode is on, so the UI (e.g. main menu) only draws in the center and the black bars stay visible. For manual setup: use **Screen Space - Camera** and assign **Main Camera** (like OfficeFloor).
+
+**SnapToTarget()**: Teleports the camera instantly to its target position (room position or follow target) instead of lerping. Call this after the player teleports (e.g. room change) to avoid camera lag; the script already uses it when switching room mode.
 
 ### FootstepLoop.cs
 
@@ -510,7 +518,7 @@ First puzzle: Pierce is trapped in his office. He finds a bat and uses it to bre
 ### VendingMachinePuzzle.cs
 
 **What Does It Do?**  
-Pierce's hand gets stuck. Fullscreen arm image shakes. Click fast to escape.
+Pierce's hand gets stuck. Fullscreen arm image shakes. Click fast to escape. The puzzle can only be played **once**; after it is completed, clicking the vending machine does nothing.
 
 **How to Hook It Up**
 
@@ -628,6 +636,26 @@ Use VendingMachinePuzzle's **On Puzzle Started** (AudioSource.Play) and **On Puz
 ### Footsteps
 
 See FootstepLoop in Section 7. Assign "Dress Shoes Walk" to Footstep Clip.
+
+### Jukebox.cs
+
+**What Does It Do?**  
+Background music system. Picks a random track from a list, plays it, then when it ends picks another (with optional gap and avoid-repeat). AudioSource is required and is added automatically by the component.
+
+**How to Hook It Up**
+
+1. Create an empty GameObject named e.g. "Jukebox"
+2. Add the **Jukebox** component (AudioSource is added automatically)
+3. Drag music clips into **Tracks**
+4. **Volume**: 0–1 (default 0.7)
+5. **Gap Between Tracks**: Seconds of silence between songs (0 = no gap)
+6. **Avoid Repeat**: If true, the same track won't play back-to-back
+
+**Other behavior / API**
+
+- **PlayNext()** – Plays a random track (respects Avoid Repeat)
+- **Stop()** – Stops playback and clears state
+- **FadeOut(duration)** – Smoothly fades volume to zero over the given seconds, then stops. **UIController** already uses this when returning to the main menu
 
 ---
 
