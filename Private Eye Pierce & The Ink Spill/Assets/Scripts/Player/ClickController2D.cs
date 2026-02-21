@@ -30,6 +30,13 @@ public class ClickController2D : MonoBehaviour
     public Collider2D walkBounds;
 
     /// <summary>
+    /// World units to inset walk bounds from left and right edges. Reduces how close Pierce can walk to objects at room edges.
+    /// Tune in Inspector (e.g. 0.5–1) if movement feels tight or Pierce clips past props.
+    /// </summary>
+    [Tooltip("World units to inset from each side of walk bounds. Helps avoid getting stuck past objects.")]
+    public float walkBoundsInsetX = 0.5f;
+
+    /// <summary>
     /// Optional. When set, cursor switches to "use" when hovering any IInteractable (via AdventureHUDController.SetCursorType).
     /// </summary>
     public AdventureHUDController adventureHUDController;
@@ -115,7 +122,13 @@ public class ClickController2D : MonoBehaviour
             if (walkBounds != null)
             {
                 Bounds b = walkBounds.bounds;
-                targetX = Mathf.Clamp(targetX, b.min.x, b.max.x);
+                float inset = Mathf.Max(0f, walkBoundsInsetX);
+                float minX = b.min.x + inset;
+                float maxX = b.max.x - inset;
+                if (minX <= maxX)
+                    targetX = Mathf.Clamp(targetX, minX, maxX);
+                else
+                    targetX = Mathf.Clamp(targetX, b.min.x, b.max.x);
             }
             if (pierceController != null)
                 pierceController.SetTargetX(targetX);

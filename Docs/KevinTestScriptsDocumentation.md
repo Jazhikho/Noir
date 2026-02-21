@@ -407,8 +407,9 @@ Handles click-to-move and interaction. Converts screen clicks to world position,
 1. Add to a GameObject in the scene (e.g. on the same object as RoomManager or Camera)
 2. Assign **Interactable Mask**: Check "Interactable"
 3. **Walk Bounds**: RoomManager sets this automatically from the current room's floor collider when you enter a room. You can leave unset; assign only if you need a fallback (e.g. testing without RoomManager).
-4. Assign **Pierce Controller** (PointClickController)
-5. Optionally assign **Adventure HUD Controller** for cursor type switching
+4. **Walk Bounds Inset X**: World units to inset from each side of walk bounds (default 0.5). Tune if movement feels tight or Pierce clips past props.
+5. Assign **Pierce Controller** (PointClickController)
+6. Optionally assign **Adventure HUD Controller** for cursor type switching
 
 ### AdventureCameraController.cs
 
