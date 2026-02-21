@@ -580,7 +580,9 @@ Singleton that manages room transitions. Activates/deactivates rooms, moves the 
 6. Assign **Player Mover** (PlayerMover2D) or leave unset to use PointClickController
 7. Set **Initial Room Id** to the roomId of your starting room (e.g. "Office" for the demo). Must match a **Room Id** on one of the RoomDefinitions in your **Rooms** list.
 8. Add all RoomDefinitions to **Rooms** list
-9. Optionally assign **Page Turn Transition** for room-change animation
+9. Optionally assign **Page Turn Transition** for room-change animation (captures the screen, peels it away to reveal the new room)
+
+**PageTurnTransition setup:** Assign a RawImage (fullscreen under a Canvas) to **Capture Display**. The script captures the current view, switches rooms, then peels the captured image away. Optionally assign **Target Canvas**, **Capture Camera**, **Page Peel Material** (using the UI/PagePeel shader in Assets/Shaders), and **Transition Sound** (AudioClip played once when each transition starts; uses an AudioSource on the same GameObject, adding one if missing).
 
 **Note:** Only ONE RoomManager per scene. RoomManager.Instance is used by LockedDoor and DoorInteractable.
 
@@ -637,6 +639,10 @@ Use VendingMachinePuzzle's **On Puzzle Started** (AudioSource.Play) and **On Puz
 ### Footsteps
 
 See FootstepLoop in Section 7. Assign "Dress Shoes Walk" to Footstep Clip.
+
+### Room Transition (Page Turn)
+
+Assign **Transition Sound** on PageTurnTransition to play an audio clip once when each room transition starts (e.g. page-turn or paper rustle SFX).
 
 ### Jukebox.cs
 

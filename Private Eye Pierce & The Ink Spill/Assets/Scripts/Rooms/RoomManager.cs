@@ -89,9 +89,13 @@ public class RoomManager : MonoBehaviour
             _pendingRoomId = null;
             _pendingSpawnKey = null;
             _pendingLeavingRoomId = null;
-            bool rightToLeft = (spawnKey == "Right");
+            bool rightToLeft = !doorWasOnLeft;
             if (pageTurnTransition != null)
+            {
+                if (!pageTurnTransition.gameObject.activeInHierarchy)
+                    pageTurnTransition.gameObject.SetActive(true);
                 pageTurnTransition.PlayTransition(rightToLeft, () => EnterRoom(roomId, spawnKey, leavingRoomId, doorWasOnLeft));
+            }
             else
                 EnterRoom(roomId, spawnKey, leavingRoomId, doorWasOnLeft);
         }
@@ -147,12 +151,12 @@ public class RoomManager : MonoBehaviour
         ApplyRoomSwitch(next);
 
         Vector3 spawnPosition;
-        if (leavingRoomId == null)
+        Transform spawn = _current.GetSpawn(spawnKey);
+        if (spawn != null)
         {
-            Transform spawn = _current.GetSpawn(spawnKey);
             spawnPosition = SpawnPositionFrom(spawn);
         }
-        else
+        else if (leavingRoomId != null)
         {
             Transform doorInNewRoom = GetDoorInRoom(_current, leavingRoomId);
             if (doorInNewRoom != null)
@@ -161,17 +165,16 @@ public class RoomManager : MonoBehaviour
                 float inward = (doorWasOnLeft ? -1f : 1f) * spawnInwardOffset;
                 spawnPosition.x += inward;
             }
-            else if (roomId == "Room1")
-            {
-                Transform spawn = _current.GetSpawn("Right");
-                spawnPosition = SpawnPositionFrom(spawn);
-            }
             else
             {
-                string key = doorWasOnLeft ? "Right" : "Left";
-                Transform spawn = _current.GetSpawn(key);
-                spawnPosition = SpawnPositionFrom(spawn);
+                string fallbackKey = doorWasOnLeft ? "Right" : "Left";
+                Transform fallback = _current.GetSpawn(fallbackKey);
+                spawnPosition = fallback != null ? SpawnPositionFrom(fallback) : (player != null ? player.position : Vector3.zero);
             }
+        }
+        else
+        {
+            spawnPosition = player != null ? player.position : Vector3.zero;
         }
 
         if (player != null)

@@ -1,28 +1,46 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 
 /// <summary>
-/// Plays a fullscreen sliding "page turn" transition. Direction: right-to-left (default) or left-to-right.
-/// Assign a fullscreen RectTransform panel (e.g. under a Screen Space - Overlay Canvas); it will be animated off-screen.
+/// Captures the current screen, then peels it away to reveal the newly transitioned room.
+/// Assign a RawImage (with RectTransform) for the overlay; optionally assign a Canvas and capture Camera.
 /// </summary>
 public class PageTurnTransition : MonoBehaviour
 {
-    [Tooltip("Fullscreen panel to slide (e.g. Image with paper colour). Must be under a Canvas.")]
-    public RectTransform pagePanel;
-    [Tooltip("Duration of the slide-in and slide-out in seconds.")]
-    public float duration = 0.4f;
+    [Tooltip("RawImage that displays the captured screen. Must be fullscreen under a Canvas.")]
+    public RawImage captureDisplay;
+    [Tooltip("Canvas to reparent the overlay to (e.g. Screen Space Overlay). If unset, uses the display's parent canvas.")]
+    public Canvas targetCanvas;
+    [Tooltip("Camera to capture from. If unset, uses Camera.main.")]
+    public Camera captureCamera;
+    [Tooltip("Material with PagePeel shader. If unset, uses a default from Resources or creates one at runtime.")]
+    public Material pagePeelMaterial;
+    [Tooltip("Duration of the peel animation in seconds.")]
+    public float duration = 0.6f;
+    [Tooltip("Softness of the peel edge (0.01–0.3).")]
+    [Range(0.01f, 0.3f)]
+    public float peelSoftness = 0.05f;
+    [Tooltip("Optional. Plays once when the transition starts. Uses AudioSource on this GameObject; adds one if missing.")]
+    public AudioClip transitionSound;
+
+    private static readonly int CurlAmountId = Shader.PropertyToID("_CurlAmount");
+    private static readonly int CurlFromRightId = Shader.PropertyToID("_CurlFromRight");
+    private static readonly int PeelSoftnessId = Shader.PropertyToID("_PeelSoftness");
 
     private bool _isPlaying;
+    private Material _materialInstance;
+    private RenderTexture _captureRt;
 
     /// <summary>
-    /// Plays the page turn, calls onMidTransition when the screen is covered (switch room here), then slides out.
+    /// Plays the page peel, calls onMidTransition when ready (switch room here), then peels away to reveal the new scene.
     /// </summary>
-    /// <param name="rightToLeft">True = page slides in from right (default book turn). False = from left.</param>
-    /// <param name="onMidTransition">Called when the screen is fully covered; perform the room switch here.</param>
+    /// <param name="rightToLeft">True = peel from right (page curls left). False = peel from left.</param>
+    /// <param name="onMidTransition">Called when the capture is displayed; perform the room switch here.</param>
     public void PlayTransition(bool rightToLeft, Action onMidTransition)
     {
-        if (pagePanel == null)
+        if (captureDisplay == null)
         {
             onMidTransition?.Invoke();
             return;
@@ -32,80 +50,140 @@ public class PageTurnTransition : MonoBehaviour
         StartCoroutine(PlayTransitionCoroutine(rightToLeft, onMidTransition));
     }
 
-    /// <summary>
-    /// Runs the slide-in, invokes the callback when covered, then slides out.
-    /// </summary>
-    /// <param name="rightToLeft">True to slide in from right.</param>
-    /// <param name="onMidTransition">Invoked when the screen is fully covered.</param>
     private IEnumerator PlayTransitionCoroutine(bool rightToLeft, Action onMidTransition)
     {
         _isPlaying = true;
-        pagePanel.gameObject.SetActive(true);
 
-        float halfDuration = duration * 0.5f;
-
-        if (rightToLeft)
+        if (transitionSound != null)
         {
-            SetAnchorX(pagePanel, 1f, 2f);
-            yield return LerpAnchorX(pagePanel, 1f, 2f, 0f, 1f, halfDuration);
-        }
-        else
-        {
-            SetAnchorX(pagePanel, -1f, 0f);
-            yield return LerpAnchorX(pagePanel, -1f, 0f, 0f, 1f, halfDuration);
+            AudioSource src = GetComponent<AudioSource>();
+            if (src == null)
+                src = gameObject.AddComponent<AudioSource>();
+            src.PlayOneShot(transitionSound);
         }
 
+        Camera cam = captureCamera != null ? captureCamera : Camera.main;
+        if (cam == null)
+        {
+            Debug.LogError("[PageTurnTransition] No camera. Assign Capture Camera or ensure Camera.main exists.", this);
+            onMidTransition?.Invoke();
+            _isPlaying = false;
+            yield break;
+        }
+
+        Rect viewportRect = cam.rect;
+        int w = Mathf.RoundToInt(viewportRect.width * Screen.width);
+        int h = Mathf.RoundToInt(viewportRect.height * Screen.height);
+        if (w < 1) w = 1;
+        if (h < 1) h = 1;
+
+        if (_captureRt == null || _captureRt.width != w || _captureRt.height != h)
+        {
+            if (_captureRt != null)
+                _captureRt.Release();
+            _captureRt = new RenderTexture(w, h, 24);
+            _captureRt.Create();
+        }
+
+        Rect prevRect = cam.rect;
+        cam.rect = new Rect(0f, 0f, 1f, 1f);
+        RenderTexture prevTarget = cam.targetTexture;
+        cam.targetTexture = _captureRt;
+        cam.Render();
+        cam.targetTexture = prevTarget;
+        cam.rect = prevRect;
+
+        captureDisplay.texture = _captureRt;
+        captureDisplay.color = Color.white;
+        captureDisplay.gameObject.SetActive(true);
+
+        RectTransform rect = captureDisplay.rectTransform;
+        rect.anchorMin = Vector2.zero;
+        rect.anchorMax = Vector2.one;
+        rect.offsetMin = Vector2.zero;
+        rect.offsetMax = Vector2.zero;
+
+        Transform originalParent = rect.parent;
+        Canvas canvas = targetCanvas != null ? targetCanvas : rect.GetComponentInParent<Canvas>();
+        if (canvas != null && canvas.transform.localScale == Vector3.zero)
+        {
+            foreach (Canvas c in FindObjectsByType<Canvas>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+            {
+                if (c.renderMode == RenderMode.ScreenSpaceOverlay && c.transform.localScale != Vector3.zero)
+                {
+                    canvas = c;
+                    break;
+                }
+            }
+        }
+        if (canvas != null && canvas.transform != originalParent)
+        {
+            rect.SetParent(canvas.transform, false);
+            rect.SetAsLastSibling();
+        }
+
+        Material mat = GetOrCreateMaterial();
+        mat.SetFloat(CurlFromRightId, rightToLeft ? 1f : 0f);
+        mat.SetFloat(PeelSoftnessId, peelSoftness);
+        mat.SetFloat(CurlAmountId, 0f);
+        captureDisplay.material = mat;
+
+        yield return null;
         onMidTransition?.Invoke();
 
-        if (rightToLeft)
-            yield return LerpAnchorX(pagePanel, 0f, 1f, -1f, 0f, halfDuration);
-        else
-            yield return LerpAnchorX(pagePanel, 0f, 1f, 1f, 2f, halfDuration);
+        float elapsed = 0f;
+        while (elapsed < duration)
+        {
+            elapsed += Time.unscaledDeltaTime;
+            float t = Mathf.Clamp01(elapsed / duration);
+            t = t * t * (3f - 2f * t);
+            mat.SetFloat(CurlAmountId, t);
+            yield return null;
+        }
 
-        pagePanel.gameObject.SetActive(false);
+        mat.SetFloat(CurlAmountId, 1f);
+        captureDisplay.gameObject.SetActive(false);
+        captureDisplay.material = null;
+        captureDisplay.texture = null;
+
+        if (originalParent != null)
+            rect.SetParent(originalParent, false);
+
         _isPlaying = false;
     }
 
-    /// <summary>
-    /// Sets the RectTransform anchor min/max X and clears offsets so the panel spans the given X range.
-    /// </summary>
-    /// <param name="rect">The panel to update.</param>
-    /// <param name="minX">Anchor min X.</param>
-    /// <param name="maxX">Anchor max X.</param>
-    private static void SetAnchorX(RectTransform rect, float minX, float maxX)
+    private Material GetOrCreateMaterial()
     {
-        Vector2 min = rect.anchorMin;
-        Vector2 max = rect.anchorMax;
-        min.x = minX;
-        max.x = maxX;
-        rect.anchorMin = min;
-        rect.anchorMax = max;
-        rect.offsetMin = Vector2.zero;
-        rect.offsetMax = Vector2.zero;
+        if (pagePeelMaterial != null)
+        {
+            if (_materialInstance == null)
+                _materialInstance = new Material(pagePeelMaterial);
+            return _materialInstance;
+        }
+
+        Shader peelShader = Shader.Find("UI/PagePeel");
+        if (peelShader == null)
+        {
+            Debug.LogError("[PageTurnTransition] PagePeel shader not found. Assign Page Peel Material in the Inspector.", this);
+            return null;
+        }
+
+        if (_materialInstance == null)
+            _materialInstance = new Material(peelShader);
+        return _materialInstance;
     }
 
-    /// <summary>
-    /// Lerps the panel's anchor X from (fromMinX, fromMaxX) to (toMinX, toMaxX) over the given duration with smoothstep.
-    /// </summary>
-    /// <param name="rect">The panel to animate.</param>
-    /// <param name="fromMinX">Starting anchor min X.</param>
-    /// <param name="fromMaxX">Starting anchor max X.</param>
-    /// <param name="toMinX">End anchor min X.</param>
-    /// <param name="toMaxX">End anchor max X.</param>
-    /// <param name="overDuration">Duration in seconds.</param>
-    private static IEnumerator LerpAnchorX(RectTransform rect, float fromMinX, float fromMaxX, float toMinX, float toMaxX, float overDuration)
+    private void OnDestroy()
     {
-        float elapsed = 0f;
-        while (elapsed < overDuration)
+        if (_captureRt != null)
         {
-            elapsed += Time.unscaledDeltaTime;
-            float t = Mathf.Clamp01(elapsed / overDuration);
-            t = t * t * (3f - 2f * t);
-            float minX = Mathf.Lerp(fromMinX, toMinX, t);
-            float maxX = Mathf.Lerp(fromMaxX, toMaxX, t);
-            SetAnchorX(rect, minX, maxX);
-            yield return null;
+            _captureRt.Release();
+            _captureRt = null;
         }
-        SetAnchorX(rect, toMinX, toMaxX);
+        if (_materialInstance != null)
+        {
+            Destroy(_materialInstance);
+            _materialInstance = null;
+        }
     }
 }
