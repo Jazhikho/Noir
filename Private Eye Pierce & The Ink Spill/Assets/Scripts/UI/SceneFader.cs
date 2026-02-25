@@ -2,12 +2,15 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System.Collections;
+using System;
 
 public class SceneFader : MonoBehaviour
 {
     public static SceneFader Instance;
     public Image fadePanel;
     public float fadeDuration = 1f;
+
+    private bool isFading = false;
 
     void Awake()
     {
@@ -19,26 +22,35 @@ public class SceneFader : MonoBehaviour
         else
         {
             Destroy(gameObject);
+            return;
+        }
+
+        if (fadePanel != null)
+        {
+            fadePanel.gameObject.SetActive(true);
+            Color c = fadePanel.color;
+            c.a = 1f;
+            fadePanel.color = c;
         }
     }
 
     void Start()
     {
-        // Fade in on first scene
         StartCoroutine(FadeIn());
     }
 
     public void FadeToScene(string sceneName)
     {
+        if (isFading) return;
         StartCoroutine(FadeOutAndLoad(sceneName));
     }
 
-    /// <summary>
-    /// Fades the fade panel to black over the given duration. Yields until complete. Does not load a scene or fade in after.
-    /// Used by DemoEndSequence and any other flow that needs a fade-to-black without a scene change.
-    /// </summary>
-    /// <param name="duration">Time in seconds to fade from current alpha to 1.</param>
-    /// <returns>Coroutine enumerator.</returns>
+    public void FadeToSceneWithCallback(string sceneName, Action onFadeOutComplete)
+    {
+        if (isFading) return;
+        StartCoroutine(FadeOutLoadAndCallback(sceneName, onFadeOutComplete));
+    }
+
     public IEnumerator FadeToBlack(float duration)
     {
         if (fadePanel == null) yield break;
@@ -59,10 +71,16 @@ public class SceneFader : MonoBehaviour
         fadePanel.color = color;
     }
 
-    IEnumerator FadeIn()
+    public IEnumerator FadeIn()
     {
+        if (fadePanel == null) yield break;
+
+        isFading = true;
+        fadePanel.gameObject.SetActive(true);
         float elapsed = 0f;
         Color color = fadePanel.color;
+        color.a = 1f;
+        fadePanel.color = color;
 
         while (elapsed < fadeDuration)
         {
@@ -74,14 +92,20 @@ public class SceneFader : MonoBehaviour
 
         color.a = 0f;
         fadePanel.color = color;
+        isFading = false;
     }
 
-    IEnumerator FadeOutAndLoad(string sceneName)
+    public IEnumerator FadeOut()
     {
+        if (fadePanel == null) yield break;
+
+        isFading = true;
+        fadePanel.gameObject.SetActive(true);
         float elapsed = 0f;
         Color color = fadePanel.color;
+        color.a = 0f;
+        fadePanel.color = color;
 
-        // Fade out
         while (elapsed < fadeDuration)
         {
             elapsed += Time.deltaTime;
@@ -90,13 +114,71 @@ public class SceneFader : MonoBehaviour
             yield return null;
         }
 
-        // Load scene
-        SceneManager.LoadScene(sceneName);
+        color.a = 1f;
+        fadePanel.color = color;
+        isFading = false;
+    }
 
-        // Wait one frame for scene to load
+    IEnumerator FadeOutAndLoad(string sceneName)
+    {
+        isFading = true;
+
+        // Fade to black
+        yield return StartCoroutine(FadeOut());
+
+        // Load scene asynchronously
+        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneName);
+        asyncLoad.allowSceneActivation = false;
+
+        // Wait until scene is ready
+        while (asyncLoad.progress < 0.9f)
+        {
+            yield return null;
+        }
+
+        // Activate scene
+        asyncLoad.allowSceneActivation = true;
+
+        // Wait for scene to fully load
         yield return null;
 
-        // Fade in
+        // Fade back in
+        yield return StartCoroutine(FadeIn());
+
+        isFading = false;
+    }
+
+    IEnumerator FadeOutLoadAndCallback(string sceneName, Action onFadeOutComplete)
+    {
+        isFading = true;
+
+        // Fade to black
+        yield return StartCoroutine(FadeOut());
+
+        // Load scene asynchronously
+        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneName);
+        asyncLoad.allowSceneActivation = false;
+
+        while (asyncLoad.progress < 0.9f)
+        {
+            yield return null;
+        }
+
+        asyncLoad.allowSceneActivation = true;
+        yield return null;
+
+        // Callback after scene loads but before fade in
+        onFadeOutComplete?.Invoke();
+
+        yield return StartCoroutine(FadeIn());
+
+        isFading = false;
+    }
+
+    public bool IsFading() => isFading;
+
+    public void FadeInNow()
+    {
         StartCoroutine(FadeIn());
     }
 }

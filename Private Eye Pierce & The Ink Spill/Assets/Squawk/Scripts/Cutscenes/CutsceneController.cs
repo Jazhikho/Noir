@@ -129,9 +129,9 @@ public class CutsceneController : MonoBehaviour
                 //search for a CutscenePlayer. If found, start the cutscene and break out of the foreach loop
                 foreach (GameObject obj in SceneManager.GetActiveScene().GetRootGameObjects())
                 {                    
-                    if (obj.GetComponent<CutscenePlayer>() != null)
+                    if (obj.GetComponent<CutscenePlayer1>() != null)
                     {
-                        obj.GetComponent<CutscenePlayer>().StartCutscene(this, cutsceneName);
+                        obj.GetComponent<CutscenePlayer1>().StartCutscene(this, cutsceneName);
                         playerFound = true;
                         break;
                     }

@@ -7,7 +7,7 @@ using Unity.VisualScripting;
 //IMPORTANT: Add it as a component on a ROOT gameobject in the unity scene containing the cutscne, preferably the first root object
 //Even better, have the CutscenePlayer as the only root object (except for the Bolt "Scene Variables" object) and put all other scene objects as chilcren of the player.
 //The cutscene player should also probably implement a bolt state machine. The CutsceneConversation bolt macros are written based on this assumption
-public class CutscenePlayer : MonoBehaviour
+public class CutscenePlayer1 : MonoBehaviour
 {
     private CutsceneController controller;
     private string cutsceneName;
