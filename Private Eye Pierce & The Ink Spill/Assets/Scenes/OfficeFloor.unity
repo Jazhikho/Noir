@@ -2067,9 +2067,9 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: -1
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 6942517707294277919, guid: b05ddc4e1756c4c439a25b43f7c6e5b7, type: 3}
+  m_Sprite: {fileID: 3182100205326513115, guid: 77e7ed623937077469e8f3deb8fd7de1, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_FlipX: 0
+  m_FlipX: 1
   m_FlipY: 0
   m_DrawMode: 0
   m_Size: {x: 4.3, y: 2.56}
@@ -2240,7 +2240,7 @@ Transform:
   m_GameObject: {fileID: 461066820}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -8.26, y: -0.09, z: 0}
+  m_LocalPosition: {x: 11.4, y: -0.09, z: 0}
   m_LocalScale: {x: 6.223954, y: 6.223954, z: 6.223954}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2295,7 +2295,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: -2825360641880775547, guid: d889048395e227c419f25090b397b6b3, type: 3}
+  m_Sprite: {fileID: 3494591215596985847, guid: e0c49763738486241abcf0953451081e, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -2553,7 +2553,7 @@ Transform:
   m_GameObject: {fileID: 507697320}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 10.245999, y: -5.13122, z: 0}
+  m_LocalPosition: {x: -8.36, y: -5.13122, z: 0}
   m_LocalScale: {x: 6, y: 6, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2610,7 +2610,7 @@ SpriteRenderer:
   m_MaskInteraction: 0
   m_Sprite: {fileID: -2400380091199245223, guid: dfa7bb1c4565a504eb4e5bc67976c271, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_FlipX: 1
+  m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
   m_Size: {x: 0.43, y: 0.55}
@@ -3783,7 +3783,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: -1
   m_MaskInteraction: 0
-  m_Sprite: {fileID: -9060671508730346864, guid: 209e3c40bc4408e4b99b9727a622f210, type: 3}
+  m_Sprite: {fileID: -9060671508730346864, guid: 8104dac947dc0bc42a6678a9f638d1a1, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -5910,6 +5910,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UIController
   pauseMenu: {fileID: 140429611}
+  gameSceneName: Cutscene
+  mainMenuSceneName: MainMenu
 --- !u!1 &1322054482
 GameObject:
   m_ObjectHideFlags: 0
