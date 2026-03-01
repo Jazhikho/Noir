@@ -43,9 +43,10 @@ public class ClickController2D : MonoBehaviour
 
     private IInteractable _hovered;
     private GameObject _hoveredObject;
+    private OverlaySpriteOnInteract[] _cachedOverlayScripts;
 
     /// <summary>
-    /// Caches camera and pierce controller. Uses Camera.main and FindFirstObjectByType PointClickController if not assigned.
+    /// Caches camera, pierce controller, and overlay scripts for click preference. Uses Camera.main and FindFirstObjectByType PointClickController if not assigned.
     /// </summary>
     private void Start()
     {
@@ -55,6 +56,7 @@ public class ClickController2D : MonoBehaviour
             pierceController = FindFirstObjectByType<PointClickController>();
         if (pierceController != null)
             pierceController.inputHandledExternally = true;
+        _cachedOverlayScripts = FindObjectsByType<OverlaySpriteOnInteract>(FindObjectsSortMode.None);
     }
 
     /// <summary>
@@ -64,12 +66,14 @@ public class ClickController2D : MonoBehaviour
     {
         if (cam == null) return;
         if (UIController.IsPaused) return;
+        if (SearchableProp.IsSearchInProgress) return;
 
         Vector2 screenPos = Mouse.current != null ? Mouse.current.position.ReadValue() : (Vector2)Input.mousePosition;
         Vector2 world = cam.ScreenToWorldPoint(screenPos);
 
-        // Hover check for interactables first (so cursor and clicks work even when UI is under the pointer)
-        Collider2D hitHover = Physics2D.OverlapPoint(world, interactableMask);
+        // Hover check for interactables. When multiple colliders overlap (e.g. fridge parent + open fridge overlay),
+        // prefer the one with SearchableProp so clicking the open fridge runs search instead of close.
+        Collider2D hitHover = GetPreferredInteractableCollider(world);
         IInteractable newHover = null;
         if (hitHover != null)
             newHover = hitHover.GetComponent<IInteractable>();
@@ -133,6 +137,34 @@ public class ClickController2D : MonoBehaviour
             if (pierceController != null)
                 pierceController.SetTargetX(targetX);
         }
+    }
+
+    /// <summary>
+    /// When multiple interactable colliders overlap (e.g. fridge parent + open fridge overlay), returns the one to use.
+    /// Prefers the overlay (OverlaySpriteOnInteract.overlayToShow) so clicking the open fridge runs search; clicking the rest closes.
+    /// Uses a small radius (0.05) so both overlapping colliders are often returned.
+    /// </summary>
+    private Collider2D GetPreferredInteractableCollider(Vector2 worldPoint)
+    {
+        const float overlapRadius = 0.05f;
+        Collider2D[] hits = Physics2D.OverlapCircleAll(worldPoint, overlapRadius, interactableMask);
+        if (hits == null || hits.Length == 0)
+            return null;
+        if (hits.Length == 1)
+            return hits[0];
+
+        if (_cachedOverlayScripts != null)
+        {
+            foreach (Collider2D c in hits)
+            {
+                foreach (OverlaySpriteOnInteract ov in _cachedOverlayScripts)
+                {
+                    if (ov.overlayToShow != null && ov.overlayToShow == c.gameObject && c.GetComponent<IInteractable>() != null)
+                        return c;
+                }
+            }
+        }
+        return hits[0];
     }
 
     /// <summary>

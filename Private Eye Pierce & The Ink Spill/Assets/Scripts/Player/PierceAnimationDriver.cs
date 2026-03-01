@@ -13,6 +13,7 @@ public class PierceAnimationDriver : MonoBehaviour
 
     [Header("Animator Parameters")]
     public string inspectTrigger = "Inspect";
+    public string releaseInspectBool = "ReleaseInspect";
     public string lookingUpBool = "IsLookingUp";
     /// <summary>Trigger fired when the cursor hovers an interactable (optional highlight reaction).</summary>
     public string highlightReactTrigger = "HighlightReact";
@@ -75,7 +76,35 @@ public class PierceAnimationDriver : MonoBehaviour
         }
 
         animator.SetTrigger(inspectTrigger);
-        Debug.Log("ANIMATION: Playing inspect animation.");
+    }
+
+    /// <summary>
+    /// Plays the inspect animation and holds on the last frame until ReleaseInspect() is called.
+    /// Use for search: call at search start, then ReleaseInspect() when search completes.
+    /// Requires an Animator bool "ReleaseInspect": Inspect state should transition to Idle when ReleaseInspect is true.
+    /// </summary>
+    public void PlayInspectAndHold()
+    {
+        if (animator == null)
+        {
+            Debug.LogWarning("PierceAnimationDriver: Cannot play inspect, no Animator.");
+            return;
+        }
+
+        if (!string.IsNullOrEmpty(releaseInspectBool))
+            animator.SetBool(releaseInspectBool, false);
+        animator.SetTrigger(inspectTrigger);
+    }
+
+    /// <summary>
+    /// Releases the inspect hold so the animator can transition from Inspect back to Idle. Call when search completes.
+    /// </summary>
+    public void ReleaseInspect()
+    {
+        if (animator == null)
+            return;
+        if (!string.IsNullOrEmpty(releaseInspectBool))
+            animator.SetBool(releaseInspectBool, true);
     }
 
     public void PlayInspectAutoEnd()

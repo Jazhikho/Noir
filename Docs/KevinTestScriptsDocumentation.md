@@ -67,15 +67,17 @@ Think of an Event Flag like a light switch. It's either ON or OFF. The game uses
 - Is the break room door unlocked? (ON = yes, OFF = no)
 - Did the player complete the tutorial? (ON = yes, OFF = no)
 
-### The 3 Event Flags You Need to Create
+### The Event Flags You Need to Create
 
-For the demo, you need exactly 3 Event Flags:
+For the demo and Janitor Keys puzzle, create these Event Flags:
 
 | Flag Name | What It Remembers |
 |-----------|-------------------|
 | TutorialComplete | Did Pierce break the office door window? |
 | BreakRoomUnlocked | Did Pierce complete the vending machine puzzle? |
 | HasKeys | Did Pierce find the janitor's keys? |
+| JanitorQuestStarted | Did the janitor give Pierce the quest at the elevator? |
+| JanitorQuestComplete | Did Pierce return the keys to the janitor? |
 
 ### How to Create an Event Flag (Step by Step)
 
@@ -92,13 +94,15 @@ For the demo, you need exactly 3 Event Flags:
    - TutorialComplete
    - BreakRoomUnlocked
    - HasKeys
+   - JanitorQuestStarted
+   - JanitorQuestComplete
 
 6. **Configure the Flag** – Click on the flag. In the Inspector:
    - **Is Active**: Leave UNCHECKED (the flag starts OFF)
    - **Reset On Play**: CHECK this box (so the flag resets when you test the game)
    - **Default Value**: Leave UNCHECKED (the flag should start as OFF)
 
-7. **Repeat** – Do steps 3–6 three times, once for each flag name.
+7. **Repeat** – Do steps 3–6 once for each flag name (e.g. five times if using all flags above).
 
 ---
 
@@ -271,16 +275,14 @@ When an interactable is highlighted (cursor hovers over it), this can trigger: a
 ### SearchPromptUI.cs
 
 **What Does It Do?**  
-Shows "Searching..." when Pierce searches a trash can or desk. Singleton (`SearchPromptUI.Instance`).
+Shows "Searching..." (or custom text) on screen when Pierce searches. Singleton (`SearchPromptUI.Instance`). SearchableProp uses the singleton when available; if it is null (e.g. panel starts inactive), it finds SearchPromptUI via `FindFirstObjectByType` so the message still shows.
 
 **How to Hook It Up**
 
 1. Inside HUDCanvas, create Panel named "SearchPanel"
-2. Inside that panel, create TextMeshPro text named "SearchingText"
-3. Type "Searching..." in the text
-4. Add SearchPromptUI to SearchPanel
-5. Assign **Panel Root** and **Tmp Text**
-6. DISABLE SearchPanel (SearchableProp calls Show/Hide at runtime)
+2. Inside that panel, create TextMeshPro text named "SearchingText". Set **Default Text** on SearchPromptUI to "Searching..." (or leave default).
+3. Add SearchPromptUI to SearchPanel. Assign **Panel Root** (the SearchPanel GameObject) and **Tmp Text**
+4. DISABLE SearchPanel at edit time so it is hidden at start; SearchableProp calls **Show()** / **Hide()** at runtime
 
 ---
 
@@ -359,6 +361,45 @@ Click-based door. When Pierce clicks, he walks to it and RoomManager transitions
 5. Set **Door Direction**: **Left** (cursor shows left arrow), **Right** (right arrow), or **Wall** (up arrow for doors on the wall)
 6. Optionally assign **Glow Effect** (GameObject to show when hovering)
 7. RoomManager handles the transition when the player reaches the door
+
+### TwoStateSpriteSwapper.cs
+
+**What Does It Do?**  
+Swaps a SpriteRenderer to a "checked" sprite when you call **SwapToCheckedSprite()**. Use it so that clicking (or after searching) an object—e.g. the fridge—replaces the current sprite with a "checked" version (e.g. open fridge, ticked box). Optional one-time-only behaviour so it only swaps once.
+
+**How to Hook It Up**
+
+1. Add **TwoStateSpriteSwapper** to the same GameObject that has the SpriteRenderer (or assign **Target Renderer** to another object).
+2. Assign **Checked Sprite** (the sprite to show after interaction, e.g. your checked/open fridge sprite).
+3. Leave **Swap Only Once** checked so repeated clicks don’t change it again.
+4. Call the swap from one of:
+   - **Interactable > On Interact**: add a listener → this GameObject → **TwoStateSpriteSwapper > SwapToCheckedSprite ()**. Click = immediate sprite swap.
+   - **SearchableProp > On Search Complete**: if the object is also searchable, add a listener → this GameObject → **TwoStateSpriteSwapper > SwapToCheckedSprite ()**. Sprite swaps after the search finishes.
+
+**Example – Fridge (click to swap only):** Add Box Collider 2D (Layer: Interactable), Interactable, and TwoStateSpriteSwapper. Set Checked Sprite to your opened/checked fridge art. On Interactable **On Interact**, add **TwoStateSpriteSwapper > SwapToCheckedSprite**.
+
+**Example – Fridge (search then swap):** If the fridge has SearchableProp, add TwoStateSpriteSwapper and assign Checked Sprite. On SearchableProp **On Search Complete**, add **TwoStateSpriteSwapper > SwapToCheckedSprite** so the sprite changes after Pierce finishes searching.
+
+### OverlaySpriteOnInteract.cs
+
+**What Does It Do?**
+Shows or hides an overlay GameObject (e.g. a child with a sprite) **on top** of the current object. Use **ToggleOverlay()** on the fridge’s one Interactable so one click opens (and plays open sound) and the next click closes (and plays close sound). **On Overlay Shown** fires when opened (wire to open sound); **On Overlay Hidden** fires when closed (wire to close sound).
+
+**How to Hook It Up**
+
+1. **Create the overlay:** Under your object (e.g. FridgeUnopened), create a child: Right-click the object > Create Empty. Name it e.g. "FridgeOverlay".
+2. **Add a sprite to the overlay:** Add a **Sprite Renderer** to the child. Assign your "opened" or overlay sprite. Position the child so the sprite sits on top of the parent (use Transform position, or a higher Sorting Order so it draws in front).
+3. **Disable the overlay:** Leave the overlay child **disabled** (checkbox unchecked in the Hierarchy) so it is hidden until opened.
+4. **Add the script:** Add **Overlay Sprite On Interact** to the **parent** (e.g. FridgeUnopened). Assign **Overlay To Show** to the child (FridgeOverlay).
+5. **Play open/close sounds:** **On Overlay Shown** → add a listener (e.g. AudioSource > PlayOneShot) and assign your "Fridge Opened" clip. **On Overlay Hidden** → add a listener (e.g. AudioSource > PlayOneShot) and assign your "Fridge Closed" clip.
+6. **Wire the fridge box:** On the parent's **Interactable > On Interact**, add **OverlaySpriteOnInteract > ToggleOverlay ()**. One click on the fridge: if closed → opens and plays open sound; if open → closes and plays close sound.
+
+**Example – Fridge (open/close only, one click target):** One collider on the fridge. **FridgeUnopened** has Box Collider 2D (Layer: Interactable), Interactable, OverlaySpriteOnInteract. Assign **Overlay To Show** = FridgeOverlay (child with opened sprite, starts disabled). **Interactable On Interact** → **OverlaySpriteOnInteract > ToggleOverlay ()**. **On Overlay Shown** → play "Fridge Opened" (e.g. AudioSource > PlayOneShot). **On Overlay Hidden** → play "Fridge Closed" (e.g. AudioSource > PlayOneShot). Click closed fridge → opens + open sound. Click open fridge → closes + close sound.
+
+**Example – Fridge (open/close + sound + search):**
+- **Parent (FridgeUnopened):** Box Collider 2D (Layer: Interactable), Interactable, OverlaySpriteOnInteract. Assign **Overlay To Show** = FridgeOverlay. **On Overlay Shown** → open sound. **On Overlay Hidden** → close sound. **Interactable On Interact** → **OverlaySpriteOnInteract > ToggleOverlay ()**.
+- **Child (FridgeOverlay):** Sprite Renderer (opened fridge sprite), Box Collider 2D (Layer: Interactable), Interactable, SearchableProp. Start **disabled**. **Interactable On Interact** → **SearchableProp > Search**. Add to KeyHuntManager if this is a key search spot.
+- Result: Click closed fridge → overlay appears (opened fridge), sound plays. Click the **opened fridge interior** (overlay) → search runs (keys). Click the **door/frame** (parent’s collider) → overlay hides (fridge closes). So "clicking the opened fridge" to search does not close it; only clicking the close area closes it. Size the parent and overlay colliders so the overlay covers the "search inside" area and the parent still has a clickable "door" area when open if you want both close and search.
 
 ---
 
@@ -443,7 +484,7 @@ Plays footstep sounds when Pierce walks. Starts when he moves, stops when he sto
 ### PierceAnimationDriver.cs
 
 **What Does It Do?**  
-Controls Pierce's animations: look up when mouse is above him, inspect animation when examining things, and an optional **highlight-react** animation when the cursor hovers an interactable (if HoverFeedback is used). Use **PlayInspect** for one-shot; use **PlayInspectAutoEnd** for interactions that should re-enable movement automatically (e.g. SearchableProp).
+Controls Pierce's animations: look up when mouse is above him, inspect animation when examining things, and an optional **highlight-react** animation when the cursor hovers an interactable (if HoverFeedback is used). Use **PlayInspect** for one-shot; use **PlayInspectAndHold** for search—the inspect animation plays and holds on the last frame until **ReleaseInspect()** is called when the search completes.
 
 **How to Hook It Up**
 
@@ -452,8 +493,10 @@ Controls Pierce's animations: look up when mouse is above him, inspect animation
 3. Assign **Animator**
 4. In Animator Controller, add:
    - **Inspect** (Trigger)
+   - **ReleaseInspect** (Bool) – for search: Inspect state should have a transition to Idle when **ReleaseInspect** is true, so the animation holds on the last frame until search ends
    - **IsLookingUp** (Bool) – optional
    - **HighlightReact** (Trigger) – optional; fired when hovering an interactable that has HoverFeedback (set **Highlight React Trigger** on PierceAnimationDriver to match)
+5. Set **Release Inspect Bool** on PierceAnimationDriver to the same parameter name (default "ReleaseInspect"). SearchableProp calls **PlayInspectAndHold()** at search start and **ReleaseInspect()** when the search finishes.
 
 ---
 
@@ -473,11 +516,24 @@ Optional. Randomly picks which searchable object has the keys.
 3. Drag all searchable props into **Searchable Props**
 4. Assign **Has Keys Flag**
 5. Check **Randomize Key Location** for random placement; if unchecked, assign **Fixed Key Prop** to the one SearchableProp that should contain the keys.
+6. For the "arm with keys" moment when keys are found: wire **On Keys Found** to **KeysFoundRevealUI > ShowReveal** (see KeysFoundRevealUI below).
+
+### KeysFoundRevealUI.cs
+
+**What Does It Do?**  
+Shows Pierce's arm with the keys in hand (fullscreen or overlay UI Image) when the keys are found, then fades out. Same idea as the vending machine hand reveal at the end of that puzzle. Wire **KeyHuntManager > On Keys Found** to **ShowReveal ()**. If the component is on an inactive GameObject (e.g. "KeysFound"), the coroutine runs on KeyHuntManager so the reveal still works; the script will activate the GameObject when showing.
+
+**How to Hook It Up**
+
+1. Under **HUD Canvas**, create **UI > Image** (e.g. name "KeysFound"). Set **Source Image** to your arm-with-keys sprite. Stretch or position as needed.
+2. Add **KeysFoundRevealUI** to the same GameObject as the Image (or to a parent). Assign **Arm With Keys Image** to the Image. Set **Display Duration** (e.g. 2) and **Fade Duration** (e.g. 0.5). Optionally assign **Player Root** (Pierce) to hide him during the reveal.
+3. Leave the KeysFound GameObject **disabled** at start so the image is hidden; the script activates it when keys are found.
+4. On **KeyHuntManager**, in **On Keys Found**, add a listener: drag the GameObject with KeysFoundRevealUI, choose **KeysFoundRevealUI > ShowReveal ()**.
 
 ### SearchableProp.cs
 
 **What Does It Do?**  
-Put on things Pierce can search (trash cans, desks). When clicked, Pierce searches and might find keys. Uses SearchPromptUI.Instance for "Searching..." text.
+Put on things Pierce can search (trash cans, desks). When clicked, Pierce plays the inspect animation (held on last frame until search ends), shows "Searching..." via SearchPromptUI, then shows dialogue or result. Uses SearchPromptUI (Instance or FindFirstObjectByType) for the on-screen "Searching..." message.
 
 **How to Hook It Up**
 
@@ -541,6 +597,112 @@ Pierce's hand gets stuck. Fullscreen arm image shakes. Click fast to escape. The
    - **Break Room Unlocked Flag**
    - **Max Shake Intensity**: 20
 8. On Interactable **On Interact**, connect to VendingMachinePuzzle > StartPuzzle
+
+### JanitorKeysPuzzle.cs
+
+**What Does It Do?**  
+Controls the janitor keys quest. When Pierce tries the elevator, the janitor (through dialogue) gives him the quest to find the keys. Pierce searches garbage cans and office props in multiple rooms (Pierce's office, office back, break room fridge). Finding the keys is handled by **KeyHuntManager** and **SearchableProp**; this script handles elevator dialogue (quest start, reminder, completion when Pierce returns with keys).
+
+**How to Hook It Up**
+
+1. Create Event Flags: **JanitorQuestStarted**, **JanitorQuestComplete** (and **HasKeys** if not already created). See Section 2.
+2. Create a **JanitorKeysPuzzle** controller: Create Empty "JanitorKeysPuzzleController", add **JanitorKeysPuzzle** (KevinTests.Puzzles).
+3. Create 3 Dialogue Assets: **Janitor Quest Start** (janitor gives quest), **Janitor Reminder** (no keys yet), **Janitor Thanks** (keys returned; quest complete). Assign them to the puzzle controller.
+4. Assign **Dialogue Runner**, **Has Keys Flag**, **Janitor Quest Started Flag**, **Janitor Quest Complete Flag**. Optionally assign **Key Hunt Manager** (same Has Keys Flag must be on KeyHuntManager and its SearchableProps).
+5. On the **elevator** GameObject: add Box Collider 2D (Layer: Interactable), **Interactable**. In Interactable **On Interact**, add a listener: drag JanitorKeysPuzzleController → **JanitorKeysPuzzle > OnElevatorInteract**.
+6. Add searchable props in each room and add them to KeyHuntManager (see "Wiring the Janitor Keys Puzzle in Unity" below).
+
+---
+
+### Wiring the Janitor Keys Puzzle in Unity
+
+This walkthrough wires the full flow: elevator (quest start) → search in Pierce's office, office back, break room (fridge) → return to elevator (complete).
+
+**Step 1: Event Flags**
+
+1. In **Assets > ScriptableObjects > Flags**, create **Create > Game > Event Flag** for: **JanitorQuestStarted**, **JanitorQuestComplete**, **HasKeys** (if missing).
+2. Leave **Is Active** unchecked, check **Reset On Play** if you want them to reset when testing.
+
+**Step 2: JanitorKeysPuzzle controller**
+
+1. In the Hierarchy (in the scene that has the elevator), create Empty → name it **JanitorKeysPuzzleController**.
+2. Add Component → **Janitor Keys Puzzle** (script under KevinTests.Puzzles).
+3. Create 3 Dialogue Assets (**Create > Dialogue > Dialogue Asset**): e.g. `JanitorQuestStart`, `JanitorReminder`, `JanitorThanks`. Write lines for: (1) janitor gives quest, (2) "Did you find my keys?", (3) "Thanks, you're a lifesaver!" (or similar).
+4. Assign on **JanitorKeysPuzzle**:
+   - **Janitor Quest Start Dialogue**, **Janitor Reminder Dialogue**, **Janitor Thanks Dialogue**
+   - **Dialogue Runner** (scene’s DialogueRunner)
+   - **Has Keys Flag**, **Janitor Quest Started Flag**, **Janitor Quest Complete Flag**
+   - **Key Hunt Manager** (optional; the GameObject with KeyHuntManager)
+
+**Step 3: Elevator (quest start / completion)**
+
+1. Select the **elevator** GameObject (button, door, or panel that represents “talk to janitor”).
+2. Ensure it has **Box Collider 2D**, Layer **Interactable**.
+3. Add **Interactable** if missing. Set **Interaction Point** or leave default.
+4. In **Interactable > On Interact**, click + and assign:
+   - **Object**: JanitorKeysPuzzleController
+   - **Function**: **JanitorKeysPuzzle > OnElevatorInteract ()**.
+
+**Step 4: KeyHuntManager (one per scene or shared)**
+
+1. Create Empty **KeyHuntManager** (or use existing).
+2. Add **KeyHuntManager**.
+3. Assign **Has Keys Flag** (same asset as on JanitorKeysPuzzle).
+4. Either check **Randomize Key Location** or leave unchecked and set **Fixed Key Prop** to the one SearchableProp that should hold the keys (e.g. break room fridge).
+
+**Step 5: Searchable props in each room**
+
+Add searchable objects in **Pierce's office**, **office back**, and **break room** (including the fridge). For each:
+
+1. Select the prop (e.g. garbage can, desk, fridge).
+2. Add **Box Collider 2D**, set Layer to **Interactable**.
+3. Add **Interactable**.
+4. Add **SearchableProp**. Set **Search Duration** (e.g. 1.5). Assign **Has Keys Flag**. Do **not** check **Contains Keys** if using KeyHuntManager (it will set the key location); only check it if you are **not** using KeyHuntManager and this is the fixed key prop.
+5. In **Interactable > On Interact**, add listener: **SearchableProp > Search** (on the same GameObject).
+6. Drag this GameObject into **KeyHuntManager > Searchable Props** (if using KeyHuntManager). Repeat for every searchable in all three rooms.
+
+**Step 6: Where the keys are**
+
+- **Random:** On KeyHuntManager, check **Randomize Key Location**. One of the props in the list will have the keys each run.
+- **Fixed (e.g. fridge):** Leave **Randomize Key Location** unchecked. Assign the break room fridge’s SearchableProp to **Fixed Key Prop**.
+
+**Step 7: Arm with keys reveal (when keys are found)**
+
+When Pierce finds the keys, show his arm holding the keys (like the vending machine hand reveal). Use **KeysFoundRevealUI** (see Puzzles section): create a UI Image under HUD Canvas with the arm-with-keys sprite, start disabled. Add **KeysFoundRevealUI** to a GameObject, assign **Arm With Keys Image**. On **KeyHuntManager**, in **On Keys Found**, add a listener to **KeysFoundRevealUI > ShowReveal ()**.
+
+**Step 8: Optional – elevator door after completion**
+
+If the elevator should become a door to another room after the quest (e.g. use LockedDoor):
+
+1. Add **LockedDoor** to the elevator (or a separate door GameObject).
+2. Set **Unlock Flag** to **JanitorQuestComplete**. When Pierce returns the keys, the flag is set and the door can be used.
+
+**Checklist**
+
+- [ ] JanitorQuestStarted, JanitorQuestComplete, HasKeys flags created and assigned.
+- [ ] JanitorKeysPuzzleController has all three dialogues and Dialogue Runner.
+- [ ] Elevator Interactable → OnElevatorInteract.
+- [ ] KeyHuntManager has Has Keys Flag and all Searchable Props from office, office back, break room.
+- [ ] Each searchable has Interactable + SearchableProp, On Interact → Search, and is in KeyHuntManager’s list.
+- [ ] SearchPromptUI (SearchPanel with TMP text) present under HUD so "Searching..." shows during search.
+- [ ] **KeysFoundRevealUI** set up: arm-with-keys Image (starts disabled), and **KeyHuntManager > On Keys Found** → **KeysFoundRevealUI > ShowReveal**.
+
+**OfficeFloor scene – what to wire / fix (from scene inspection)**
+
+| Item | Status | Action |
+|------|--------|--------|
+| **Elevator** | OK | Layer 6, JanitorKeysPuzzle + Interactable → OnElevatorInteract. |
+| **KeyHuntManager** | OK | 4 props, Has Keys Flag, Fixed Key Prop (fridge), On Keys Found → KeysFoundRevealUI.ShowReveal. |
+| **JanitorKeysPuzzle** (on Elevator) | OK | All 3 dialogues, Dialogue Runner, Key Hunt Manager, all 3 flags. |
+| **Fridge (FridgeUnopened)** | OK | Layer 6, Interactable → ToggleOverlay, OverlaySpriteOnInteract + open/close sounds. |
+| **checkedFridge_0** (fridge overlay) | OK | Layer 6, SearchableProp (keys), Interactable → Search. |
+| **KeysFound** (under HUDCanvas) | OK | KeysFoundRevealUI, arm image, playerRoot (Pierce), starts disabled. |
+| **SearchPanel** (under HUDCanvas) | OK | SearchPromptUI, panelRoot, tmpText, defaultText "Searching...", starts disabled. |
+| **Pierce** | OK | PierceAnimationDriver has **Release Inspect Bool** = "ReleaseInspect". |
+| **UncheckedTrashPierceOffice** | **FIX** | **Interactable > On Interact** is empty. Add listener: **SearchableProp > Search** (same GameObject). |
+| **UncheckedBoxPierceOffice** | **FIX** | GameObject is **Layer 0**. Set to **Layer 6 (Interactable)** so clicks register. |
+| **Pierce Animator** | **CHECK** | Add Bool **ReleaseInspect**. Inspect state: add transition to Idle when **ReleaseInspect** is true (so inspect holds on last frame until search ends). |
+| **Dialogue for "nothing here"** | Optional | On each SearchableProp, assign **Dialogue Runner** and **Nothing Found Dialogue** (and **Already Found Dialogue** if desired) so results show in dialogue instead of console. Fridge's SearchableProp has Dialogue Runner unset; others have Runner but no dialogue assets. |
 
 ---
 

@@ -1,0 +1,60 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86cd8c335fb150b489bdabe8c9887b57, type: 3}
+  m_Name: JanitorQuestStart
+  m_EditorClassIdentifier: Assembly-CSharp::DialogueAsset
+  dialogueName: JanitorQuestStart
+  defaultPlayerPortrait: {fileID: -1400755493468073530, guid: 1bf00380608c4ad4fa119ad1f51bf051, type: 3}
+  defaultOtherPortrait: {fileID: 4526296290215008011, guid: 38254f2e8252a084092c30ac2d2b32e7, type: 3}
+  playerName: Pierce
+  otherName: Janitor
+  lines:
+  - speaker: 1
+    text: "Sorry son, this old girl isn\u2019t going anywhere. Damn thing\u2014 locked
+      behind me before I even realized what happened."
+    portrait: {fileID: 4526296290215008011, guid: 38254f2e8252a084092c30ac2d2b32e7, type: 3}
+    typingSpeed: 0
+    nextLineIndex: 0
+    onLineStart:
+      m_PersistentCalls:
+        m_Calls: []
+    onLineEnd:
+      m_PersistentCalls:
+        m_Calls: []
+    choices: []
+  - speaker: 1
+    text: "I could probably get her open if I had my keys. I thought I asked my wife
+      to fix that hole\u2026"
+    portrait: {fileID: 4526296290215008011, guid: 38254f2e8252a084092c30ac2d2b32e7, type: 3}
+    typingSpeed: 0
+    nextLineIndex: 0
+    onLineStart:
+      m_PersistentCalls:
+        m_Calls: []
+    onLineEnd:
+      m_PersistentCalls:
+        m_Calls: []
+    choices: []
+  - speaker: 1
+    text: Guess this is my sign to take a little break. If only there was somewhere
+      to put my feet up.
+    portrait: {fileID: 4526296290215008011, guid: 38254f2e8252a084092c30ac2d2b32e7, type: 3}
+    typingSpeed: 0
+    nextLineIndex: 0
+    onLineStart:
+      m_PersistentCalls:
+        m_Calls: []
+    onLineEnd:
+      m_PersistentCalls:
+        m_Calls: []
+    choices: []
+  startingLine: 0
