@@ -3578,7 +3578,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DoorInteractable
   targetRoomId: Pierce
-  targetSpawn: Left
+  targetSpawn: Right
   doorDirection: 1
   glowEffect: {fileID: 0}
 --- !u!61 &730413651
@@ -3843,7 +3843,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DoorInteractable
   targetRoomId: PierceBack
-  targetSpawn: Right
+  targetSpawn: Left
   doorDirection: 0
   glowEffect: {fileID: 0}
 --- !u!61 &778269626
@@ -6784,7 +6784,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DoorInteractable
   targetRoomId: PierceBack
-  targetSpawn: Left
+  targetSpawn: Right
   doorDirection: 1
   glowEffect: {fileID: 0}
 --- !u!61 &1289394068
@@ -7101,7 +7101,7 @@ Transform:
   m_GameObject: {fileID: 1322054482}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 6.71, y: -6, z: 0}
+  m_LocalPosition: {x: -10.12, y: -6, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -7241,7 +7241,7 @@ Transform:
   m_GameObject: {fileID: 1336363087}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -11.98, y: -6, z: 0}
+  m_LocalPosition: {x: -4.22, y: -6, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -7403,7 +7403,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DoorInteractable
   targetRoomId: Pierce
-  targetSpawn: Right
+  targetSpawn: Left
   doorDirection: 0
   glowEffect: {fileID: 0}
 --- !u!61 &1357746357
@@ -7611,7 +7611,7 @@ Transform:
   m_GameObject: {fileID: 1382362960}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -8.72, y: -6, z: 0}
+  m_LocalPosition: {x: 7.36, y: -6, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -10850,7 +10850,7 @@ Transform:
   m_GameObject: {fileID: 2058290561}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 9, y: -6, z: 0}
+  m_LocalPosition: {x: -10.81, y: -6, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
