@@ -11,6 +11,9 @@ public class DialogueUI : MonoBehaviour
     public GameObject dialoguePanel; // Assign the panel GameObject in Inspector
     public Image playerImage;
     public Image npcImage;
+    public Image dialogueBubble;
+    public Sprite bubbleRight;
+    public Sprite bubbleLeft;
     public TMP_Text dialogueText;
     public TMP_Text speakerNameText;
 
@@ -72,9 +75,15 @@ public class DialogueUI : MonoBehaviour
 
         // Set speaker name
         if (line.speaker == Speaker.Player)
+        { 
             speakerNameText.text = currentDialogue.playerName;
+            dialogueBubble.sprite = bubbleRight;
+        }
         else
+        { 
             speakerNameText.text = currentDialogue.otherName;
+            dialogueBubble.sprite = bubbleLeft;
+        }
 
         // Set portraits with overrides or defaults
         if (line.speaker == Speaker.Player && line.portrait != null)
