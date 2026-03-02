@@ -38,11 +38,26 @@ public class DoorInteractable : MonoBehaviour, IInteractable
     /// </summary>
     public GameObject glowEffect;
 
+    private LockedDoor _lockedDoor;
+
+    void Awake()
+    {
+        _lockedDoor = GetComponent<LockedDoor>();
+    }
+
     /// <summary>
     /// Starts a room transition to targetRoomId when the player reaches this door. Sets the player's walk target to this door (using the same controller as ClickController2D) so they move there; RoomManager triggers the transition on arrival.
+    /// If a LockedDoor component exists and the door is currently locked, blocks entry and fires locked events.
     /// </summary>
     public void OnClick()
     {
+        if (_lockedDoor != null && _lockedDoor.IsCurrentlyLocked())
+        {
+            Debug.Log("[DoorInteractable] Door is locked.");
+            _lockedDoor.OnLockedAttempt?.Invoke();
+            return;
+        }
+
         if (RoomManager.Instance == null)
         {
             Debug.LogError("[DoorInteractable] RoomManager.Instance is null. Is there a RoomManager in the scene with no duplicate?", this);

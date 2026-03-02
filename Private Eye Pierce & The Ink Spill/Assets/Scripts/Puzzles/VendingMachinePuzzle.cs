@@ -49,6 +49,15 @@ public class VendingMachinePuzzle : MonoBehaviour
     [Header("Completion")]
     public EventFlag breakRoomUnlockedFlag;
 
+    // KEVIN EDIT - gate: puzzle won't start unless this flag is active (e.g. TutorialComplete)
+    [Header("Gate")]
+    [Tooltip("If set, puzzle only starts when this flag is active. Use TutorialComplete so vending machine is blocked until window is broken.")]
+    public EventFlag requiredFlag;
+    [Tooltip("Optional. Dialogue runner for showing the blocked message.")]
+    public DialogueRunner dialogueRunner;
+    [Tooltip("Optional. Played when player tries the vending machine before the required flag is set.")]
+    public DialogueAsset blockedDialogue;
+
     [Header("Events")]
     public UnityEvent OnPuzzleStarted;
     public UnityEvent OnPuzzleCompleted;
@@ -61,6 +70,10 @@ public class VendingMachinePuzzle : MonoBehaviour
     private List<float> clickTimestamps = new List<float>();
     private RectTransform armRectTransform;
     private Vector2 armOriginalPosition;
+
+    // KEVIN EDIT - for waiting on blocked dialogue before ending interaction
+    private DialogueUI _dialogueUI;
+    private bool _waitingForBlockedDialogue;
 
     void Awake()
     {
@@ -86,6 +99,32 @@ public class VendingMachinePuzzle : MonoBehaviour
         }
     }
 
+    // KEVIN EDIT - cache DialogueUI for blocked dialogue callback
+    void Start()
+    {
+        if (dialogueRunner == null)
+            dialogueRunner = FindFirstObjectByType<DialogueRunner>();
+        if (dialogueRunner != null)
+            _dialogueUI = dialogueRunner.GetComponent<DialogueUI>();
+        if (_dialogueUI != null)
+            _dialogueUI.OnDialogueFinished += OnBlockedDialogueFinished;
+    }
+
+    void OnDestroy()
+    {
+        if (_dialogueUI != null)
+            _dialogueUI.OnDialogueFinished -= OnBlockedDialogueFinished;
+    }
+
+    private void OnBlockedDialogueFinished()
+    {
+        if (_waitingForBlockedDialogue)
+        {
+            _waitingForBlockedDialogue = false;
+            Interactable.EndCurrentInteraction();
+        }
+    }
+
     void Update()
     {
         if (!puzzleActive) return;
@@ -102,6 +141,22 @@ public class VendingMachinePuzzle : MonoBehaviour
         if (puzzleCompleted)
         {
             Interactable.EndCurrentInteraction();
+            return;
+        }
+
+        // KEVIN EDIT - block puzzle if required flag is not yet active (dunno how players would get to this before the tutorial ends, but just to be safe...)
+        if (requiredFlag != null && !requiredFlag.isActive)
+        {
+            Debug.Log("PUZZLE: Vending machine blocked — required flag not active.");
+            if (dialogueRunner != null && blockedDialogue != null)
+            {
+                _waitingForBlockedDialogue = true;
+                dialogueRunner.StartDialogue(blockedDialogue);
+            }
+            else
+            {
+                Interactable.EndCurrentInteraction();
+            }
             return;
         }
 

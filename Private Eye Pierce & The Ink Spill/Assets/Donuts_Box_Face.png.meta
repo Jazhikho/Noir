@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 4667691993752fa4e9faa745a1208607
+guid: a35f8d6cedf274c4e9ca6d291e917f1e
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 6522260682055781001
-    second: checkedFridge_0
+      213: -9129035271553760733
+    second: Donuts_Box_Face_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -126,23 +126,23 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: checkedFridge_0
+      name: Donuts_Box_Face_0
       rect:
         serializedVersion: 2
-        x: 37
-        y: 33
-        width: 111
-        height: 201
+        x: 6
+        y: 0
+        width: 190
+        height: 61
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 98a8e6ea889b38a50800000000000000
-      internalID: 6522260682055781001
+      spriteID: 322c609c9c62f4180800000000000000
+      internalID: -9129035271553760733
       vertices: []
       indices: 
       edges: []
@@ -151,7 +151,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: f5f53c8f56f3e8640b78a8a1f32ce34c
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
@@ -161,7 +161,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      checkedFridge_0: 6522260682055781001
+      Donuts_Box_Face_0: -9129035271553760733
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

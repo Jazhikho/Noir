@@ -9,6 +9,7 @@ public class SearchableProp : MonoBehaviour
 
     [Header("Search Settings")]
     public float searchDuration = 1.5f;
+    public bool disableColliderAfterFirstSearch = false;
 
     [Header("Flags")]
     public EventFlag hasKeysFlag;
@@ -51,6 +52,11 @@ public class SearchableProp : MonoBehaviour
 
     public void Search()
     {
+        if (hasBeenSearched)
+        {
+            Interactable.EndCurrentInteraction();
+            return;
+        }
         StartCoroutine(SearchCoroutine());
     }
 
@@ -100,6 +106,11 @@ public class SearchableProp : MonoBehaviour
         }
 
         hasBeenSearched = true;
+        if (disableColliderAfterFirstSearch)
+        {
+            Collider2D col = GetComponent<Collider2D>();
+            if (col != null) col.enabled = false;
+        }
         if (animationDriver != null)
             animationDriver.ReleaseInspect();
         OnSearchComplete?.Invoke();

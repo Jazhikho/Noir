@@ -78,6 +78,14 @@ public class Interactable : MonoBehaviour, IInteractable
     public static void EndCurrentInteraction()
     {
         PointClickController player = FindFirstObjectByType<PointClickController>();
+        // KEVIN EDIT - fallback for when player GO is inactive (e.g., KeysFoundRevealUI hides Pierce)
+        if (player == null)
+        {
+            foreach (var p in Resources.FindObjectsOfTypeAll<PointClickController>())
+            {
+                if (p.gameObject.scene.IsValid()) { player = p; break; }
+            }
+        }
         if (player != null)
         {
             player.EnableMovement();

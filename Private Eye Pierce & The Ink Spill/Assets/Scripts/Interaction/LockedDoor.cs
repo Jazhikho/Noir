@@ -78,15 +78,20 @@ public class LockedDoor : MonoBehaviour
         }
         _nextAllowedUse[key] = now + _teleportCooldown;
 
-        Transform spawnPoint = targetRoom.GetEntryPoint(targetEntryPointName);
-        if (spawnPoint != null)
+        PageTurnTransition pageTurn = RoomManager.Instance.pageTurnTransition;
+        if (pageTurn != null && pageTurn.gameObject.activeInHierarchy)
         {
-            playerController.TeleportToX(spawnPoint.position.x);
+            bool doorOnLeft = transform.position.x < GetRoomCenterX();
+            bool rightToLeft = !doorOnLeft;
+            pageTurn.PlayTransition(rightToLeft, () =>
+            {
+                PerformTransition(playerController);
+            });
         }
-
-        RoomManager.Instance.EnterRoom(targetRoom);
-        OnEntered?.Invoke();
-        Interactable.EndCurrentInteraction();
+        else
+        {
+            PerformTransition(playerController);
+        }
     }
 
     /// <summary>
@@ -103,6 +108,34 @@ public class LockedDoor : MonoBehaviour
         }
 
         return isLocked;
+    }
+
+    private void PerformTransition(PointClickController playerController)
+    {
+        Transform spawnPoint = targetRoom.GetEntryPoint(targetEntryPointName);
+        if (spawnPoint != null)
+        {
+            playerController.TeleportToX(spawnPoint.position.x);
+        }
+
+        RoomManager.Instance.EnterRoom(targetRoom);
+        OnEntered?.Invoke();
+        Interactable.EndCurrentInteraction();
+    }
+
+    private float GetRoomCenterX()
+    {
+        if (RoomManager.Instance == null) return 0f;
+        foreach (RoomDefinition room in RoomManager.Instance.rooms)
+        {
+            if (room.roomRoot != null && room.roomRoot.activeInHierarchy)
+            {
+                if (room.floorCollider != null) return room.floorCollider.bounds.center.x;
+                if (room.cameraAnchor != null) return room.cameraAnchor.position.x;
+                break;
+            }
+        }
+        return 0f;
     }
 
     /// <summary>Sets the door to locked state.</summary>

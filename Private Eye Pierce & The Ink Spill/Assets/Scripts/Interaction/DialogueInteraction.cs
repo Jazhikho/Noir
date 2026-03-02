@@ -11,6 +11,13 @@ public class DialogueInteraction : MonoBehaviour
     public EventFlag conditionalFlag;
     public DialogueAsset conditionalDialogueAsset;
 
+    // KEVIN EDIT - one-shot gating: if talkOnceFlag is active, interaction is skipped entirely
+    [Header("One-Shot")]
+    [Tooltip("If set and active, this interaction does nothing (used for talk-once NPCs like Carmen).")]
+    public EventFlag talkOnceFlag;
+    [Tooltip("If set, this flag is activated when the dialogue finishes (pairs with talkOnceFlag for one-shot behavior).")]
+    public EventFlag flagToSetOnEnd;
+
     [Header("Events")]
     public UnityEvent OnDialogueStarted;
     public UnityEvent OnDialogueEnded;
@@ -38,6 +45,13 @@ public class DialogueInteraction : MonoBehaviour
 
     public void StartDialogue()
     {
+        // KEVIN EDIT - block if talk-once flag is already set (e.g., Carmen already talked)
+        if (talkOnceFlag != null && talkOnceFlag.isActive)
+        {
+            Interactable.EndCurrentInteraction();
+            return;
+        }
+
         if (dialogueRunner == null)
         {
             Debug.LogWarning("DialogueInteraction: No DialogueRunner assigned.");
@@ -68,6 +82,11 @@ public class DialogueInteraction : MonoBehaviour
         if (!isDialogueActive) return;
 
         isDialogueActive = false;
+
+        // KEVIN EDIT - set the end flag so this interaction is gated on next click
+        if (flagToSetOnEnd != null && !flagToSetOnEnd.isActive)
+            flagToSetOnEnd.SetActive(true);
+
         OnDialogueEnded?.Invoke();
 
         Interactable.EndCurrentInteraction();

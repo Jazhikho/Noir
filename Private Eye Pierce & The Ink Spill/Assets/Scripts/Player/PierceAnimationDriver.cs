@@ -24,6 +24,7 @@ public class PierceAnimationDriver : MonoBehaviour
     private bool isLookingUp = false;
     private bool autoEndAfterInspect = false;
     private Coroutine autoEndCoroutine;
+    private bool hasReleaseInspectParam = false; // KEVIN EDIT - guards SetBool calls so missing Animator param doesn't spam warnings
 
     void Start()
     {
@@ -38,6 +39,19 @@ public class PierceAnimationDriver : MonoBehaviour
 
         if (playerController == null)
             playerController = FindFirstObjectByType<PointClickController>();
+
+        // KEVIN EDIT - cache whether ReleaseInspect param exists so we don't spam warnings every search
+        if (animator != null && !string.IsNullOrEmpty(releaseInspectBool))
+        {
+            foreach (var param in animator.parameters)
+            {
+                if (param.name == releaseInspectBool && param.type == AnimatorControllerParameterType.Bool)
+                {
+                    hasReleaseInspectParam = true;
+                    break;
+                }
+            }
+        }
     }
 
     void Update()
@@ -91,7 +105,7 @@ public class PierceAnimationDriver : MonoBehaviour
             return;
         }
 
-        if (!string.IsNullOrEmpty(releaseInspectBool))
+        if (!string.IsNullOrEmpty(releaseInspectBool) && hasReleaseInspectParam)
             animator.SetBool(releaseInspectBool, false);
         animator.SetTrigger(inspectTrigger);
     }
@@ -103,7 +117,7 @@ public class PierceAnimationDriver : MonoBehaviour
     {
         if (animator == null)
             return;
-        if (!string.IsNullOrEmpty(releaseInspectBool))
+        if (!string.IsNullOrEmpty(releaseInspectBool) && hasReleaseInspectParam)
             animator.SetBool(releaseInspectBool, true);
     }
 

@@ -35,8 +35,15 @@ namespace KevinTests.Puzzles
         public UnityEvent OnQuestStarted;
         public UnityEvent OnQuestCompleted;
 
+        // KEVIN EDIT - fires AFTER the thanks dialogue finishes; wire DemoEndSequence.PlayEndSequence here
+        [Tooltip("Fires after the quest-complete dialogue finishes. Wire DemoEndSequence.PlayEndSequence here for the end-of-demo transition.")]
+        public UnityEvent OnQuestDialogueFinished;
+
         private DialogueUI _dialogueUI;
         private bool _waitingForDialogue;
+
+        // KEVIN EDIT - tracks whether the dialogue we're waiting on is the quest-complete thanks dialogue
+        private bool _questJustCompleted;
 
         private void Start()
         {
@@ -62,6 +69,14 @@ namespace KevinTests.Puzzles
             if (_waitingForDialogue)
             {
                 _waitingForDialogue = false;
+
+                // KEVIN EDIT - if this was the thanks dialogue, fire the post-dialogue event (DemoEndSequence hook)
+                if (_questJustCompleted)
+                {
+                    _questJustCompleted = false;
+                    OnQuestDialogueFinished?.Invoke();
+                }
+
                 Interactable.EndCurrentInteraction();
             }
         }
@@ -89,6 +104,10 @@ namespace KevinTests.Puzzles
                 Debug.Log("PUZZLE: Janitor keys quest completed.");
                 OnQuestCompleted?.Invoke();
 
+                // KEVIN EDIT - mark that we're waiting for the thanks dialogue specifically.
+                // The existing OnQuestCompleted fired before the thanks dialogue started, which would have kicked off the demo end sequence mid-conversation. Oops
+                _questJustCompleted = true;
+
                 if (dialogueRunner != null && janitorThanksDialogue != null)
                 {
                     _waitingForDialogue = true;
@@ -96,6 +115,9 @@ namespace KevinTests.Puzzles
                 }
                 else
                 {
+                    // KEVIN EDIT - no dialogue to play, fire the post-dialogue event immediately
+                    _questJustCompleted = false;
+                    OnQuestDialogueFinished?.Invoke();
                     Interactable.EndCurrentInteraction();
                 }
                 return;

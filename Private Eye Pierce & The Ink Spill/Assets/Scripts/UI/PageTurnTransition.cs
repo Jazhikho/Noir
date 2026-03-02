@@ -24,6 +24,9 @@ public class PageTurnTransition : MonoBehaviour
     public float peelSoftness = 0.05f;
     [Tooltip("Optional. Plays once when the transition starts. Uses AudioSource on this GameObject; adds one if missing.")]
     public AudioClip transitionSound;
+    [Tooltip("Volume scale for Transition Sound (0 = silent, 1 = full). Note: multiplied by the AudioSource's Volume.")]
+    [Range(0f, 1f)]
+    public float transitionSoundVolume = 1f;
 
     private static readonly int CurlAmountId = Shader.PropertyToID("_CurlAmount");
     private static readonly int CurlFromRightId = Shader.PropertyToID("_CurlFromRight");
@@ -59,7 +62,8 @@ public class PageTurnTransition : MonoBehaviour
             AudioSource src = GetComponent<AudioSource>();
             if (src == null)
                 src = gameObject.AddComponent<AudioSource>();
-            src.PlayOneShot(transitionSound);
+            // PlayOneShot's volumeScale is a per-call multiplier (also multiplied by AudioSource.volume).
+            src.PlayOneShot(transitionSound, transitionSoundVolume);
         }
 
         Camera cam = captureCamera != null ? captureCamera : Camera.main;
