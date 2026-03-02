@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: DoorOpened
   m_EditorClassIdentifier: Assembly-CSharp::DialogueAsset
   dialogueName: DoorOpened
-  defaultPlayerPortrait: {fileID: -1400755493468073530, guid: 1bf00380608c4ad4fa119ad1f51bf051, type: 3}
-  defaultOtherPortrait: {fileID: 0}
+  defaultPlayerPortrait: {fileID: 21300000, guid: 1bf00380608c4ad4fa119ad1f51bf051, type: 3}
+  defaultOtherPortrait: {fileID: 6573717335437068505, guid: 0987ed0183f7f2b418b65d81fc99c30d, type: 3}
   playerName: Pierce
   otherName: 
   lines:
