@@ -1,0 +1,57 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86cd8c335fb150b489bdabe8c9887b57, type: 3}
+  m_Name: CarmenDialogue
+  m_EditorClassIdentifier: Assembly-CSharp::DialogueAsset
+  dialogueName: Carmen First Meeting
+  defaultPlayerPortrait: {fileID: -1400755493468073530, guid: 1bf00380608c4ad4fa119ad1f51bf051, type: 3}
+  defaultOtherPortrait: {fileID: -6586057596007793298, guid: 04210d4f9fcdd7c4d89a15d66b0c18e1, type: 3}
+  playerName: Player
+  otherName: Carmen Evangeline
+  lines:
+  - speaker: 1
+    text: Pierce! Are you alright?
+    portrait: {fileID: -1920779165982319034, guid: 940720eb16e151b469750397726fe618, type: 3}
+    typingSpeed: 0
+    nextLineIndex: 0
+    onLineStart:
+      m_PersistentCalls:
+        m_Calls: []
+    onLineEnd:
+      m_PersistentCalls:
+        m_Calls: []
+    choices: []
+  - speaker: 0
+    text: I am now.
+    portrait: {fileID: -1400755493468073530, guid: 1bf00380608c4ad4fa119ad1f51bf051, type: 3}
+    typingSpeed: 0
+    nextLineIndex: 0
+    onLineStart:
+      m_PersistentCalls:
+        m_Calls: []
+    onLineEnd:
+      m_PersistentCalls:
+        m_Calls: []
+    choices: []
+  - speaker: 0
+    text: I am now.
+    portrait: {fileID: -1400755493468073530, guid: 1bf00380608c4ad4fa119ad1f51bf051, type: 3}
+    typingSpeed: 0
+    nextLineIndex: 0
+    onLineStart:
+      m_PersistentCalls:
+        m_Calls: []
+    onLineEnd:
+      m_PersistentCalls:
+        m_Calls: []
+    choices: []
+  startingLine: 0
