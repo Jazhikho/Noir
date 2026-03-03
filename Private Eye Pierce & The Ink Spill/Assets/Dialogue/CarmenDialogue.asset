@@ -10,17 +10,29 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 86cd8c335fb150b489bdabe8c9887b57, type: 3}
-  m_Name: JanitorQuestEnd
+  m_Name: CarmenDialogue
   m_EditorClassIdentifier: Assembly-CSharp::DialogueAsset
-  dialogueName: JanitorQuestComplete
+  dialogueName: Carmen First Meeting
   defaultPlayerPortrait: {fileID: 21300000, guid: 1bf00380608c4ad4fa119ad1f51bf051, type: 3}
-  defaultOtherPortrait: {fileID: 4526296290215008011, guid: 38254f2e8252a084092c30ac2d2b32e7, type: 3}
-  playerName: Pierce
-  otherName: Janitor
+  defaultOtherPortrait: {fileID: -6586057596007793298, guid: 04210d4f9fcdd7c4d89a15d66b0c18e1, type: 3}
+  playerName: Player
+  otherName: Carmen Evangeline
   lines:
   - speaker: 1
-    text: Is that jingling I hear?
-    portrait: {fileID: 4526296290215008011, guid: 38254f2e8252a084092c30ac2d2b32e7, type: 3}
+    text: Pierce! Are you alright?
+    portrait: {fileID: -1920779165982319034, guid: 940720eb16e151b469750397726fe618, type: 3}
+    typingSpeed: 0
+    nextLineIndex: 0
+    onLineStart:
+      m_PersistentCalls:
+        m_Calls: []
+    onLineEnd:
+      m_PersistentCalls:
+        m_Calls: []
+    choices: []
+  - speaker: 0
+    text: I am now. I was locked inside my office.
+    portrait: {fileID: -1400755493468073530, guid: 1bf00380608c4ad4fa119ad1f51bf051, type: 3}
     typingSpeed: 0
     nextLineIndex: 0
     onLineStart:
@@ -31,9 +43,8 @@ MonoBehaviour:
         m_Calls: []
     choices: []
   - speaker: 1
-    text: "You found my keys! Great work, son. You are one fine detective! That\u2019s
-      why I hear all the ladies talking about you."
-    portrait: {fileID: 4526296290215008011, guid: 38254f2e8252a084092c30ac2d2b32e7, type: 3}
+    text: "What do you mean you were locked inside? Don\u2019t you have a key?"
+    portrait: {fileID: 7836537948929544159, guid: 5860da3408340484f81888cc054d4e09, type: 3}
     typingSpeed: 0
     nextLineIndex: 0
     onLineStart:
@@ -43,22 +54,9 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
     choices: []
-  - speaker: 1
-    text: "What ladies? Don\u2019t worry about it."
-    portrait: {fileID: 4526296290215008011, guid: 38254f2e8252a084092c30ac2d2b32e7, type: 3}
-    typingSpeed: 0
-    nextLineIndex: 0
-    onLineStart:
-      m_PersistentCalls:
-        m_Calls: []
-    onLineEnd:
-      m_PersistentCalls:
-        m_Calls: []
-    choices: []
-  - speaker: 1
-    text: "Oh yeah, the emergency release panel is on the wall next to the door.
-      Can\u2019t miss it. Just put my key in there and we\u2019ll be golden!"
-    portrait: {fileID: 4526296290215008011, guid: 38254f2e8252a084092c30ac2d2b32e7, type: 3}
+  - speaker: 0
+    text: I do, but it wasn't working.
+    portrait: {fileID: 0}
     typingSpeed: 0
     nextLineIndex: 0
     onLineStart:
