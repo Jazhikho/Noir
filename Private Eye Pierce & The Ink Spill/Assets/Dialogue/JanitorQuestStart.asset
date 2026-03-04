@@ -44,10 +44,10 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
     choices: []
-  - speaker: 1
+  - speaker: 0
     text: "Have you tried putting them in a different pocket? They seem to disappear
       on you\u2026 frequently."
-    portrait: {fileID: 4526296290215008011, guid: 38254f2e8252a084092c30ac2d2b32e7, type: 3}
+    portrait: {fileID: 0}
     typingSpeed: 0.05
     nextLineIndex: 0
     onLineStart:
