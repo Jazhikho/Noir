@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: JanitorQuestReminder
   m_EditorClassIdentifier: Assembly-CSharp::DialogueAsset
   dialogueName: JanitorQuestReminder
-  defaultPlayerPortrait: {fileID: 21300000, guid: 1bf00380608c4ad4fa119ad1f51bf051, type: 3}
+  defaultPlayerPortrait: {fileID: 21300000, guid: cf4f38fe984c83549a338d04d3e07ac1, type: 3}
   defaultOtherPortrait: {fileID: 4526296290215008011, guid: 38254f2e8252a084092c30ac2d2b32e7, type: 3}
   playerName: Pierce
   otherName: Janitor
@@ -22,7 +22,7 @@ MonoBehaviour:
     text: "All this waitin\u2019 is making me thirsty. Hey! If you find my keys,
       could you bring me a drink from the vending machine too?"
     portrait: {fileID: 4526296290215008011, guid: 38254f2e8252a084092c30ac2d2b32e7, type: 3}
-    typingSpeed: 0
+    typingSpeed: 0.05
     nextLineIndex: 0
     onLineStart:
       m_PersistentCalls:

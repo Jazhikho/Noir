@@ -182,4 +182,39 @@ public class SceneFader : MonoBehaviour
     {
         StartCoroutine(FadeIn());
     }
+
+    /// <summary>
+    /// Sets the fade panel to opaque, loads the scene, then fades in.
+    /// Use when the screen is already black and you just need load + fade-in.
+    /// </summary>
+    public void LoadSceneAndFadeIn(string sceneName)
+    {
+        StartCoroutine(LoadAndFadeIn(sceneName));
+    }
+
+    IEnumerator LoadAndFadeIn(string sceneName)
+    {
+        isFading = true;
+
+        if (fadePanel != null)
+        {
+            fadePanel.gameObject.SetActive(true);
+            Color c = fadePanel.color;
+            c.a = 1f;
+            fadePanel.color = c;
+        }
+
+        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneName);
+        asyncLoad.allowSceneActivation = false;
+
+        while (asyncLoad.progress < 0.9f)
+            yield return null;
+
+        asyncLoad.allowSceneActivation = true;
+        yield return null;
+
+        yield return StartCoroutine(FadeIn());
+
+        isFading = false;
+    }
 }

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: JanitorQuestStart
   m_EditorClassIdentifier: Assembly-CSharp::DialogueAsset
   dialogueName: JanitorQuestStart
-  defaultPlayerPortrait: {fileID: 21300000, guid: 1bf00380608c4ad4fa119ad1f51bf051, type: 3}
+  defaultPlayerPortrait: {fileID: 21300000, guid: cf4f38fe984c83549a338d04d3e07ac1, type: 3}
   defaultOtherPortrait: {fileID: 4526296290215008011, guid: 38254f2e8252a084092c30ac2d2b32e7, type: 3}
   playerName: Pierce
   otherName: Janitor
@@ -22,7 +22,7 @@ MonoBehaviour:
     text: "Sorry son, this old girl isn\u2019t going anywhere. Damn thing\u2014 locked
       behind me before I even realized what happened."
     portrait: {fileID: 4526296290215008011, guid: 38254f2e8252a084092c30ac2d2b32e7, type: 3}
-    typingSpeed: 0
+    typingSpeed: 0.05
     nextLineIndex: 0
     onLineStart:
       m_PersistentCalls:
@@ -35,7 +35,32 @@ MonoBehaviour:
     text: "I could probably get her open if I had my keys. I thought I asked my wife
       to fix that hole\u2026"
     portrait: {fileID: 4526296290215008011, guid: 38254f2e8252a084092c30ac2d2b32e7, type: 3}
-    typingSpeed: 0
+    typingSpeed: 0.05
+    nextLineIndex: 0
+    onLineStart:
+      m_PersistentCalls:
+        m_Calls: []
+    onLineEnd:
+      m_PersistentCalls:
+        m_Calls: []
+    choices: []
+  - speaker: 1
+    text: "Have you tried putting them in a different pocket? They seem to disappear
+      on you\u2026 frequently."
+    portrait: {fileID: 4526296290215008011, guid: 38254f2e8252a084092c30ac2d2b32e7, type: 3}
+    typingSpeed: 0.05
+    nextLineIndex: 0
+    onLineStart:
+      m_PersistentCalls:
+        m_Calls: []
+    onLineEnd:
+      m_PersistentCalls:
+        m_Calls: []
+    choices: []
+  - speaker: 1
+    text: "It\u2019s hard to teach an old dog new tricks, son."
+    portrait: {fileID: 4526296290215008011, guid: 38254f2e8252a084092c30ac2d2b32e7, type: 3}
+    typingSpeed: 0.05
     nextLineIndex: 0
     onLineStart:
       m_PersistentCalls:
@@ -48,7 +73,7 @@ MonoBehaviour:
     text: Guess this is my sign to take a little break. If only there was somewhere
       to put my feet up.
     portrait: {fileID: 4526296290215008011, guid: 38254f2e8252a084092c30ac2d2b32e7, type: 3}
-    typingSpeed: 0
+    typingSpeed: 0.05
     nextLineIndex: 0
     onLineStart:
       m_PersistentCalls:

@@ -13,15 +13,15 @@ MonoBehaviour:
   m_Name: CarmenDialogue
   m_EditorClassIdentifier: Assembly-CSharp::DialogueAsset
   dialogueName: Carmen First Meeting
-  defaultPlayerPortrait: {fileID: 21300000, guid: 1bf00380608c4ad4fa119ad1f51bf051, type: 3}
+  defaultPlayerPortrait: {fileID: 21300000, guid: cf4f38fe984c83549a338d04d3e07ac1, type: 3}
   defaultOtherPortrait: {fileID: -6586057596007793298, guid: 04210d4f9fcdd7c4d89a15d66b0c18e1, type: 3}
-  playerName: Player
+  playerName: Pierce
   otherName: Carmen Evangeline
   lines:
   - speaker: 1
     text: Pierce! Are you alright?
     portrait: {fileID: -1920779165982319034, guid: 940720eb16e151b469750397726fe618, type: 3}
-    typingSpeed: 0
+    typingSpeed: 0.05
     nextLineIndex: 0
     onLineStart:
       m_PersistentCalls:
@@ -43,9 +43,10 @@ MonoBehaviour:
           m_CallState: 2
     choices: []
   - speaker: 0
-    text: I am now. I was locked inside my office.
+    text: "I think so. Not the first time I\u2019ve had to do that, if you can believe
+      it. I\u2019ve gotten pretty good at bustin\u2019 open locked doors."
     portrait: {fileID: -1400755493468073530, guid: 1bf00380608c4ad4fa119ad1f51bf051, type: 3}
-    typingSpeed: 0
+    typingSpeed: 0.05
     nextLineIndex: 0
     onLineStart:
       m_PersistentCalls:
@@ -55,9 +56,9 @@ MonoBehaviour:
         m_Calls: []
     choices: []
   - speaker: 1
-    text: "What do you mean you were locked inside? Don\u2019t you have a key?"
+    text: "That\u2019s your office, don\u2019t you have a key?"
     portrait: {fileID: 7836537948929544159, guid: 5860da3408340484f81888cc054d4e09, type: 3}
-    typingSpeed: 0
+    typingSpeed: 0.05
     nextLineIndex: 0
     onLineStart:
       m_PersistentCalls:
@@ -67,9 +68,109 @@ MonoBehaviour:
         m_Calls: []
     choices: []
   - speaker: 0
-    text: I do, but it wasn't working.
+    text: It locks from the outside.
     portrait: {fileID: 0}
-    typingSpeed: 0
+    typingSpeed: 0.05
+    nextLineIndex: 0
+    onLineStart:
+      m_PersistentCalls:
+        m_Calls: []
+    onLineEnd:
+      m_PersistentCalls:
+        m_Calls: []
+    choices: []
+  - speaker: 0
+    text: It locks from the outside.
+    portrait: {fileID: 0}
+    typingSpeed: 0.05
+    nextLineIndex: 0
+    onLineStart:
+      m_PersistentCalls:
+        m_Calls: []
+    onLineEnd:
+      m_PersistentCalls:
+        m_Calls: []
+    choices: []
+  - speaker: 1
+    text: "Oh, that\u2019s odd."
+    portrait: {fileID: -1920779165982319034, guid: 940720eb16e151b469750397726fe618, type: 3}
+    typingSpeed: 0.05
+    nextLineIndex: 0
+    onLineStart:
+      m_PersistentCalls:
+        m_Calls: []
+    onLineEnd:
+      m_PersistentCalls:
+        m_Calls: []
+    choices: []
+  - speaker: 0
+    text: As are most things in life, Ms. Evangeline.
+    portrait: {fileID: 0}
+    typingSpeed: 0.05
+    nextLineIndex: 0
+    onLineStart:
+      m_PersistentCalls:
+        m_Calls: []
+    onLineEnd:
+      m_PersistentCalls:
+        m_Calls: []
+    choices: []
+  - speaker: 1
+    text: "Well someone is going to have to sweep up all that glass now\u2026 I hope
+      no one cuts themself."
+    portrait: {fileID: -6780613106981228551, guid: 25fec20275431cd4b8c1e812a4fdbbfc, type: 3}
+    typingSpeed: 0.05
+    nextLineIndex: 0
+    onLineStart:
+      m_PersistentCalls:
+        m_Calls: []
+    onLineEnd:
+      m_PersistentCalls:
+        m_Calls: []
+    choices: []
+  - speaker: 0
+    text: "I am very sorry about that, ma\u2019am. I\u2019ll let the janitor know.
+      Watch your step in the meantime."
+    portrait: {fileID: 0}
+    typingSpeed: 0.05
+    nextLineIndex: 0
+    onLineStart:
+      m_PersistentCalls:
+        m_Calls: []
+    onLineEnd:
+      m_PersistentCalls:
+        m_Calls: []
+    choices: []
+  - speaker: 1
+    text: "I haven\u2019t seen him in some time, he\u2019s usually back from his
+      smoke break by now."
+    portrait: {fileID: -1920779165982319034, guid: 940720eb16e151b469750397726fe618, type: 3}
+    typingSpeed: 0.05
+    nextLineIndex: 0
+    onLineStart:
+      m_PersistentCalls:
+        m_Calls: []
+    onLineEnd:
+      m_PersistentCalls:
+        m_Calls: []
+    choices: []
+  - speaker: 0
+    text: "He isn\u2019t exactly known for his punctuality, but I\u2019ll keep an
+      eye out for him."
+    portrait: {fileID: 0}
+    typingSpeed: 0.05
+    nextLineIndex: 0
+    onLineStart:
+      m_PersistentCalls:
+        m_Calls: []
+    onLineEnd:
+      m_PersistentCalls:
+        m_Calls: []
+    choices: []
+  - speaker: 1
+    text: Thank you, Pierce.
+    portrait: {fileID: -1920779165982319034, guid: 940720eb16e151b469750397726fe618, type: 3}
+    typingSpeed: 0.05
     nextLineIndex: 0
     onLineStart:
       m_PersistentCalls:
