@@ -34,19 +34,14 @@ public class DemoEndSequence : MonoBehaviour
         }
         Instance = this;
 
+        // Don't deactivate or change alpha on the fade panel —
+        // SceneFader manages its own panel (starts opaque, fades in,
+        // then sits at alpha 0 / active). Deactivating it here conflicts
+        // with SceneFader.Awake and causes a Canvas-rebuild flicker
+        // when FadeToBlack reactivates it later.
+        // Just disable raycast so the transparent panel doesn't block clicks.
         if (fadeImage != null)
-        {
-            Color c = fadeImage.color;
-            c.a = 0f;
-            fadeImage.color = c;
-            fadeImage.gameObject.SetActive(false);
-        }
-
-        if (fadeCanvasGroup != null)
-        {
-            fadeCanvasGroup.alpha = 0f;
-            fadeCanvasGroup.gameObject.SetActive(false);
-        }
+            fadeImage.raycastTarget = false;
 
         if (tmpText != null)
         {
@@ -80,6 +75,10 @@ public class DemoEndSequence : MonoBehaviour
     {
         isPlaying = true;
 
+        // Re-enable raycast blocking so the fade panel absorbs input during the sequence
+        if (fadeImage != null)
+            fadeImage.raycastTarget = true;
+
         Interactable.EndCurrentInteraction();
         var player = FindFirstObjectByType<PointClickController>();
         if (player != null)
@@ -97,6 +96,8 @@ public class DemoEndSequence : MonoBehaviour
 
         yield return StartCoroutine(ShowToBeContinued());
 
+        yield return StartCoroutine(HideToBeContinued());
+
         yield return new WaitForSeconds(sceneLoadDelay);
 
         Debug.Log("DEMO END: Loading " + mainMenuSceneName + "...");
@@ -110,10 +111,18 @@ public class DemoEndSequence : MonoBehaviour
     IEnumerator FadeToBlack()
     {
         if (fadeImage != null)
+        {
+            Color c = fadeImage.color;
+            c.a = 0f;
+            fadeImage.color = c;
             fadeImage.gameObject.SetActive(true);
+        }
 
         if (fadeCanvasGroup != null)
+        {
+            fadeCanvasGroup.alpha = 0f;
             fadeCanvasGroup.gameObject.SetActive(true);
+        }
 
         float elapsed = 0f;
 
@@ -196,5 +205,41 @@ public class DemoEndSequence : MonoBehaviour
         Debug.Log("DEMO END: To be continued...");
 
         yield return new WaitForSeconds(textDisplayDuration);
+    }
+
+    IEnumerator HideToBeContinued()
+    {
+        if (tmpText == null && legacyText == null) yield break;
+
+        float elapsed = 0f;
+        while (elapsed < textFadeDuration)
+        {
+            elapsed += Time.deltaTime;
+            float t = 1f - Mathf.Clamp01(elapsed / textFadeDuration);
+
+            if (tmpText != null)
+            {
+                Color c = tmpText.color;
+                c.a = t;
+                tmpText.color = c;
+            }
+
+            if (legacyText != null)
+            {
+                Color c = legacyText.color;
+                c.a = t;
+                legacyText.color = c;
+            }
+
+            yield return null;
+        }
+
+        if (tmpText != null)
+            tmpText.gameObject.SetActive(false);
+
+        if (legacyText != null)
+            legacyText.gameObject.SetActive(false);
+
+        Debug.Log("DEMO END: Text faded out.");
     }
 }

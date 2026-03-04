@@ -54,15 +54,16 @@ public class SceneFader : MonoBehaviour
     public IEnumerator FadeToBlack(float duration)
     {
         if (fadePanel == null) yield break;
-        fadePanel.gameObject.SetActive(true);
         Color color = fadePanel.color;
-        float startAlpha = color.a;
+        color.a = 0f;
+        fadePanel.color = color;
+        fadePanel.gameObject.SetActive(true);
         float elapsed = 0f;
 
         while (elapsed < duration)
         {
             elapsed += Time.deltaTime;
-            color.a = Mathf.Lerp(startAlpha, 1f, Mathf.Clamp01(elapsed / duration));
+            color.a = Mathf.Lerp(0f, 1f, Mathf.Clamp01(elapsed / duration));
             fadePanel.color = color;
             yield return null;
         }
