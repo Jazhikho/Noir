@@ -8,6 +8,10 @@ public class Interactable : MonoBehaviour, IInteractable
 {
     [Header("Interaction Position")]
     public Transform interactionPoint;
+    [Tooltip("Optional: place left of the object. If both left and right are set, the player auto-walks to the closer side.")]
+    public Transform interactionPointLeft;
+    [Tooltip("Optional: place right of the object. If both left and right are set, the player auto-walks to the closer side.")]
+    public Transform interactionPointRight;
     public float defaultOffset = 1f;
 
     [Header("Events")]
@@ -39,24 +43,36 @@ public class Interactable : MonoBehaviour, IInteractable
 
     public float GetInteractionX()
     {
-        if (interactionPoint != null)
+        // Two-sided: pick the side the player is approaching from
+        if (interactionPointLeft != null && interactionPointRight != null && playerController != null)
         {
-            return interactionPoint.position.x;
+            float playerX = playerController.transform.position.x;
+            float objectX = transform.position.x;
+            return (playerX < objectX)
+                ? interactionPointLeft.position.x
+                : interactionPointRight.position.x;
         }
 
+        // One-sided fallbacks (left-only or right-only)
+        if (interactionPointLeft != null)
+            return interactionPointLeft.position.x;
+        if (interactionPointRight != null)
+            return interactionPointRight.position.x;
+
+        // Original single-point
+        if (interactionPoint != null)
+            return interactionPoint.position.x;
+
+        // Default offset fallback
         if (playerController != null)
         {
             float playerX = playerController.transform.position.x;
             float objectX = transform.position.x;
 
             if (playerX < objectX)
-            {
                 return objectX - defaultOffset;
-            }
             else
-            {
                 return objectX + defaultOffset;
-            }
         }
 
         return transform.position.x - defaultOffset;
