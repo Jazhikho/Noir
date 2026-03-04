@@ -40,6 +40,14 @@ public class AdventureHUDController : MonoBehaviour
     public bool hudEnabled = true;
     public bool hideSystemCursor = true;
 
+    [Header("Cursor over UI")]
+    [Tooltip("When true, use customCursorOverUI when the pointer is over blocking UI. When false, use the default system (Windows) cursor over UI.")]
+    public bool useCustomCursorOverUI = false;
+    [Tooltip("Custom cursor texture when over UI. Used only if useCustomCursorOverUI is true. Texture should be readable for Cursor.SetCursor.")]
+    public Texture2D customCursorOverUI;
+    [Tooltip("Hotspot for the custom UI cursor (e.g. tip of arrow).")]
+    public Vector2 customCursorOverUIHotspot = Vector2.zero;
+
     [Header("References")]
     public Transform playerTransform;
     public Camera mainCamera;
@@ -145,9 +153,14 @@ public class AdventureHUDController : MonoBehaviour
         {
             if (hideSystemCursor)
                 Cursor.visible = true;
+            if (useCustomCursorOverUI && customCursorOverUI != null)
+                Cursor.SetCursor(customCursorOverUI, customCursorOverUIHotspot, CursorMode.Auto);
             cursorImage.enabled = false;
             return;
         }
+
+        if (hudEnabled && !_cursorOverUI && hideSystemCursor)
+            Cursor.visible = false;
 
         if (!cursorImage.gameObject.activeSelf)
             cursorImage.gameObject.SetActive(true);
