@@ -72,6 +72,9 @@ public class ClickController2D : MonoBehaviour
         Vector2 screenPos = Mouse.current != null ? Mouse.current.position.ReadValue() : (Vector2)Input.mousePosition;
         Vector2 world = cam.ScreenToWorldPoint(screenPos);
 
+        if (adventureHUDController != null)
+            adventureHUDController.SetCursorOverUI(IsPointerOverBlockingUI(screenPos));
+
         // Hover check for interactables. When multiple colliders overlap (e.g. fridge parent + open fridge overlay),
         // prefer the one with SearchableProp so clicking the open fridge runs search instead of close.
         Collider2D hitHover = GetPreferredInteractableCollider(world);

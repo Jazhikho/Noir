@@ -53,6 +53,7 @@ public class AdventureHUDController : MonoBehaviour
     private Sprite _mainCursorSprite;
     private CursorType _currentCursorType = CursorType.Main;
     private DoorDirection _currentDoorDirection = DoorDirection.Right;
+    private bool _cursorOverUI;
 
     void Awake()
     {
@@ -139,6 +140,14 @@ public class AdventureHUDController : MonoBehaviour
     void UpdateCursor()
     {
         if (cursorImage == null || cursorRect == null) return;
+
+        if (hudEnabled && _cursorOverUI)
+        {
+            if (hideSystemCursor)
+                Cursor.visible = true;
+            cursorImage.enabled = false;
+            return;
+        }
 
         if (!cursorImage.gameObject.activeSelf)
             cursorImage.gameObject.SetActive(true);
@@ -278,6 +287,14 @@ public class AdventureHUDController : MonoBehaviour
     {
         if (cursorImage != null)
             cursorImage.enabled = visible;
+    }
+
+    /// <summary>
+    /// When true, shows the system (Windows) cursor and hides the game cursor. Call from ClickController2D when pointer is over blocking UI.
+    /// </summary>
+    public void SetCursorOverUI(bool overUI)
+    {
+        _cursorOverUI = overUI;
     }
 
     /// <summary>
