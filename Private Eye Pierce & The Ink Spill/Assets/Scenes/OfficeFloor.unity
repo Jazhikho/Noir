@@ -9100,6 +9100,30 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &1610388563
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1610388556}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2e0a378839ff6443992e25fa9d46c7a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DialogueInteraction
+  dialogueRunner: {fileID: 1682519117}
+  dialogueAsset: {fileID: 11400000, guid: 4f0931f545ccb8842890f84f62733c0c, type: 2}
+  conditionalFlag: {fileID: 0}
+  conditionalDialogueAsset: {fileID: 0}
+  talkOnceFlag: {fileID: 0}
+  flagToSetOnEnd: {fileID: 0}
+  OnDialogueStarted:
+    m_PersistentCalls:
+      m_Calls: []
+  OnDialogueEnded:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &1618126618
 GameObject:
   m_ObjectHideFlags: 0
@@ -10295,6 +10319,9 @@ MonoBehaviour:
   arrowLockedColor: {r: 0.5, g: 0.5, b: 0.5, a: 0.5}
   hudEnabled: 1
   hideSystemCursor: 1
+  useCustomCursorOverUI: 0
+  customCursorOverUI: {fileID: 0}
+  customCursorOverUIHotspot: {x: 0, y: 0}
   playerTransform: {fileID: 0}
   mainCamera: {fileID: 0}
 --- !u!223 &1799806416
@@ -11950,9 +11977,9 @@ Camera:
   m_LensShift: {x: 0, y: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0.13333334
+    x: 0.024324324
     y: 0.025925925
-    width: 0.73333335
+    width: 0.9513514
     height: 0.94814813
   near clip plane: 0.3
   far clip plane: 1000
@@ -12538,6 +12565,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 359226887245044006, guid: 48b77a31ae0a6d74d840512b7666b71e, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1610388562}
+    - targetCorrespondingSourceObject: {fileID: 359226887245044006, guid: 48b77a31ae0a6d74d840512b7666b71e, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1610388563}
   m_SourcePrefab: {fileID: 100100000, guid: 48b77a31ae0a6d74d840512b7666b71e, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
