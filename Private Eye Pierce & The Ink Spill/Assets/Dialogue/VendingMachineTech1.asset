@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 86cd8c335fb150b489bdabe8c9887b57, type: 3}
-  m_Name: VendingMachineTech 1
+  m_Name: VendingMachineTech1
   m_EditorClassIdentifier: Assembly-CSharp::DialogueAsset
   dialogueName: Vending Machine Tech 1
   defaultPlayerPortrait: {fileID: 21300000, guid: cf4f38fe984c83549a338d04d3e07ac1, type: 3}
