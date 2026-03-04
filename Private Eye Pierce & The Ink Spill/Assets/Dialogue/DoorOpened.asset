@@ -19,7 +19,8 @@ MonoBehaviour:
   otherName: 
   lines:
   - speaker: 0
-    text: I did it!
+    text: 'I did it! Whew, I''m parched... I should go get a drink from the vending
+      machine. '
     portrait: {fileID: 0}
     typingSpeed: 0
     nextLineIndex: 0

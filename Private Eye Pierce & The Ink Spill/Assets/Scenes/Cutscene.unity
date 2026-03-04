@@ -145,7 +145,7 @@ VideoPlayer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 552462609}
   m_Enabled: 1
-  m_VideoClip: {fileID: 32900000, guid: 10886765bf5282140a3338d11aad3ec7, type: 3}
+  m_VideoClip: {fileID: 32900000, guid: bdc955c11ebe81f43b4e6a3b6a3df974, type: 3}
   m_TargetCameraAlpha: 1
   m_TargetCamera3DLayout: 0
   m_TargetCamera: {fileID: 582188612}
@@ -201,7 +201,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CutscenePlayer
   videoPlayer: {fileID: 552462610}
-  videoClip: {fileID: 32900000, guid: 10886765bf5282140a3338d11aad3ec7, type: 3}
+  videoClip: {fileID: 32900000, guid: bdc955c11ebe81f43b4e6a3b6a3df974, type: 3}
   videoDisplay: {fileID: 1668948882}
   nextSceneName: OfficeFloor
   allowSkip: 1

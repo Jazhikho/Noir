@@ -7862,6 +7862,7 @@ GameObject:
   - component: {fileID: 1457466311}
   - component: {fileID: 1457466313}
   - component: {fileID: 1457466312}
+  - component: {fileID: 1457466314}
   m_Layer: 6
   m_Name: CarmenEvangeline
   m_TagString: Untagged
@@ -7960,13 +7961,13 @@ MonoBehaviour:
   OnInteract:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1682519117}
-        m_TargetAssemblyTypeName: DialogueRunner, Assembly-CSharp
+      - m_Target: {fileID: 1457466314}
+        m_TargetAssemblyTypeName: DialogueInteraction, Assembly-CSharp
         m_MethodName: StartDialogue
-        m_Mode: 2
+        m_Mode: 1
         m_Arguments:
-          m_ObjectArgument: {fileID: 11400000, guid: 303e85f694c93264eb3c293a65fe59b4, type: 2}
-          m_ObjectArgumentAssemblyTypeName: DialogueAsset, Assembly-CSharp
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -8010,7 +8011,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.56, y: 1.55}
+    oldSize: {x: 0.4, y: 1.09}
     newSize: {x: 0.4, y: 1.09}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -8018,6 +8019,30 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 0.56, y: 1.55}
   m_EdgeRadius: 0
+--- !u!114 &1457466314
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1457466309}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2e0a378839ff6443992e25fa9d46c7a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DialogueInteraction
+  dialogueRunner: {fileID: 0}
+  dialogueAsset: {fileID: 11400000, guid: 303e85f694c93264eb3c293a65fe59b4, type: 2}
+  conditionalFlag: {fileID: 0}
+  conditionalDialogueAsset: {fileID: 0}
+  talkOnceFlag: {fileID: 0}
+  flagToSetOnEnd: {fileID: 0}
+  OnDialogueStarted:
+    m_PersistentCalls:
+      m_Calls: []
+  OnDialogueEnded:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &1461135965
 GameObject:
   m_ObjectHideFlags: 0
@@ -9058,7 +9083,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1682519115}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
   m_Name: 
@@ -11199,9 +11224,9 @@ Camera:
   m_LensShift: {x: 0, y: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0.024324324
+    x: 0.13333334
     y: 0.025925925
-    width: 0.9513514
+    width: 0.73333335
     height: 0.94814813
   near clip plane: 0.3
   far clip plane: 1000
