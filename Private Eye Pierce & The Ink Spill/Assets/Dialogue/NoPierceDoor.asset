@@ -13,9 +13,21 @@ MonoBehaviour:
   m_Name: NoPierceDoor
   m_EditorClassIdentifier: Assembly-CSharp::DialogueAsset
   dialogueName: When Pierce Interacts with "No Pierce" Door
-  defaultPlayerPortrait: {fileID: 21300000, guid: 1bf00380608c4ad4fa119ad1f51bf051, type: 3}
+  defaultPlayerPortrait: {fileID: 21300000, guid: cf4f38fe984c83549a338d04d3e07ac1, type: 3}
   defaultOtherPortrait: {fileID: 6573717335437068505, guid: 0987ed0183f7f2b418b65d81fc99c30d, type: 3}
-  playerName: Player
-  otherName: NPC
-  lines: []
+  playerName: Pierce
+  otherName: 
+  lines:
+  - speaker: 0
+    text: "Guess he\u2019s still hung up about the coffee cup..."
+    portrait: {fileID: 0}
+    typingSpeed: 0.05
+    nextLineIndex: 0
+    onLineStart:
+      m_PersistentCalls:
+        m_Calls: []
+    onLineEnd:
+      m_PersistentCalls:
+        m_Calls: []
+    choices: []
   startingLine: 0
