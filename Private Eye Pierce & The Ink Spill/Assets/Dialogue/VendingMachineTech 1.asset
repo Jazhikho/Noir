@@ -10,30 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 86cd8c335fb150b489bdabe8c9887b57, type: 3}
-  m_Name: JanitorQuestEnd
+  m_Name: VendingMachineTech 1
   m_EditorClassIdentifier: Assembly-CSharp::DialogueAsset
-  dialogueName: JanitorQuestComplete
+  dialogueName: Vending Machine Tech 1
   defaultPlayerPortrait: {fileID: 21300000, guid: cf4f38fe984c83549a338d04d3e07ac1, type: 3}
-  defaultOtherPortrait: {fileID: 4526296290215008011, guid: 38254f2e8252a084092c30ac2d2b32e7, type: 3}
+  defaultOtherPortrait: {fileID: 10917, guid: 0000000000000000f000000000000000, type: 0}
   playerName: Pierce
-  otherName: Janitor
+  otherName: Technician
   lines:
   - speaker: 1
-    text: Is that jingling I hear?
-    portrait: {fileID: 4526296290215008011, guid: 38254f2e8252a084092c30ac2d2b32e7, type: 3}
-    typingSpeed: 0
-    nextLineIndex: 0
-    onLineStart:
-      m_PersistentCalls:
-        m_Calls: []
-    onLineEnd:
-      m_PersistentCalls:
-        m_Calls: []
-    choices: []
-  - speaker: 1
-    text: "You found my keys! Great work, son. You are one fine detective! That\u2019s
-      why I hear all the ladies talking about you."
-    portrait: {fileID: 4526296290215008011, guid: 38254f2e8252a084092c30ac2d2b32e7, type: 3}
+    text: "What are you looking at? Didn\u2019t your ma teach you it was rude to
+      stare?"
+    portrait: {fileID: 0}
     typingSpeed: 0
     nextLineIndex: 0
     onLineStart:
@@ -44,7 +32,7 @@ MonoBehaviour:
         m_Calls: []
     choices: []
   - speaker: 0
-    text: What ladies are you talking to?
+    text: It seems I am actually looking through you, funnily enough.
     portrait: {fileID: 0}
     typingSpeed: 0
     nextLineIndex: 0
@@ -56,8 +44,9 @@ MonoBehaviour:
         m_Calls: []
     choices: []
   - speaker: 1
-    text: "Don\u2019t worry about it."
-    portrait: {fileID: 4526296290215008011, guid: 38254f2e8252a084092c30ac2d2b32e7, type: 3}
+    text: "Oh. No- no you\u2019re right. Sometimes I forget people can\u2019t see
+      me. Sorry."
+    portrait: {fileID: 0}
     typingSpeed: 0
     nextLineIndex: 0
     onLineStart:
@@ -67,10 +56,10 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
     choices: []
-  - speaker: 1
-    text: "Oh yeah, the emergency release panel is on the wall next to the door.
-      Can\u2019t miss it. Just put my key in there and we\u2019ll be golden!"
-    portrait: {fileID: 4526296290215008011, guid: 38254f2e8252a084092c30ac2d2b32e7, type: 3}
+  - speaker: 0
+    text: "No offense taken, I\u2019m sure we\u2019ve both got bigger things to worry
+      about."
+    portrait: {fileID: 0}
     typingSpeed: 0
     nextLineIndex: 0
     onLineStart:

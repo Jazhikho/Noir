@@ -2162,8 +2162,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Interactable
   interactionPoint: {fileID: 437290180}
-  interactionPointLeft: {fileID: 0}
-  interactionPointRight: {fileID: 0}
   defaultOffset: 1
   OnInteract:
     m_PersistentCalls:
@@ -2534,8 +2532,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Interactable
   interactionPoint: {fileID: 1638845992}
-  interactionPointLeft: {fileID: 0}
-  interactionPointRight: {fileID: 0}
   defaultOffset: 0
   OnInteract:
     m_PersistentCalls:
@@ -2566,8 +2562,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::OverlaySpriteOnInteract
   overlayToShow: {fileID: 1793873531}
   showOnlyOnce: 0
-  enforceStartHidden: 1
-  endInteractionAfterAction: 1
   OnOverlayShown:
     m_PersistentCalls:
       m_Calls:
@@ -3076,7 +3070,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SearchableProp
   containsKeys: 0
   searchDuration: 2
-  disableColliderAfterFirstSearch: 0
   hasKeysFlag: {fileID: 0}
   keysFoundText: Pierce found the keys!
   nothingFoundText: Nothing useful here.
@@ -3134,8 +3127,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Interactable
   interactionPoint: {fileID: 250156856}
-  interactionPointLeft: {fileID: 0}
-  interactionPointRight: {fileID: 0}
   defaultOffset: 0
   OnInteract:
     m_PersistentCalls:
@@ -3212,8 +3203,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::OverlaySpriteOnInteract
   overlayToShow: {fileID: 1652718697}
   showOnlyOnce: 0
-  enforceStartHidden: 1
-  endInteractionAfterAction: 1
   OnOverlayShown:
     m_PersistentCalls:
       m_Calls:
@@ -4699,8 +4688,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::OverlaySpriteOnInteract
   overlayToShow: {fileID: 1464319551}
   showOnlyOnce: 0
-  enforceStartHidden: 1
-  endInteractionAfterAction: 1
   OnOverlayShown:
     m_PersistentCalls:
       m_Calls:
@@ -6767,9 +6754,6 @@ MonoBehaviour:
   armFadeDuration: 0.5
   promptUI: {fileID: 1432916495}
   breakRoomUnlockedFlag: {fileID: 11400000, guid: 9ac31696ff8346444a8df7c346eccb72, type: 2}
-  requiredFlag: {fileID: 11400000, guid: b55189df39fc6ba46a90d5e06528c296, type: 2}
-  dialogueRunner: {fileID: 0}
-  blockedDialogue: {fileID: 0}
   OnPuzzleStarted:
     m_PersistentCalls:
       m_Calls:
@@ -6816,8 +6800,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Interactable
   interactionPoint: {fileID: 1288041878}
-  interactionPointLeft: {fileID: 0}
-  interactionPointRight: {fileID: 0}
   defaultOffset: 1
   OnInteract:
     m_PersistentCalls:
@@ -7753,11 +7735,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 655a8a46e71d90e4b8ab34d9dca480de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ActivateOnFlag
-  flag: {fileID: 11400000, guid: 9ac31696ff8346444a8df7c346eccb72, type: 2}
-  targets:
-  - {fileID: 1343854723}
-  activeWhenFlagTrue: 1
-  fadeDuration: 3
 --- !u!1 &1357746354
 GameObject:
   m_ObjectHideFlags: 0
@@ -8690,7 +8667,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 529.00006, y: -337}
-  m_SizeDelta: {x: 200, y: 200}
+  m_SizeDelta: {x: 300, y: 300}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1592257372
 MonoBehaviour:
@@ -9029,21 +9006,6 @@ MonoBehaviour:
   OnQuestCompleted:
     m_PersistentCalls:
       m_Calls: []
-  OnQuestDialogueFinished:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1404311717}
-        m_TargetAssemblyTypeName: DemoEndSequence, Assembly-CSharp
-        m_MethodName: PlayEndSequence
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
 --- !u!114 &1649500149
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9057,8 +9019,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Interactable
   interactionPoint: {fileID: 1649500147}
-  interactionPointLeft: {fileID: 0}
-  interactionPointRight: {fileID: 0}
   defaultOffset: 1
   OnInteract:
     m_PersistentCalls:
@@ -9463,8 +9423,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Interactable
   interactionPoint: {fileID: 1971240099}
-  interactionPointLeft: {fileID: 0}
-  interactionPointRight: {fileID: 0}
   defaultOffset: 0
   OnInteract:
     m_PersistentCalls:
@@ -9633,7 +9591,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SearchableProp
   containsKeys: 0
   searchDuration: 1.65
-  disableColliderAfterFirstSearch: 0
   hasKeysFlag: {fileID: 0}
   keysFoundText: 
   nothingFoundText: 
@@ -9859,7 +9816,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SearchableProp
   containsKeys: 1
   searchDuration: 2
-  disableColliderAfterFirstSearch: 0
   hasKeysFlag: {fileID: 11400000, guid: 80246e17844e9854abc95500fffdadf4, type: 2}
   keysFoundText: Pierce found the keys!
   nothingFoundText: Nothing useful here.
@@ -9951,8 +9907,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Interactable
   interactionPoint: {fileID: 1638845992}
-  interactionPointLeft: {fileID: 0}
-  interactionPointRight: {fileID: 0}
   defaultOffset: 0
   OnInteract:
     m_PersistentCalls:
@@ -10234,8 +10188,6 @@ MonoBehaviour:
   dialogueAsset: {fileID: 11400000, guid: 303e85f694c93264eb3c293a65fe59b4, type: 2}
   conditionalFlag: {fileID: 0}
   conditionalDialogueAsset: {fileID: 0}
-  talkOnceFlag: {fileID: 0}
-  flagToSetOnEnd: {fileID: 0}
   OnDialogueStarted:
     m_PersistentCalls:
       m_Calls: []
@@ -10255,8 +10207,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Interactable
   interactionPoint: {fileID: 0}
-  interactionPointLeft: {fileID: 507880456}
-  interactionPointRight: {fileID: 723131687}
   defaultOffset: 0
   OnInteract:
     m_PersistentCalls:
@@ -11724,9 +11674,9 @@ Camera:
   m_LensShift: {x: 0, y: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0.13333334
+    x: 0.024324324
     y: 0.025925925
-    width: 0.73333335
+    width: 0.9513514
     height: 0.94814813
   near clip plane: 0.3
   far clip plane: 1000
@@ -12048,7 +11998,6 @@ MonoBehaviour:
   duration: 0.4
   peelSoftness: 0.05
   transitionSound: {fileID: 8300000, guid: 92e0e9420688f6f4da2aa33e42508354, type: 3}
-  transitionSoundVolume: 0.5
 --- !u!222 &2116176744
 CanvasRenderer:
   m_ObjectHideFlags: 0
