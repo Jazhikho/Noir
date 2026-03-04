@@ -45,6 +45,31 @@ MonoBehaviour:
         m_Calls: []
     choices: []
   - speaker: 1
+    text: "Have you tried putting them in a different pocket? They seem to disappear
+      on you\u2026 frequently."
+    portrait: {fileID: 4526296290215008011, guid: 38254f2e8252a084092c30ac2d2b32e7, type: 3}
+    typingSpeed: 0
+    nextLineIndex: 0
+    onLineStart:
+      m_PersistentCalls:
+        m_Calls: []
+    onLineEnd:
+      m_PersistentCalls:
+        m_Calls: []
+    choices: []
+  - speaker: 1
+    text: "It\u2019s hard to teach an old dog new tricks, son."
+    portrait: {fileID: 4526296290215008011, guid: 38254f2e8252a084092c30ac2d2b32e7, type: 3}
+    typingSpeed: 0
+    nextLineIndex: 0
+    onLineStart:
+      m_PersistentCalls:
+        m_Calls: []
+    onLineEnd:
+      m_PersistentCalls:
+        m_Calls: []
+    choices: []
+  - speaker: 1
     text: Guess this is my sign to take a little break. If only there was somewhere
       to put my feet up.
     portrait: {fileID: 4526296290215008011, guid: 38254f2e8252a084092c30ac2d2b32e7, type: 3}

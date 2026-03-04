@@ -43,8 +43,20 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
     choices: []
+  - speaker: 0
+    text: What ladies are you talking to?
+    portrait: {fileID: 0}
+    typingSpeed: 0
+    nextLineIndex: 0
+    onLineStart:
+      m_PersistentCalls:
+        m_Calls: []
+    onLineEnd:
+      m_PersistentCalls:
+        m_Calls: []
+    choices: []
   - speaker: 1
-    text: "What ladies? Don\u2019t worry about it."
+    text: "Don\u2019t worry about it."
     portrait: {fileID: 4526296290215008011, guid: 38254f2e8252a084092c30ac2d2b32e7, type: 3}
     typingSpeed: 0
     nextLineIndex: 0
