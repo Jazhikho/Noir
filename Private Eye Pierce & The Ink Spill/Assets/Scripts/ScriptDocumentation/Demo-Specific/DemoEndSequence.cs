@@ -89,10 +89,25 @@ public class DemoEndSequence : MonoBehaviour
 
         Debug.Log("DEMO END: Starting end sequence...");
 
-        if (SceneFader.Instance != null)
-            yield return StartCoroutine(SceneFader.Instance.FadeToBlack(fadeDuration));
-        else
+        // Use own fade panel when it's still alive (text is on the same
+        // Canvas so it naturally renders above the black overlay).
+        // If the panel was destroyed — the SceneFader singleton on that
+        // GameObject called Destroy(gameObject) because a persistent
+        // instance already existed — fall back to SceneFader's fade but
+        // raise the text Canvas sort order so the text isn't hidden.
+        if (fadeImage != null)
+        {
             yield return StartCoroutine(FadeToBlack());
+        }
+        else if (SceneFader.Instance != null)
+        {
+            Canvas textCanvas = (tmpText != null ? tmpText.GetComponentInParent<Canvas>() : null)
+                             ?? (legacyText != null ? legacyText.GetComponentInParent<Canvas>() : null);
+            if (textCanvas != null)
+                textCanvas.sortingOrder = 999;
+
+            yield return StartCoroutine(SceneFader.Instance.FadeToBlack(fadeDuration));
+        }
 
         yield return StartCoroutine(ShowToBeContinued());
 
@@ -103,7 +118,15 @@ public class DemoEndSequence : MonoBehaviour
         Debug.Log("DEMO END: Loading " + mainMenuSceneName + "...");
 
         if (!string.IsNullOrEmpty(mainMenuSceneName))
-            SceneManager.LoadScene(mainMenuSceneName);
+        {
+            // If a persistent SceneFader exists, let it handle the scene
+            // load so it can fade in on the new scene. Direct LoadScene
+            // would leave SceneFader's panel opaque with nothing to clear it.
+            if (SceneFader.Instance != null)
+                SceneFader.Instance.LoadSceneAndFadeIn(mainMenuSceneName);
+            else
+                SceneManager.LoadScene(mainMenuSceneName);
+        }
         else
             Debug.LogWarning("DemoEndSequence: No main menu scene specified.");
     }
