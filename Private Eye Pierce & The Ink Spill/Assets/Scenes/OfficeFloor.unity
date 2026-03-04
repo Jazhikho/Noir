@@ -5893,7 +5893,7 @@ MonoBehaviour:
   - {fileID: 507697323}
   - {fileID: 842669485}
   hasKeysFlag: {fileID: 11400000, guid: 80246e17844e9854abc95500fffdadf4, type: 2}
-  randomizeKeyLocation: 1
+  randomizeKeyLocation: 0
   fixedKeyProp: {fileID: 1793873534}
   OnKeysFound:
     m_PersistentCalls:
@@ -11950,9 +11950,9 @@ Camera:
   m_LensShift: {x: 0, y: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0.024324324
+    x: 0.13333334
     y: 0.025925925
-    width: 0.9513514
+    width: 0.73333335
     height: 0.94814813
   near clip plane: 0.3
   far clip plane: 1000
