@@ -11,6 +11,9 @@ public class DialogueInteraction : MonoBehaviour
     public EventFlag conditionalFlag;
     public DialogueAsset conditionalDialogueAsset;
 
+    [Header("Random Dialogue")]
+    public DialogueAsset[] randomDialogueAssets;
+
     // KEVIN EDIT - one-shot gating: if talkOnceFlag is active, interaction is skipped entirely
     [Header("One-Shot")]
     [Tooltip("If set and active, this interaction does nothing (used for talk-once NPCs like Carmen).")]
@@ -73,6 +76,12 @@ public class DialogueInteraction : MonoBehaviour
 
         if (conditionalFlag != null && conditionalFlag.isActive && conditionalDialogueAsset != null)
             assetToPlay = conditionalDialogueAsset;
+
+        if (randomDialogueAssets != null && randomDialogueAssets.Length > 0)
+        {
+            int randomIndex = Random.Range(0, randomDialogueAssets.Length);
+            assetToPlay = randomDialogueAssets[randomIndex];
+        }
 
         if (assetToPlay == null)
         {
