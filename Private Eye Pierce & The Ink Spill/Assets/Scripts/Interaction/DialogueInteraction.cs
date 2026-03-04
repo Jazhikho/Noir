@@ -33,8 +33,14 @@ public class DialogueInteraction : MonoBehaviour
         if (dialogueRunner != null)
             dialogueUI = dialogueRunner.GetComponent<DialogueUI>();
 
+        // KEVIN EDIT - subscription verification to confirm dialogue event wiring per-NPC
         if (dialogueUI != null)
+        {
             dialogueUI.OnDialogueFinished += HandleDialogueFinished;
+            Debug.Log($"[DialogueInteraction] {gameObject.name}: subscribed to OnDialogueFinished (dialogueUI on '{dialogueUI.gameObject.name}')");
+        }
+        else
+            Debug.LogWarning($"[DialogueInteraction] {gameObject.name}: dialogueUI is NULL — subscription FAILED");
     }
 
     void OnDestroy()
@@ -45,9 +51,13 @@ public class DialogueInteraction : MonoBehaviour
 
     public void StartDialogue()
     {
+        // KEVIN EDIT - entry point trace to verify interaction-to-dialogue pipeline
+        Debug.Log($"[DialogueInteraction] {gameObject.name}: StartDialogue called");
+
         // KEVIN EDIT - block if talk-once flag is already set (e.g., Carmen already talked)
         if (talkOnceFlag != null && talkOnceFlag.isActive)
         {
+            Debug.Log($"[DialogueInteraction] {gameObject.name}: talkOnceFlag active — skipping dialogue");
             Interactable.EndCurrentInteraction();
             return;
         }
@@ -72,6 +82,8 @@ public class DialogueInteraction : MonoBehaviour
         }
 
         isDialogueActive = true;
+        // KEVIN EDIT - trace dialogue asset selection for QA playthrough validation
+        Debug.Log($"[DialogueInteraction] {gameObject.name}: isDialogueActive = true, starting dialogue '{assetToPlay.dialogueName}'");
         OnDialogueStarted?.Invoke();
 
         dialogueRunner.StartDialogue(assetToPlay);
@@ -79,7 +91,14 @@ public class DialogueInteraction : MonoBehaviour
 
     void HandleDialogueFinished()
     {
-        if (!isDialogueActive) return;
+        // KEVIN EDIT - completion trace to confirm movement re-enable fires correctly
+        Debug.Log($"[DialogueInteraction] {gameObject.name}: HandleDialogueFinished called, isDialogueActive={isDialogueActive}");
+
+        if (!isDialogueActive)
+        {
+            Debug.Log($"[DialogueInteraction] {gameObject.name}: SKIPPED — isDialogueActive was false");
+            return;
+        }
 
         isDialogueActive = false;
 
@@ -89,6 +108,7 @@ public class DialogueInteraction : MonoBehaviour
 
         OnDialogueEnded?.Invoke();
 
+        Debug.Log($"[DialogueInteraction] {gameObject.name}: calling EndCurrentInteraction now");
         Interactable.EndCurrentInteraction();
     }
 

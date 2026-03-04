@@ -17,11 +17,14 @@ public class DialogueUI : MonoBehaviour
     public TMP_Text dialogueText;
     public TMP_Text speakerNameText;
 
+    public static bool IsDialogueActive { get; private set; }
+
     private DialogueAsset currentDialogue;
     private int currentLineIndex;
     private bool dialogueActive;
 
     private Coroutine typingCoroutine;
+    private int dialogueStartFrame;
 
     private void Awake()
     {
@@ -34,6 +37,8 @@ public class DialogueUI : MonoBehaviour
     private void Update()
     {
         if (!dialogueActive)
+            return;
+        if (Time.frameCount == dialogueStartFrame)
             return;
         if (Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame)
             AdvanceDialogue();
@@ -50,6 +55,8 @@ public class DialogueUI : MonoBehaviour
         currentDialogue = dialogue;
         currentLineIndex = 0;
         dialogueActive = true;
+        IsDialogueActive = true;
+        dialogueStartFrame = Time.frameCount;
 
         if (dialoguePanel != null)
             dialoguePanel.SetActive(true);
@@ -111,8 +118,14 @@ public class DialogueUI : MonoBehaviour
             npcImage.color = brightColor;
         }
 
-        // Start typing text coroutine
-        typingCoroutine = StartCoroutine(TypeText(line.text, line.typingSpeed));
+        if (line.typingSpeed <= 0f)
+        {
+            dialogueText.text = line.text;
+        }
+        else
+        {
+            typingCoroutine = StartCoroutine(TypeText(line.text, line.typingSpeed));
+        }
     }
 
     /// <summary>
@@ -124,6 +137,7 @@ public class DialogueUI : MonoBehaviour
         if (typingSpeed <= 0f)
         {
             dialogueText.text = fullText; // show instantly
+            typingCoroutine = null;
             yield break;
         }
 
@@ -132,6 +146,8 @@ public class DialogueUI : MonoBehaviour
             dialogueText.text += c;
             yield return new WaitForSeconds(typingSpeed);
         }
+
+        typingCoroutine = null;
 
         if (currentDialogue != null && currentLineIndex < currentDialogue.lines.Count)
             currentDialogue.lines[currentLineIndex].onLineEnd.Invoke();
@@ -144,6 +160,9 @@ public class DialogueUI : MonoBehaviour
     {
         if (!dialogueActive)
             return;
+
+        // KEVIN EDIT - trace logging to verify dialogue line advancement during QA
+        Debug.Log($"[DialogueUI] AdvanceDialogue: lineIndex={currentLineIndex}, typingCoroutine={(typingCoroutine != null ? "active" : "null")}");
 
         if (typingCoroutine != null)
         {
@@ -163,9 +182,38 @@ public class DialogueUI : MonoBehaviour
     public event Action OnDialogueFinished;
     private void EndDialogue()
     {
+        // KEVIN EDIT - granular handler tracing to catch missing subscriber wiring during QA
+        Debug.Log($"[DialogueUI] EndDialogue called. Subscriber count: {OnDialogueFinished?.GetInvocationList()?.Length ?? 0}");
         dialogueActive = false;
         if (dialoguePanel != null)
             dialoguePanel.SetActive(false);
-        OnDialogueFinished?.Invoke();
+        Debug.Log("[DialogueUI] About to invoke OnDialogueFinished handlers...");
+        if (OnDialogueFinished != null)
+        {
+            var handlers = OnDialogueFinished.GetInvocationList();
+            for (int i = 0; i < handlers.Length; i++)
+            {
+                var target = handlers[i].Target as MonoBehaviour;
+                string targetName = target != null ? target.gameObject.name : "null";
+                Debug.Log($"[DialogueUI] Invoking handler {i}: {handlers[i].Method.Name} on '{targetName}'");
+                try
+                {
+                    ((Action)handlers[i]).Invoke();
+                    Debug.Log($"[DialogueUI] Handler {i} completed OK");
+                }
+                catch (System.Exception e)
+                {
+                    Debug.LogError($"[DialogueUI] Handler {i} threw: {e}");
+                }
+            }
+        }
+        Debug.Log("[DialogueUI] All handlers done. Dialogue fully ended.");
+        StartCoroutine(ClearDialogueActiveNextFrame());
+    }
+
+    private IEnumerator ClearDialogueActiveNextFrame()
+    {
+        yield return null;
+        IsDialogueActive = false;
     }
 }

@@ -67,6 +67,7 @@ public class ClickController2D : MonoBehaviour
         if (cam == null) return;
         if (UIController.IsPaused) return;
         if (SearchableProp.IsSearchInProgress) return;
+        if (DialogueUI.IsDialogueActive) return;
 
         Vector2 screenPos = Mouse.current != null ? Mouse.current.position.ReadValue() : (Vector2)Input.mousePosition;
         Vector2 world = cam.ScreenToWorldPoint(screenPos);

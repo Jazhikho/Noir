@@ -77,6 +77,8 @@ public class Interactable : MonoBehaviour, IInteractable
 
     public static void EndCurrentInteraction()
     {
+        // KEVIN EDIT - movement unlock trace to verify post-interaction walkability
+        Debug.Log("[Interactable] EndCurrentInteraction called");
         PointClickController player = FindFirstObjectByType<PointClickController>();
         // KEVIN EDIT - fallback for when player GO is inactive (e.g., KeysFoundRevealUI hides Pierce)
         if (player == null)
@@ -88,7 +90,12 @@ public class Interactable : MonoBehaviour, IInteractable
         }
         if (player != null)
         {
+            Debug.Log("[Interactable] EnableMovement called on player");
             player.EnableMovement();
+        }
+        else
+        {
+            Debug.LogWarning("[Interactable] EndCurrentInteraction: player is NULL — movement NOT re-enabled!");
         }
     }
 }
