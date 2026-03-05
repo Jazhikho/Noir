@@ -56,104 +56,118 @@ public class PageTurnTransition : MonoBehaviour
     private IEnumerator PlayTransitionCoroutine(bool rightToLeft, Action onMidTransition)
     {
         _isPlaying = true;
+        Transform originalParent = null;
 
-        if (transitionSound != null)
+        try
         {
-            AudioSource src = GetComponent<AudioSource>();
-            if (src == null)
-                src = gameObject.AddComponent<AudioSource>();
-            // PlayOneShot's volumeScale is a per-call multiplier (also multiplied by AudioSource.volume).
-            src.PlayOneShot(transitionSound, transitionSoundVolume);
-        }
-
-        Camera cam = captureCamera != null ? captureCamera : Camera.main;
-        if (cam == null)
-        {
-            Debug.LogError("[PageTurnTransition] No camera. Assign Capture Camera or ensure Camera.main exists.", this);
-            onMidTransition?.Invoke();
-            _isPlaying = false;
-            yield break;
-        }
-
-        Rect viewportRect = cam.rect;
-        int w = Mathf.RoundToInt(viewportRect.width * Screen.width);
-        int h = Mathf.RoundToInt(viewportRect.height * Screen.height);
-        if (w < 1) w = 1;
-        if (h < 1) h = 1;
-
-        if (_captureRt == null || _captureRt.width != w || _captureRt.height != h)
-        {
-            if (_captureRt != null)
-                _captureRt.Release();
-            _captureRt = new RenderTexture(w, h, 24);
-            _captureRt.Create();
-        }
-
-        Rect prevRect = cam.rect;
-        cam.rect = new Rect(0f, 0f, 1f, 1f);
-        RenderTexture prevTarget = cam.targetTexture;
-        cam.targetTexture = _captureRt;
-        cam.Render();
-        cam.targetTexture = prevTarget;
-        cam.rect = prevRect;
-
-        captureDisplay.texture = _captureRt;
-        captureDisplay.color = Color.white;
-        captureDisplay.gameObject.SetActive(true);
-
-        RectTransform rect = captureDisplay.rectTransform;
-        rect.anchorMin = Vector2.zero;
-        rect.anchorMax = Vector2.one;
-        rect.offsetMin = Vector2.zero;
-        rect.offsetMax = Vector2.zero;
-
-        Transform originalParent = rect.parent;
-        Canvas canvas = targetCanvas != null ? targetCanvas : rect.GetComponentInParent<Canvas>();
-        if (canvas != null && canvas.transform.localScale == Vector3.zero)
-        {
-            foreach (Canvas c in FindObjectsByType<Canvas>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+            if (transitionSound != null)
             {
-                if (c.renderMode == RenderMode.ScreenSpaceOverlay && c.transform.localScale != Vector3.zero)
+                AudioSource src = GetComponent<AudioSource>();
+                if (src == null)
+                    src = gameObject.AddComponent<AudioSource>();
+                src.PlayOneShot(transitionSound, transitionSoundVolume);
+            }
+
+            Camera cam = captureCamera != null ? captureCamera : Camera.main;
+            if (cam == null)
+            {
+                Debug.LogError("[PageTurnTransition] No camera. Assign Capture Camera or ensure Camera.main exists.", this);
+                onMidTransition?.Invoke();
+                yield break;
+            }
+
+            Rect viewportRect = cam.rect;
+            int w = Mathf.RoundToInt(viewportRect.width * Screen.width);
+            int h = Mathf.RoundToInt(viewportRect.height * Screen.height);
+            if (w < 1) w = 1;
+            if (h < 1) h = 1;
+
+            if (_captureRt == null || _captureRt.width != w || _captureRt.height != h)
+            {
+                if (_captureRt != null)
+                    _captureRt.Release();
+                _captureRt = new RenderTexture(w, h, 24);
+                _captureRt.Create();
+            }
+
+            Rect prevRect = cam.rect;
+            cam.rect = new Rect(0f, 0f, 1f, 1f);
+            RenderTexture prevTarget = cam.targetTexture;
+            cam.targetTexture = _captureRt;
+            cam.Render();
+            cam.targetTexture = prevTarget;
+            cam.rect = prevRect;
+
+            captureDisplay.texture = _captureRt;
+            captureDisplay.color = Color.white;
+            captureDisplay.gameObject.SetActive(true);
+
+            RectTransform rect = captureDisplay.rectTransform;
+            rect.anchorMin = Vector2.zero;
+            rect.anchorMax = Vector2.one;
+            rect.offsetMin = Vector2.zero;
+            rect.offsetMax = Vector2.zero;
+
+            originalParent = rect.parent;
+            Canvas canvas = targetCanvas != null ? targetCanvas : rect.GetComponentInParent<Canvas>();
+            if (canvas != null && canvas.transform.localScale == Vector3.zero)
+            {
+                foreach (Canvas c in FindObjectsByType<Canvas>(FindObjectsInactive.Include, FindObjectsSortMode.None))
                 {
-                    canvas = c;
-                    break;
+                    if (c.renderMode == RenderMode.ScreenSpaceOverlay && c.transform.localScale != Vector3.zero)
+                    {
+                        canvas = c;
+                        break;
+                    }
                 }
             }
-        }
-        if (canvas != null && canvas.transform != originalParent)
-        {
-            rect.SetParent(canvas.transform, false);
-            rect.SetAsLastSibling();
-        }
+            if (canvas != null && canvas.transform != originalParent)
+            {
+                rect.SetParent(canvas.transform, false);
+                rect.SetAsLastSibling();
+            }
 
-        Material mat = GetOrCreateMaterial();
-        mat.SetFloat(CurlFromRightId, rightToLeft ? 1f : 0f);
-        mat.SetFloat(PeelSoftnessId, peelSoftness);
-        mat.SetFloat(CurlAmountId, 0f);
-        captureDisplay.material = mat;
-
-        yield return null;
-        onMidTransition?.Invoke();
-
-        float elapsed = 0f;
-        while (elapsed < duration)
-        {
-            elapsed += Time.unscaledDeltaTime;
-            float t = Mathf.Clamp01(elapsed / duration);
-            t = t * t * (3f - 2f * t);
-            mat.SetFloat(CurlAmountId, t);
             yield return null;
+            onMidTransition?.Invoke();
+
+            Material mat = GetOrCreateMaterial();
+            if (mat == null)
+            {
+                Debug.LogWarning("[PageTurnTransition] No peel material; skipping animation. Room switch already applied.", this);
+                yield return null;
+            }
+            else
+            {
+                mat.SetFloat(CurlFromRightId, rightToLeft ? 1f : 0f);
+                mat.SetFloat(PeelSoftnessId, peelSoftness);
+                mat.SetFloat(CurlAmountId, 0f);
+                captureDisplay.material = mat;
+
+                float elapsed = 0f;
+                while (elapsed < duration)
+                {
+                    elapsed += Time.unscaledDeltaTime;
+                    float t = Mathf.Clamp01(elapsed / duration);
+                    t = t * t * (3f - 2f * t);
+                    mat.SetFloat(CurlAmountId, t);
+                    yield return null;
+                }
+
+                mat.SetFloat(CurlAmountId, 1f);
+            }
         }
-
-        mat.SetFloat(CurlAmountId, 1f);
-        captureDisplay.gameObject.SetActive(false);
-        captureDisplay.material = null;
-        captureDisplay.texture = null;
-
-        if (originalParent != null)
-            rect.SetParent(originalParent, false);
-
-        _isPlaying = false;
+        finally
+        {
+            if (captureDisplay != null)
+            {
+                captureDisplay.gameObject.SetActive(false);
+                captureDisplay.material = null;
+                captureDisplay.texture = null;
+                if (originalParent != null && captureDisplay.rectTransform != null)
+                    captureDisplay.rectTransform.SetParent(originalParent, false);
+            }
+            _isPlaying = false;
+        }
     }
 
     private Material GetOrCreateMaterial()

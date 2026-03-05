@@ -178,6 +178,18 @@ public class SceneFader : MonoBehaviour
 
     public bool IsFading() => isFading;
 
+    /// <summary>
+    /// Sets the fade panel to fully opaque (black) immediately. Use before FadeInNow() when loading a scene without a fade-out.
+    /// </summary>
+    public void SetToBlack()
+    {
+        if (fadePanel == null) return;
+        fadePanel.gameObject.SetActive(true);
+        Color c = fadePanel.color;
+        c.a = 1f;
+        fadePanel.color = c;
+    }
+
     public void FadeInNow()
     {
         StartCoroutine(FadeIn());

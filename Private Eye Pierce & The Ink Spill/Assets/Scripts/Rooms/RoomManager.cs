@@ -54,10 +54,17 @@ public class RoomManager : MonoBehaviour
 
     /// <summary>
     /// Enters the initial room using initialRoomId and the default "Left" spawn.
+    /// When this scene (OfficeFloor) was loaded without a fade (e.g. WebGL skip), fades in from black.
     /// </summary>
     private void Start()
     {
         EnterRoom(initialRoomId, "Left", null);
+
+        if (SceneFader.Instance != null && !SceneFader.Instance.IsFading())
+        {
+            SceneFader.Instance.SetToBlack();
+            SceneFader.Instance.FadeInNow();
+        }
     }
 
     /// <summary>

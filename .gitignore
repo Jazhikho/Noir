@@ -60,6 +60,8 @@ sysinfo.txt
 
 # WebGL / release build output (host elsewhere; not versioned)
 [Ff]or[Rr]elease/
+[Rr]elease/
+[Ww]indows[Rr]elease/
 
 # Crashlytics generated file
 crashlytics-build.properties

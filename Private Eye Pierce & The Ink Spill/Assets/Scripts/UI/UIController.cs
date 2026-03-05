@@ -7,6 +7,8 @@ public class UIController : MonoBehaviour
 
     [Header("Scene Names")]
     public string gameSceneName = "Cutscene";
+    /// <summary>Scene to load when skipping cutscene on WebGL (e.g. "OfficeFloor"). Must be in build.</summary>
+    public string webglSkipToSceneName = "OfficeFloor";
     public string mainMenuSceneName = "MainMenu";
 
     public static bool IsPaused { get; private set; }
@@ -38,7 +40,22 @@ public class UIController : MonoBehaviour
         pauseMenu.SetActive(willBeVisible);
     }
 
+    /// <summary>
+    /// Starts the game. On WebGL skips the cutscene and loads Game directly to avoid hang.
+    /// </summary>
     public void StartGame()
+    {
+#if UNITY_WEBGL
+        SceneManager.LoadScene(webglSkipToSceneName);
+#else
+        PlayCutsceneNormally();
+#endif
+    }
+
+    /// <summary>
+    /// Loads and plays the cutscene scene (used on non-WebGL platforms).
+    /// </summary>
+    private void PlayCutsceneNormally()
     {
         Jukebox jukebox = FindFirstObjectByType<Jukebox>();
 
