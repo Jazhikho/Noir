@@ -79,18 +79,6 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
     choices: []
-  - speaker: 0
-    text: It locks from the outside.
-    portrait: {fileID: 0}
-    typingSpeed: 0.05
-    nextLineIndex: 0
-    onLineStart:
-      m_PersistentCalls:
-        m_Calls: []
-    onLineEnd:
-      m_PersistentCalls:
-        m_Calls: []
-    choices: []
   - speaker: 1
     text: "Oh, that\u2019s odd."
     portrait: {fileID: -1920779165982319034, guid: 940720eb16e151b469750397726fe618, type: 3}
@@ -169,7 +157,7 @@ MonoBehaviour:
     choices: []
   - speaker: 1
     text: Thank you, Pierce.
-    portrait: {fileID: -1920779165982319034, guid: 940720eb16e151b469750397726fe618, type: 3}
+    portrait: {fileID: 0}
     typingSpeed: 0.05
     nextLineIndex: 0
     onLineStart:
