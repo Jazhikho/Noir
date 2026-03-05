@@ -1010,7 +1010,7 @@ MonoBehaviour:
   targetAspectWidth: 1.37
   targetAspectHeight: 1
   pictureWindowMode: 1
-  pictureWindowScale: 0.5
+  pictureWindowScale: 0.75
   useRoomMode: 1
   roomPosition: {x: 0, y: 0, z: -10}
   target: {fileID: 0}
