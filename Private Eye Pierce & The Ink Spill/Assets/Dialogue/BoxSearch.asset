@@ -19,7 +19,7 @@ MonoBehaviour:
   otherName: 
   lines:
   - speaker: 0
-    text: "Completely empty on the inside. Or maybe it\u2019s just invisible."
+    text: "Completely empty on the inside. Or maybe it\u2019s just invisible..."
     portrait: {fileID: 0}
     typingSpeed: 0.05
     nextLineIndex: 0

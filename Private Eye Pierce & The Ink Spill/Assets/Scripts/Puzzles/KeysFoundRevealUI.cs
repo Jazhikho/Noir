@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Events;
 using System.Collections;
 
 /// <summary>
@@ -20,6 +21,10 @@ public class KeysFoundRevealUI : MonoBehaviour
     [Header("Optional")]
     [Tooltip("If set, Pierce is hidden while the reveal is showing (like vending machine).")]
     public GameObject playerRoot;
+
+    [Header("Events")]
+    [Tooltip("Fires after the reveal image has fully faded out. Wire dialogue here so it waits for the image.")]
+    public UnityEvent OnRevealComplete;
 
     private bool _isShowing;
     private bool _imageOnSameObject;
@@ -119,6 +124,7 @@ public class KeysFoundRevealUI : MonoBehaviour
             playerRoot.SetActive(true);
 
         _isShowing = false;
+        OnRevealComplete?.Invoke();
     }
 
     private static void SetImageAlpha(Image img, float alpha)

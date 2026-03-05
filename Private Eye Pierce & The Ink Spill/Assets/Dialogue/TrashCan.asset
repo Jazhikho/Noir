@@ -19,7 +19,7 @@ MonoBehaviour:
   otherName: 
   lines:
   - speaker: 0
-    text: "Nothin\u2019 except useless mail. About half of it is mine"
+    text: "Nothin\u2019 except useless mail. About half of it is mine..."
     portrait: {fileID: 0}
     typingSpeed: 0.05
     nextLineIndex: 0

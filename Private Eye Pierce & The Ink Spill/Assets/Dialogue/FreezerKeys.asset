@@ -20,7 +20,7 @@ MonoBehaviour:
   lines:
   - speaker: 0
     text: "Ah, there\u2019s the old janitor\u2019s keys! They\u2019re half frozen
-      in ice- how long has he not had these?"
+      in ice \u2014 how long has he not had these?"
     portrait: {fileID: 0}
     typingSpeed: 0.05
     nextLineIndex: 0

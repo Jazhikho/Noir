@@ -44,8 +44,8 @@ MonoBehaviour:
         m_Calls: []
     choices: []
   - speaker: 1
-    text: "Oh. No- no you\u2019re right. Sometimes I forget people can\u2019t see
-      me. Sorry."
+    text: "Oh. No \u2014 no you\u2019re right. Sometimes I forget people can\u2019t
+      see me. Sorry."
     portrait: {fileID: 0}
     typingSpeed: 0.05
     nextLineIndex: 0

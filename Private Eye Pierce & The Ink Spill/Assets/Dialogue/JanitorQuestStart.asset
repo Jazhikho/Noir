@@ -19,8 +19,8 @@ MonoBehaviour:
   otherName: Janitor
   lines:
   - speaker: 1
-    text: "Sorry son, this old girl isn\u2019t going anywhere. Damn thing\u2014 locked
-      behind me before I even realized what happened."
+    text: "Sorry son, this old girl isn\u2019t going anywhere. Damn thing \u2014
+      locked behind me before I even realized what happened."
     portrait: {fileID: 4526296290215008011, guid: 38254f2e8252a084092c30ac2d2b32e7, type: 3}
     typingSpeed: 0.05
     nextLineIndex: 0
